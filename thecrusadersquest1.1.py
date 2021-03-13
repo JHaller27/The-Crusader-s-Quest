@@ -867,7 +867,7 @@ class adventuring(State):
     def do(self) -> Optional['State']:
         ctx = self.ctx
 
-        while ctx.counter != 0:
+        if ctx.counter != 0:
             ctx.adventure_state = True
             if ctx.hp > 0:
                 adventure_menu(self.ctx)
@@ -879,13 +879,13 @@ class adventuring(State):
                     adventure_menu(ctx)
                     ctx.counter = ctx.counter - 1
 
-                    return random_event(ctx, EndAdventure)
+                    return random_event(ctx, adventuring)
                 if selection == '2':
-                    return hunt(self.ctx, EndAdventure)
+                    return hunt(self.ctx, adventuring)
                 if selection == '3':
-                    return rest(self.ctx, EndAdventure)
+                    return rest(self.ctx, adventuring)
                 if selection == '4':
-                    return the_map(self.ctx, EndAdventure)
+                    return the_map(self.ctx, adventuring)
                 else:
                     return adventuring(self.ctx)
             else:
