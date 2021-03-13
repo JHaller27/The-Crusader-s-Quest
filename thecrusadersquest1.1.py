@@ -581,24 +581,24 @@ class location_changer(State):
             blacksmith_price_generator(self.ctx)
             # treasure_generator()
 
-        if ctx.location == 'Rodez':
+        elif ctx.location == 'Rodez':
             ctx.location = 'Oristano'
             blacksmith_price_generator(self.ctx)
 
-        if ctx.location == 'Oristano':
+        elif ctx.location == 'Oristano':
             ctx.location = 'Thasos'
             blacksmith_price_generator(self.ctx)
 
-        if ctx.location == 'Thasos':
+        elif ctx.location == 'Thasos':
             ctx.location = 'Karabuk'
             blacksmith_price_generator(self.ctx)
 
-        if ctx.location == 'Karabuk':
+        elif ctx.location == 'Karabuk':
             ctx.location = 'Salem'
             blacksmith_price_generator(self.ctx)
             return salem(self.ctx)
 
-        if ctx.location == 'Last Refuge':
+        elif ctx.location == 'Last Refuge':
             ctx.location = 'Rodez'
             blacksmith_price_generator(self.ctx)
             # end_game()
@@ -1737,13 +1737,13 @@ class chest(TransientState):
             if a == 1:
                 print('It is empty. Nothing but cobwebs remain.')
                 input('Press enter to continue')
-                return adventure_menu(self.ctx)
+                adventure_menu(self.ctx)
             if a == 2:
                 print('It was booby trapped. A dart flies out and hits you for 20 damage.')
                 ctx.hp = ctx.hp - 20
                 input('Press enter to continue')
                 hp_mechanic(self.ctx)
-                return adventure_menu(self.ctx)
+                adventure_menu(self.ctx)
             # if a == 2 and ctx.luck > 0:
             # print('It was booby trapped. A dart flies out and hits you for 20 damage.')
             # chest_loot()
