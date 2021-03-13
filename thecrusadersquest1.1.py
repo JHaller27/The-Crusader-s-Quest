@@ -2,13 +2,9 @@
 # Authored by: Gaga Gievous
 # Copyright February 2021
 
-import cmd
-import textwrap
 import sys
 import os
-import time
 import random
-import math
 
 from context import Context
 
@@ -19,7 +15,7 @@ def clear():
     os.system('cls' if os.name == 'nt' else 'clear')
 
 
-### Title Screen ###
+# Title Screen #
 def title_screen_selections():
     option = input('>: ')
 
@@ -31,11 +27,11 @@ def title_screen_selections():
         sys.exit()
     while option.lower() not in ['1', '2', '0']:
         option = input('>: ')
-        if option() == '1':
+        if option.lower() == '1':
             setup_game()
-        elif option() == '2':
+        elif option.lower() == '2':
             help_menu()
-        elif option() == '0':
+        elif option.lower() == '0':
             sys.exit()
 
 
@@ -72,7 +68,7 @@ def help_menu():
     title_screen_selections()
 
 
-### Character Creation ###
+# Character Creation #
 
 # Name #
 def setup_game():
@@ -286,11 +282,11 @@ def setup_game():
         title_screen()
 
 
-### Death ###
+# Death #
 def death():
     clear()
     print('You have died.\n')
-    selection = input('Press enter enter to continue')
+    input('Press enter enter to continue')
     char_menu()
     print()
     print('1 Menu\n')
@@ -301,10 +297,10 @@ def death():
         title_screen()
 
 
-### Food and Endurance Mechanic ###
+# Food and Endurance Mechanic #
 
 def food_endurance_mechanic():
-    if ctx.food < ctx.consumption_rate and ctx.food > 0:
+    if ctx.consumption_rate > ctx.food > 0:
         ctx.food = 0
     elif ctx.food > 1:
         ctx.food = ctx.food - ctx.consumption_rate
@@ -317,7 +313,7 @@ def food_endurance_mechanic():
     # need to work on restoring ctx.endurance#
 
 
-### Resource Mechanics ###
+# Resource Mechanics #
 
 def hp_mechanic():
     if ctx.hp > ctx.max_hp:
@@ -356,7 +352,7 @@ def arrows_mechanic():
         ctx.arrows = 0
 
 
-### Character Menu ###
+# Character Menu #
 def char_menu():
     clear()
 
@@ -379,10 +375,10 @@ def char_menu():
     # print('Illness: ' + ctx.illness + '')
     print('Gold: ' + str(ctx.gold) + '/' + str(ctx.max_gold) + '')
     print('######################\n')
-    selection = input('Press enter to continue')
+    input('Press enter to continue')
 
 
-### Adventure Menu ###
+# Adventure Menu #
 def adventure_menu():
     clear()
     print('######################')
@@ -398,7 +394,7 @@ def adventure_menu():
     print('######################\n')
 
 
-### Map ###         Update this to turn X into another symbol when that ctx.location is active
+# Map ###         Update this to turn X into another symbol when that ctx.location is active
 def the_map():
     # print('Key: T = Town; C = City; etc.)
 
@@ -483,10 +479,10 @@ def the_map():
     days_to_go()
 
 
-### Days to Go ###
+# Days to Go #
 def days_to_go():
     if ctx.location == 'Goodshire':
-        if ctx.adventure_state == False:
+        if not ctx.adventure_state:
             ctx.counter_set = 7
             ctx.counter = 7
             print('You will brave the wilds for ' + str(ctx.counter_set) + ' days.')
@@ -500,12 +496,12 @@ def days_to_go():
                 town()
             else:
                 town()
-        if ctx.adventure_state == True:
+        else:
             print('You have ' + str(ctx.counter) + ' days to go.')
             input('Press enter to continue')
 
     if ctx.location == 'Rodez':
-        if ctx.adventure_state == False:
+        if not ctx.adventure_state:
             ctx.counter_set = 11
             ctx.counter = 11
             print('You will brave the wilds for ' + str(ctx.counter_set) + ' days.')
@@ -519,11 +515,11 @@ def days_to_go():
                 town()
             else:
                 town()
-        if ctx.adventure_state == True:
+        else:
             print('You have ' + str(ctx.counter) + ' days to go.')
             input('Press enter to continue')
     if ctx.location == 'Oristano':
-        if ctx.adventure_state == False:
+        if not ctx.adventure_state:
             ctx.counter_set = 15
             ctx.counter = 15
             print('You will brave the wilds for ' + str(ctx.counter_set) + ' days.')
@@ -537,11 +533,11 @@ def days_to_go():
                 town()
             else:
                 town()
-        if ctx.adventure_state == True:
+        else:
             print('You have ' + str(ctx.counter) + ' days to go.')
             input('Press enter to continue')
     if ctx.location == 'Thasos':
-        if ctx.adventure_state == False:
+        if not ctx.adventure_state:
             ctx.counter_set = 19
             ctx.counter = 19
             print('You will brave the wilds for ' + str(ctx.counter_set) + ' days.')
@@ -555,11 +551,11 @@ def days_to_go():
                 town()
             else:
                 town()
-        if ctx.adventure_state == True:
+        else:
             print('You have ' + str(ctx.counter) + ' days to go.')
             input('Press enter to continue')
     if ctx.location == 'Karabuk':
-        if ctx.adventure_state == False:
+        if not ctx.adventure_state:
             ctx.counter_set = 25
             ctx.counter = 25
             print('You will brave the wilds for ' + str(ctx.counter_set) + ' days.')
@@ -573,11 +569,11 @@ def days_to_go():
                 town()
             else:
                 town()
-        if ctx.adventure_state == True:
+        else:
             print('You have ' + str(ctx.counter) + ' days to go.')
             input('Press enter to continue')
     if ctx.location == 'Last Refuge':
-        if ctx.adventure_state == False:
+        if not ctx.adventure_state:
             ctx.counter_set = 25
             ctx.counter = 25
             print('You will brave the wilds for ' + str(ctx.counter_set) + ' days.')
@@ -591,20 +587,20 @@ def days_to_go():
                 town()
             else:
                 town()
-        if ctx.adventure_state == True:
+        else:
             print('You have ' + str(ctx.counter) + ' days to go.')
             input('Press enter to continue')
 
 
-### Treasure Generator ###
+# Treasure Generator #
 # def treasure_generator():
 # v = random.randint(0, 3)
 # print('You found ' + str(v) + ' treasures on this leg of the journey.')
 
 
-### Location Changer ###
+# Location Changer #
 def location_changer():
-    ctx.adventure_state == False
+    ctx.adventure_state = False
 
     if ctx.location == 'Goodshire':
         ctx.location = 'Rodez'
@@ -635,7 +631,7 @@ def location_changer():
     # town()
 
 
-### Town Description ###
+# Town Description #
 def town_description():
     if ctx.location == 'Goodshire':
         print('The sun shines brightly on the lazy Halfling natives.')
@@ -649,15 +645,15 @@ def town_description():
         print('There is a foul stench in the air, and the ground is covered bubbling puddles of unknown origin.')
 
 
-### Start Game ###
+# Start Game #
 def start_game():
     ctx.location = 'Goodshire'
     blacksmith_price_generator()
-    enemy_locater_generator()
+    enemy_locator_generator()
     town()
 
 
-### Town ###
+# Town #
 def town():
     clear()
     print('You are in ' + ctx.location + '.')
@@ -687,7 +683,7 @@ def town():
         town()
 
 
-### Tavern ###
+# Tavern #
 def tavern():
     clear()
     print('######################')
@@ -713,7 +709,6 @@ def tavern():
 
     if selection == '2':
         print('How much food do you want to buy?')
-        total_cost = 0
         ctx.food_price = 5
         n = input('>: ')
         if n == '0':
@@ -733,7 +728,6 @@ def tavern():
             tavern()
     if selection == '3':
         print('How much food do you want to sell?')
-        total_sell = 0
         ctx.food_sell = 3
         n = input('>: ')
         if n == '0':
@@ -774,7 +768,7 @@ def talk():
     if dialogue == 4:
         print('There\'s nasty things where you\'re headed.')
     if dialogue == 5:
-        print('Someone I know was killed looking inside a hollow tree. You wouldn\'t want that happening to you.')
+        print("Someone I know was killed looking inside a hollow tree. You wouldn't want that happening to you.")
     if dialogue == 6:
         print('If you run out of food and arrows in the wilds, how will you survive? On pure endurance ?')
     if dialogue == 7:
@@ -806,7 +800,7 @@ def talk():
     tavern()
 
 
-### Blacksmith ###
+# Blacksmith #
 def blacksmith():
     clear()
     print('######################')
@@ -833,7 +827,6 @@ def blacksmith():
             blacksmith()
     if selection == '2':
         print('How many arrows do you want to buy?')
-        total_cost = 0
         arrow_price = 5
         n = input('>: ')
         n = int(n)
@@ -851,7 +844,6 @@ def blacksmith():
             blacksmith()
     if selection == '3':
         print('How many arrows do you want to sell?')
-        total_sell = 0
         arrow_sell = 3
         n = input('>: ')
         n = int(n)
@@ -875,7 +867,7 @@ def blacksmith():
         blacksmith()
 
 
-### Blacksmith Price Generator ###
+# Blacksmith Price Generator #
 def blacksmith_price_generator():
     ctx.blacksmith_price = random.randint(51, 75)
     if ctx.location == 'Rodez':
@@ -890,9 +882,8 @@ def blacksmith_price_generator():
         ctx.blacksmith_price = ctx.blacksmith_price + 105
 
 
-### Adventuring ###
+# Adventuring #
 def adventuring():
-    ctx.adventure_state == True
     while ctx.counter != 0:
         ctx.adventure_state = True
         if ctx.hp > 0:
@@ -928,7 +919,7 @@ def adventuring():
         adventuring()  # was location_changer()
 
 
-### Rest ###
+# Rest #
 def rest():
     x = random.randint(15, 25)
     food_endurance_mechanic()
@@ -946,7 +937,7 @@ def rest():
     input('Press enter to continue')
 
 
-### Hunt ###
+# Hunt #
 def hunt():
     x = random.randint(1, 10)
     y = random.randint(1, 25)
@@ -976,9 +967,9 @@ def hunt():
     input('Press enter to continue')
 
 
-########################################################################
-########################### Random Events ##############################
-########################################################################
+#
+# Random Events #
+#
 def random_event():
     n = random.randint(1, 20)
     if n == 1:
@@ -1023,11 +1014,10 @@ def random_event():
         fight()
 
 
-### Mushroom ###
+# Mushroom #
 def mushroom():
     print('You see a strange mushroom.')
     print('1 Consume\n2 Leave')
-    w = 0
     selection = input('>: ')
     if selection == '1':
         x = random.randint(1, 4)
@@ -1069,7 +1059,7 @@ def mushroom():
     input('Press enter to continue')
 
 
-### Miracle ###
+# Miracle #
 def miracle():
     if ctx.race == 'Halfling':
         print('You see an old wizard, and the wizard beckons you over.')
@@ -1095,7 +1085,7 @@ def miracle():
         nothing()
 
 
-### Bigger Bag ###
+# Bigger Bag #
 def bigger_bag():
     y = random.randint(1, 3)
     if y == 1:
@@ -1118,7 +1108,7 @@ def bigger_bag():
     input('Press enter to continue')
 
 
-### Lose a Day ###
+# Lose a Day #
 def lose_day():
     v = random.randint(1, 3)
     # y = random.randint(1, 2)
@@ -1134,12 +1124,12 @@ def lose_day():
     # print('You arrive at a bridge spanning an enormous chasm that is guarded by a score of bandits. One bandit approaches you.')
     # print('"If you want to cross this bridge, you have to pay us, ' + str(k) 'ctx.gold.\n')
     #        print('1 Pay ctx.gold\n2 Take a detour\n')
-    ##        selection = input('>: ')
+    #        selection = input('>: ')
     #        if selection == '1':
     #            if k > ctx.gold:
     #            print('"That is not enough to cross, but we will keep what you gave us, and you can find another way around. Have fun out there."')
     #            ctx.gold = 0
-    ##            else:
+    #            else:
     #               ctx.gold = ctx.gold - k
     #               print('You gave the bandit ' + str(k) + ' ctx.gold, and they let you cross the bridge.')
     #       elif selection == '2'
@@ -1149,7 +1139,7 @@ def lose_day():
     input('Press enter to continue')
 
 
-### Mystic ###
+# Mystic #
 def mystic():
     print('You come upon a roaming mystic.')
     print('The mystic offers you a blessing.\n')
@@ -1174,13 +1164,13 @@ def mystic():
         mystic()
 
 
-### Nothing ###
+# Nothing #
 def nothing():
     print('Nothing notable happens.')
     input('Press enter to continue')
 
 
-### Damaged (Random Event) ###
+# Damaged (Random Event) #
 def damaged():
     # adventure_menu()
     v = random.randint(1, 20)
@@ -1210,7 +1200,7 @@ def damaged():
     input('Press enter to continue')
 
 
-### Traveller ###
+# Traveller #
 def traveller():
     print('A friendly adventurer approaches you and wants to trade.')
     n = random.randint(1, 3)
@@ -1230,7 +1220,7 @@ def traveller_values():
     input('Press enter to continue')
 
 
-#### Traveller Generation ####
+# Traveller Generation #
 def traveller_generation():
     x = random.randint(1, 50)  # how much trader wants
     v = random.randint(1, 100)  # how much trader is willing to give
@@ -1442,7 +1432,7 @@ def traveller_generation():
                 print('You decline the trade.')
 
 
-### Robbed ###
+# Robbed #
 def robbed():
     x = random.randint(1, 3)
     if ctx.food == 0 and ctx.arrows == 0 and ctx.gold == 0:
@@ -1486,9 +1476,6 @@ def robbed():
         elif y == 2:
             print('You check your coin purse, and find that ' + str(v) + ' gold is missing.')
 
-    v = 0
-    x = 0
-
     input('Press enter to continue')
 
 
@@ -1498,7 +1485,7 @@ def doppelganger():
         print('The doppelganger is wielding a ' + ctx.weapon + ' exactly like yours.')
 
 
-### Fight ###
+# Fight #
 def fight():
     enemy_generator()
     print('You see a ' + ctx.enemy_adjective + ' ' + ctx.enemy_type + ' approaching.')
@@ -1550,7 +1537,7 @@ def enemy_loot():
 
 # Your Damage Taken #
 def your_damage_taken():
-    ctx.damage_taken = ctx.enemy_battlescore - ctx.martial_prowess
+    ctx.damage_taken = ctx.enemy_battle_score - ctx.martial_prowess
     ctx.hp = int(ctx.hp - ctx.damage_taken)
     if ctx.damage_taken < 1:
         ctx.hp = ctx.hp + ctx.damage_taken
@@ -1589,29 +1576,29 @@ def enemy_resetter():
     ctx.enemy_specific_gold = 0
     ctx.enemy_specific_arrows = 0
     ctx.enemy_specific_food = 0
-    ctx.enemy_battlescore = 0
+    ctx.enemy_battle_score = 0
     ctx.enemy_adjective = ''
 
 
-### Enemy Locater and Excluder Generator ###
-def enemy_locater_generator():
+# Enemy Locator and Excluder Generator #
+def enemy_locator_generator():
     if ctx.location == 'Goodshire':
-        ctx.enemy_locater = 'Goodshire'
+        ctx.enemy_locator = 'Goodshire'
         ctx.enemy_exclude = [3, 4, 5]
     if ctx.location == 'Rodez':
-        ctx.enemy_locater = 'Rodez'
+        ctx.enemy_locator = 'Rodez'
         ctx.enemy_exclude = [2, 4, 5]
     if ctx.location == 'Oristano':
-        ctx.enemy_locater = 'Oristano'
+        ctx.enemy_locator = 'Oristano'
         ctx.enemy_exclude = [1, 2, 5]
     if ctx.location == 'Thasos':
-        ctx.enemy_locater = 'Thasos'
+        ctx.enemy_locator = 'Thasos'
         ctx.enemy_exclude = [1, 2]
     if ctx.location == 'Karabuk':
-        ctx.enemy_locater = 'Karabuk'
+        ctx.enemy_locator = 'Karabuk'
         ctx.enemy_exclude = [1, 2, 3]
     if ctx.location == 'Last Refuge':
-        ctx.enemy_locater = 'Last Refuge'
+        ctx.enemy_locator = 'Last Refuge'
         ctx.enemy_exclude = [2, 3]
     ctx.enemy_number = random.randint(1, 5)
     while ctx.enemy_number in ctx.enemy_exclude:
@@ -1620,11 +1607,11 @@ def enemy_locater_generator():
 
 # Enemy Type Generator #
 def enemy_type_generator():
-    enemy_locater_generator()
+    enemy_locator_generator()
 
     if ctx.enemy_number == 1:
         ctx.enemy_type = 'Lone Wolf'
-        ctx.enemy_battlescore = ctx.enemy_battlescore + 35
+        ctx.enemy_battle_score = ctx.enemy_battle_score + 35
         ctx.enemy_specific_food = 2
         ctx.enemy_specific_arrows = 0
         ctx.enemy_specific_gold = 0
@@ -1634,7 +1621,7 @@ def enemy_type_generator():
 
     if ctx.enemy_number == 2:
         ctx.enemy_type = 'Large Maggot'
-        ctx.enemy_battlescore = ctx.enemy_battlescore + 15
+        ctx.enemy_battle_score = ctx.enemy_battle_score + 15
         ctx.enemy_specific_food = 1
         ctx.enemy_specific_arrows = 0
         ctx.enemy_specific_gold = 0
@@ -1644,7 +1631,7 @@ def enemy_type_generator():
 
     if ctx.enemy_number == 3:
         ctx.enemy_type = 'Rogue Vampire'
-        ctx.enemy_battlescore = ctx.enemy_battlescore + 55
+        ctx.enemy_battle_score = ctx.enemy_battle_score + 55
         ctx.enemy_specific_food = 0
         ctx.enemy_specific_arrows = 0
         ctx.enemy_specific_gold = 5
@@ -1654,7 +1641,7 @@ def enemy_type_generator():
 
     if ctx.enemy_number == 4:
         ctx.enemy_type = 'Dark Cultist'
-        ctx.enemy_battlescore = ctx.enemy_battlescore + 85
+        ctx.enemy_battle_score = ctx.enemy_battle_score + 85
         ctx.enemy_specific_food = 10
         ctx.enemy_specific_arrows = 0
         ctx.enemy_specific_gold = 10
@@ -1664,7 +1651,7 @@ def enemy_type_generator():
 
     if ctx.enemy_number == 5:
         ctx.enemy_type = 'Doppelganger'
-        ctx.enemy_battlescore = ctx.enemy_battlescore + 105
+        ctx.enemy_battle_score = ctx.enemy_battle_score + 105
         ctx.enemy_specific_food = 10
         ctx.enemy_specific_arrows = 0
         ctx.enemy_specific_gold = 10
@@ -1679,16 +1666,16 @@ def enemy_adjective_generator():
     j = random.randint(1, 3)
     if j == 1:
         ctx.enemy_adjective = 'Bloodthirsty'
-        ctx.enemy_battlescore = ctx.enemy_battlescore + 35
+        ctx.enemy_battle_score = ctx.enemy_battle_score + 35
     if j == 2:
         ctx.enemy_adjective = 'Regular'
-        ctx.enemy_battlescore = ctx.enemy_battlescore + 0
+        ctx.enemy_battle_score = ctx.enemy_battle_score + 0
     if j == 3:
         ctx.enemy_adjective = 'Starved'
-        ctx.enemy_battlescore = ctx.enemy_battlescore - 10
+        ctx.enemy_battle_score = ctx.enemy_battle_score - 10
 
 
-### Chest ###
+# Chest #
 def chest():
     p = random.randint(1, 2)
     if p == 1:
@@ -1711,7 +1698,7 @@ def chest():
             adventure_menu()
         # if a == 2 and ctx.luck > 0:
         # print('It was booby trapped. A dart flies out and hits you for 20 damage.')
-        # chestloot()
+        # chest_loot()
         if a == 3:
             chest_loot()
 
@@ -1741,12 +1728,11 @@ def chest_loot():
         print('Inside, you found ' + str(v) + ' gold.')
         gold_mechanic()
 
-    v = 0
     input('Press enter to continue')
     adventure_menu()
 
 
-####### Salem #######
+# Salem #
 def salem():
     clear()
     print('-----------------')
@@ -1796,8 +1782,8 @@ def salem():
         print('"Very well, then." Chernobog stands up.')
         input('Press enter to fight')
 
-        ctx.enemy_battlescore = 170
-        ctx.damage_taken = ctx.enemy_battlescore - ctx.martial_prowess
+        ctx.enemy_battle_score = 170
+        ctx.damage_taken = ctx.enemy_battle_score - ctx.martial_prowess
         ctx.hp = int(ctx.hp - ctx.damage_taken)
         if ctx.hp > 0:
             print('You have slain the Antipope. His body magically lights on fire, and leaves ashes on the ground.')
