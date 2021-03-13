@@ -57,6 +57,11 @@ enemy_specific_arrows = 0
 enemy_specific_food = 0
 damage_taken = 0
 
+
+def clear():
+    os.system('cls' if os.name == 'nt' else 'clear')
+
+
 ### Title Screen ###
 def title_screen_selections():
     option = input('>: ')
@@ -77,7 +82,7 @@ def title_screen_selections():
             sys.exit()
 
 def title_screen():
-    os.system('cls')
+    clear()
     print('#####################################################################################################################')
     print('#####################################################################################################################')
     print('##     ## ## ##   ######   ##    ### ## ####  ##    ##  ####   ##    ### ####  #####    #### ## ##   ####  ##     ###')
@@ -137,7 +142,7 @@ def setup_game():
     heal_item = 0
     endurance = 10
     adventure_state = False
-    os.system('cls')
+    clear()
     print('The Antipope is defiling the holiest religious site in the world. You are a warrior monk from the Freemasons, and it is up to you to destroy the Antipope.\n')
     print('You begin your journey in Goodshire, one of the many towns you hope to pass through.\n')
     print('What is your name?\n')
@@ -145,7 +150,7 @@ def setup_game():
     name = input('>: ')
 
 # Race #
-    os.system('cls')
+    clear()
     print('What is your race?\n')
     print('1 Human\n2 Dwarf\n3 Satyr\n4 Halfling\n5 Elf\n6 Tigerman\n7 Leprechaun\n')
 
@@ -238,7 +243,7 @@ def setup_game():
         luck = 0
         speed = 0
 
-    os.system('cls')
+    clear()
 
 # Occupation #
     print('What is your occupation?\n')
@@ -312,18 +317,18 @@ def setup_game():
         max_gold = max_gold + 300
         martial_prowess = martial_prowess + 0  
 
-    os.system('cls')
+    clear()
 
     print('What kind of weapon do you want to use? (ie. sword, poleaxe, etc.)')
 
     weapon = input('>: ')
     gold_mechanic()
-    os.system('cls')
-    
+    clear()
+
     #print('What is your weapon called? (ie. Thorn, Crusher, etc.)')
 
     #weapon = input('>: ')
-    #os.system('cls')
+    clear()
 
     print('You are ' + name + ', the ' + race + ' ' + occupation + '. You wield a ' + weapon + '.\n')
     print('1 Begin Adventure\n2 Restart')
@@ -335,7 +340,7 @@ def setup_game():
 
 ### Death ###
 def death():
-    os.system('cls')
+    clear()
     print('You have died.\n')
     selection = input('Press enter enter to continue')
     char_menu()
@@ -410,7 +415,7 @@ def arrows_mechanic():
         
 ### Character Menu ###
 def char_menu():
-    os.system('cls')
+    clear()
     global name
     global hp
     global max_hp
@@ -468,7 +473,7 @@ def adventure_menu():
     global max_gold
     global weapon
 
-    os.system('cls')
+    clear()
     print('######################')
     print('HP: ' + str(hp) + '/' + str(max_hp) + '')
     print('Food: ' + str(food) + '/' + str(max_food) + '')
@@ -757,7 +762,7 @@ def start_game():
 def town():
     global counter
     global adventure_state
-    os.system('cls')
+    clear()
     adventure_state == False
     print('You are in ' + location + '.')
     town_description()
@@ -765,10 +770,10 @@ def town():
     print('1 Tavern\n2 Blacksmith\n3 Character\n4 Adventure')
     selection = input('>: ')
     if selection == '1':
-        os.system('cls')
+        clear()
         tavern()
     if selection == '4':
-        os.system('cls')
+        clear()
         counter = 0
         the_map()
         print('You will brave the wilds for 5 days.')
@@ -776,10 +781,10 @@ def town():
         adventuring()
 
     if selection == '2':
-        os.system('cls')
+        clear()
         blacksmith()
     if selection == '3':
-        os.system('cls')
+        clear()
         char_menu()
         town()
     else:
@@ -793,7 +798,7 @@ def tavern():
     global hp
     global location
 
-    os.system('cls')
+    clear()
     print('######################')
     print('Gold: ' + str(gold) + '/' + str(max_gold) + '')
     print('HP: ' + str(hp) + '/' + str(max_hp) + '')
@@ -854,7 +859,7 @@ def tavern():
             print('You complete the transaction')
             gold_mechanic()
             input('Press enter to continue')
-            os.system('cls')
+            clear()
             tavern()
     if selection == '4':
         talk()
@@ -918,7 +923,7 @@ def blacksmith():
     global arrows
     global max_arrows
 
-    os.system('cls')
+    clear()
     print('######################')
     print('Gold: ' + str(gold) + '/' + str(max_gold) + '')
     print('Arrows: ' + str(arrows) + '/' + str(max_arrows) + '')
@@ -975,7 +980,7 @@ def blacksmith():
             print('You complete the transaction')
             gold_mechanic()
             input('Press enter to continue')
-            os.system('cls')
+            clear()
             blacksmith()
 
     if selection == '4':
@@ -1034,7 +1039,7 @@ def adventuring():
             adventure_menu()
             print('1 Continue\n2 Hunt\n3 Rest\n4 Map\n')
             selection = input('>: ')
-            os.system('cls')
+            clear()
             if selection == '1':
                 food_endurance_mechanic()
                 adventure_menu()
@@ -1051,7 +1056,7 @@ def adventuring():
         else:
             death()
     counter = 0
-    os.system('cls')
+    clear()
     adventure_menu()
     print('You have survived the trip.')
     adventure_state = False
@@ -1334,7 +1339,7 @@ def mystic():
     print('Increase:\n1 Max HP\n2 Endurance\n3 Martial Prowess\n')
     #print('Fill: ')
     selection = input('>: ')
-    os.system('cls')
+    clear()
     if selection == '1':
         max_hp = max_hp + 10
         hp = hp + 10
@@ -2019,7 +2024,7 @@ def salem():
     global martial_prowess
     global hp
 
-    os.system('cls')
+    clear()
     print('-----------------')
     print('| G |   |   |   |')
     print('+---+---+---+---+')
@@ -2033,14 +2038,14 @@ def salem():
     print('+---------------+\n')
     print('Salem\n')
     input('Press enter to continue')
-    os.system('cls')
+    clear()
 
     print('You enter the ancient city of Salem, now blackened with fire and as silent as a graveyard, and see a man who looks like a commoner lounging upon a throne of skeletons in the courtyard.')
     print('"Ah, ' + name + '", I was expecting you."\n')
     print('Type \'who are you?\'')
     input('>: ')
 
-    os.system('cls')
+    clear()
     print('"I am the called by your order the Antipope or the Prince of Darkness, but my birth name is Chernobog."')
     print('"As you can see, I have already razed Salem. Your sacred temples and artifacts are totally destroyed. You have failed."')
     print('"But I admire your willpower and resourcefulness to make it all the way here from Goodshire."')
@@ -2050,7 +2055,7 @@ def salem():
     print('"The choice is yours, ' + name + '."\n')
     print('1 Accept offer\n2 Decline offer\n')
     selection = input('>: ')
-    os.system('cls')
+    clear()
 
     if selection == '1':
         char_menu()
@@ -2071,7 +2076,7 @@ def salem():
             print('Your surroundings shimmer, and the city of Salem transforms from its ruined state to its former glory. You have succeeded in every goal.')
             input('Press enter to continue')
             char_menu()
-            os.system('cls')
+            clear()
             print('You win!')
             
             print('Occupation: ' + occupation + '')
