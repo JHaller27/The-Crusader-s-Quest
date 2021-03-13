@@ -6,7 +6,7 @@ import sys
 import os
 import random
 
-from context import Context
+from state import Context, State
 
 ctx = Context()
 

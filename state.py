@@ -1,3 +1,11 @@
+class State:
+    def __init__(self, ctx: 'Context'):
+        self._ctx = ctx
+
+    def do(self) -> 'State':
+        raise NotImplementedError
+
+
 class Context:
     counter = 0
     counter_set = 0
@@ -43,3 +51,14 @@ class Context:
     enemy_specific_arrows = 0
     enemy_specific_food = 0
     damage_taken = 0
+
+    _state = None
+
+    def _run_once(self):
+        self._state = self._state.do()
+
+    def run(self, init: State):
+        self._state = init
+
+        while self._state is not None:
+            self._run_once()
