@@ -2,6 +2,10 @@ class State:
     def __init__(self, ctx: 'Context'):
         self._ctx = ctx
 
+    @property
+    def ctx(self) -> 'Context':
+        return self._ctx
+
     def do(self) -> 'State':
         raise NotImplementedError
 
