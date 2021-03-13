@@ -12,6 +12,8 @@ global_context = Context()
 
 
 def clear():
+    print('~~~~~~~~~~  clear screen')
+    return
     os.system('cls' if os.name == 'nt' else 'clear')
 
 
