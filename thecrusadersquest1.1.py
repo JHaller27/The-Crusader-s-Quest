@@ -650,7 +650,7 @@ class town(State):
 
         if selection == '2':
             clear()
-            blacksmith(self.ctx)
+            return blacksmith(self.ctx)
         if selection == '3':
             clear()
             char_menu(self.ctx)
@@ -823,14 +823,14 @@ class blacksmith(State):
             if total_cost > ctx.gold:
                 ctx.ui.print('You do not have enough gold to buy ' + str(n) + ' arrows.')
                 input('Press enter to continue')
-                blacksmith(self.ctx)
+                return blacksmith(self.ctx)
             if total_cost <= ctx.gold:
                 ctx.arrows = ctx.arrows + n
                 arrows_mechanic(self.ctx)
                 ctx.gold = ctx.gold - total_cost
                 ctx.ui.print('You complete the transaction')
                 input('Press enter to continue')
-                blacksmith(self.ctx)
+                return blacksmith(self.ctx)
         if selection == '3':
             ctx.ui.print('How many arrows do you want to sell?')
             arrow_sell = 3
@@ -840,7 +840,7 @@ class blacksmith(State):
             if ctx.arrows < n:
                 ctx.ui.print('You do not have that many arrows.')
                 input('Press enter to continue')
-                blacksmith(self.ctx)
+                return blacksmith(self.ctx)
             if ctx.arrows >= n:
                 ctx.arrows = ctx.arrows - n
                 ctx.gold = ctx.gold + total_sell
@@ -848,7 +848,7 @@ class blacksmith(State):
                 gold_mechanic(self.ctx)
                 input('Press enter to continue')
                 clear()
-                blacksmith(self.ctx)
+                return blacksmith(self.ctx)
 
         if selection == '4':
             return town(self.ctx)
