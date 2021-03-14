@@ -1,4 +1,7 @@
 import os
+from typing import Optional
+
+from map import Map, Location
 
 
 class UserInterface:
@@ -23,6 +26,9 @@ class UserInterface:
         raise NotImplementedError
 
     def input_text(self) -> str:
+        raise NotImplementedError
+
+    def display_map(self, map_obj: Map):
         raise NotImplementedError
 
 
@@ -60,6 +66,22 @@ class ConsoleInterface(UserInterface):
     def input_text(self) -> str:
         return input(">: ")
 
+    def display_map(self, map_obj: Map):
+        def opt_loc_to_chr(loc: Optional[Location]):
+            if loc is None:
+                return ' '
+            if not loc.visited:
+                return 'X'
+            return loc.name[0]
+
+        for r_idx, r in enumerate(map_obj.grid):
+            if r_idx == 0:
+                print("╔" + "═══╤" * (map_obj.width - 1) + "═══╗")
+            else:
+                print("╟" + "───┼" * (map_obj.width - 1) + "───╢")
+            print(f"║ " + " │ ".join(map(opt_loc_to_chr, r)) + " ║")
+        print("╚" + "═══╧" * (map_obj.width - 1) + "═══╝")
+
 
 class DebugInterfaceDecorator(UserInterface):
     """
@@ -95,3 +117,6 @@ class DebugInterfaceDecorator(UserInterface):
 
     def input_text(self) -> str:
         return self._base.input_text()
+
+    def display_map(self, map_obj: Map):
+        self._base.display_map(map_obj)

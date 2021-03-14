@@ -6,16 +6,17 @@ from typing import Optional
 import random
 import yaml
 
+from map import get_map
 from ui import ConsoleInterface, DebugInterfaceDecorator
 from state import Context, State, TransientState
 
 
 with open('./data/player_options.yml', 'r') as fp:
-    player_options_config = yaml.load(fp)
+    player_options_config = yaml.safe_load(fp)
 with open('./data/enemies.yml', 'r') as fp:
-    enemies_config = yaml.load(fp)
-with open('./data/map.yml', 'r') as fp:
-    map_config = yaml.load(fp)
+    enemies_config = yaml.safe_load(fp)
+
+map_obj, map_config = get_map('./data/map.yml')
 
 
 ui = ConsoleInterface()
@@ -215,84 +216,7 @@ class TheMap(TransientState):
         ctx = self.ctx
 
         # ctx.ui.print('Key: T = Town; C = City; etc.)
-
-        if ctx.location == 'Goodshire':
-            ctx.ui.print('-----------------')
-            ctx.ui.print('| G |   |   |   |')
-            ctx.ui.print('+---+---+---+---+')
-            ctx.ui.print('| X |   |   |   |')
-            ctx.ui.print('+---+---+---+---+')
-            ctx.ui.print('|   | X |   |   |')
-            ctx.ui.print('+---+---+---+---+')
-            ctx.ui.print('|   | X | X |   |')
-            ctx.ui.print('+---+---+---+---+')
-            ctx.ui.print('|   |   |   | X |')
-            ctx.ui.print('+---------------+\n')
-
-        elif ctx.location == 'Rodez':
-            ctx.ui.print('-----------------')
-            ctx.ui.print('| G |   |   |   |')
-            ctx.ui.print('+---+---+---+---+')
-            ctx.ui.print('| R |   |   |   |')
-            ctx.ui.print('+---+---+---+---+')
-            ctx.ui.print('|   | X |   |   |')
-            ctx.ui.print('+---+---+---+---+')
-            ctx.ui.print('|   | X | X |   |')
-            ctx.ui.print('+---+---+---+---+')
-            ctx.ui.print('|   |   |   | X |')
-            ctx.ui.print('+---------------+\n')
-
-        elif ctx.location == 'Oristano':
-            ctx.ui.print('-----------------')
-            ctx.ui.print('| G |   |   |   |')
-            ctx.ui.print('+---+---+---+---+')
-            ctx.ui.print('| R |   |   |   |')
-            ctx.ui.print('+---+---+---+---+')
-            ctx.ui.print('|   | O |   |   |')
-            ctx.ui.print('+---+---+---+---+')
-            ctx.ui.print('|   | X | X |   |')
-            ctx.ui.print('+---+---+---+---+')
-            ctx.ui.print('|   |   |   | X |')
-            ctx.ui.print('+---------------+\n')
-
-        elif ctx.location == 'Thasos':
-            ctx.ui.print('-----------------')
-            ctx.ui.print('| G |   |   |   |')
-            ctx.ui.print('+---+---+---+---+')
-            ctx.ui.print('| R |   |   |   |')
-            ctx.ui.print('+---+---+---+---+')
-            ctx.ui.print('|   | O |   |   |')
-            ctx.ui.print('+---+---+---+---+')
-            ctx.ui.print('|   | T | X |   |')
-            ctx.ui.print('+---+---+---+---+')
-            ctx.ui.print('|   |   |   | X |')
-            ctx.ui.print('+---------------+\n')
-
-        elif ctx.location == 'Karabuk':
-            ctx.ui.print('-----------------')
-            ctx.ui.print('| G |   |   |   |')
-            ctx.ui.print('+---+---+---+---+')
-            ctx.ui.print('| R |   |   |   |')
-            ctx.ui.print('+---+---+---+---+')
-            ctx.ui.print('|   | O |   |   |')
-            ctx.ui.print('+---+---+---+---+')
-            ctx.ui.print('|   | T | K |   |')
-            ctx.ui.print('+---+---+---+---+')
-            ctx.ui.print('|   |   |   | X |')
-            ctx.ui.print('+---------------+\n')
-
-        elif ctx.location == 'Salem':
-            ctx.ui.print('-----------------')
-            ctx.ui.print('| G |   |   |   |')
-            ctx.ui.print('+---+---+---+---+')
-            ctx.ui.print('| R |   |   |   |')
-            ctx.ui.print('+---+---+---+---+')
-            ctx.ui.print('|   | O |   |   |')
-            ctx.ui.print('+---+---+---+---+')
-            ctx.ui.print('|   | T | K |   |')
-            ctx.ui.print('+---+---+---+---+')
-            ctx.ui.print('|   |   |   | S |')
-            ctx.ui.print('+---------------+\n')
+        ctx.ui.display_map(map_obj)
 
         return DaysToGo(self.ctx, self.default)
 
@@ -308,7 +232,7 @@ class DaysToGo(TransientState):
 
             return None
 
-        location = map_config.get("locations").get(ctx.location)
+        location = map_obj.get(ctx.location)
         distance = location.get("travel").get("distance")
         ctx.counter_set = ctx.counter = distance
 
@@ -335,10 +259,12 @@ class LocationChanger(State):
 
         ctx.adventure_state = False
 
-        location = map_config.get("locations").get(ctx.location)
+        location = map_obj.get(ctx.location)
         end_location = map_config.get("end")
 
         ctx.location = location.get("travel").get("destination")
+        map_obj.get(ctx.location).visit()
+
         blacksmith_price_generator(self.ctx)
 
         if location == end_location:
@@ -595,8 +521,8 @@ class Blacksmith(State):
 
 # Blacksmith Price Generator #
 def blacksmith_price_generator(ctx: Context):
-    location = map_config.get(ctx.location)
-    ctx.blacksmith_price = random.randint(51, 75) + location.get('blacksmith_price')
+    location = map_obj.get(ctx.location)
+    ctx.blacksmith_price = random.randint(51, 75) + location.blacksmith_price
 
 
 # Adventuring #
@@ -968,14 +894,10 @@ class Traveller(TransientState):
     def _do(self) -> Optional[State]:
         ctx = self.ctx
 
+        time_of_day = random.choice(['morning', 'evening', 'afternoon'])
+
         ctx.ui.print('A friendly adventurer approaches you and wants to trade.')
-        n = random.randint(1, 3)
-        if n == 1:
-            ctx.ui.print('"Good morning, traveler."\n')
-        if n == 2:
-            ctx.ui.print('"Good evening, traveler."\n')
-        if n == 3:
-            ctx.ui.print('"Good afternoon, traveler."\n')
+        ctx.ui.print(f'"Good {time_of_day}, traveler."\n')
 
         traveller_values(self.ctx)
 
@@ -1347,7 +1269,7 @@ def enemy_resetter(ctx: Context):
 
 # Enemy Locator and Excluder Generator #
 def enemy_locator_generator(ctx: Context):
-    location = map_config.get('locations').get(ctx.location)
+    location = map_obj.get(ctx.location)
 
     ctx.enemy_locator = ctx.location
     ctx.enemy_exclude = location.get('enemy_exclude')
