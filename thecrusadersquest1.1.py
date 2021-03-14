@@ -1246,11 +1246,8 @@ def enemy_resetter(ctx: Context):
 def enemy_locator_generator(ctx: Context):
     location = ctx.get_location()
 
-    ctx.enemy_locator = location.name
-    ctx.enemy_exclude = location.enemy_exclude
-
     ctx.enemy_number = random.randint(1, 5)
-    while ctx.enemy_number in ctx.enemy_exclude:
+    while ctx.enemy_number in location.enemy_exclude:
         ctx.enemy_number = random.randint(1, 5)
 
 

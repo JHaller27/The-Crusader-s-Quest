@@ -66,9 +66,7 @@ class Context:
 
     enemy_adjective = ''
     enemy_type = ''
-    enemy_locator = ''
     enemy_number = ''
-    enemy_exclude = 0
     enemy_battle_score = 0
     enemy_gold = 0
     enemy_arrows = 0
