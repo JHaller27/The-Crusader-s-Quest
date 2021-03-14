@@ -12,6 +12,10 @@ from state import Context, State, TransientState
 
 with open('./data/player_options.yml', 'r') as fp:
     player_options_config = yaml.load(fp)
+with open('./data/enemies.yml', 'r') as fp:
+    enemies_config = yaml.load(fp)
+with open('./data/map.yml', 'r') as fp:
+    map_config = yaml.load(fp)
 
 
 ui = ConsoleInterface()
@@ -1454,24 +1458,11 @@ def enemy_resetter(ctx: Context):
 
 # Enemy Locator and Excluder Generator #
 def enemy_locator_generator(ctx: Context):
-    if ctx.location == 'Goodshire':
-        ctx.enemy_locator = 'Goodshire'
-        ctx.enemy_exclude = [3, 4, 5]
-    if ctx.location == 'Rodez':
-        ctx.enemy_locator = 'Rodez'
-        ctx.enemy_exclude = [2, 4, 5]
-    if ctx.location == 'Oristano':
-        ctx.enemy_locator = 'Oristano'
-        ctx.enemy_exclude = [1, 2, 5]
-    if ctx.location == 'Thasos':
-        ctx.enemy_locator = 'Thasos'
-        ctx.enemy_exclude = [1, 2]
-    if ctx.location == 'Karabuk':
-        ctx.enemy_locator = 'Karabuk'
-        ctx.enemy_exclude = [1, 2, 3]
-    if ctx.location == 'Last Refuge':
-        ctx.enemy_locator = 'Last Refuge'
-        ctx.enemy_exclude = [2, 3]
+    location = map_config.get('locations').get(ctx.location)
+
+    ctx.enemy_locator = ctx.location
+    ctx.enemy_exclude = location.get('enemy_exclude')
+
     ctx.enemy_number = random.randint(1, 5)
     while ctx.enemy_number in ctx.enemy_exclude:
         ctx.enemy_number = random.randint(1, 5)
@@ -1481,70 +1472,25 @@ def enemy_locator_generator(ctx: Context):
 def enemy_type_generator(ctx: Context):
     enemy_locator_generator(ctx)
 
-    if ctx.enemy_number == 1:
-        ctx.enemy_type = 'Lone Wolf'
-        ctx.enemy_battle_score = ctx.enemy_battle_score + 35
-        ctx.enemy_specific_food = 2
-        ctx.enemy_specific_arrows = 0
-        ctx.enemy_specific_gold = 0
-        ctx.enemy_food = ctx.enemy_food + ctx.enemy_specific_food
-        ctx.enemy_arrows = ctx.enemy_arrows + ctx.enemy_specific_arrows
-        ctx.enemy_gold = ctx.enemy_gold + ctx.enemy_specific_gold
+    enemy = enemies_config.get('types')[ctx.enemy_number]
 
-    if ctx.enemy_number == 2:
-        ctx.enemy_type = 'Large Maggot'
-        ctx.enemy_battle_score = ctx.enemy_battle_score + 15
-        ctx.enemy_specific_food = 1
-        ctx.enemy_specific_arrows = 0
-        ctx.enemy_specific_gold = 0
-        ctx.enemy_food = ctx.enemy_food + ctx.enemy_specific_food
-        ctx.enemy_arrows = ctx.enemy_arrows + ctx.enemy_specific_arrows
-        ctx.enemy_gold = ctx.enemy_gold + ctx.enemy_specific_gold
-
-    if ctx.enemy_number == 3:
-        ctx.enemy_type = 'Rogue Vampire'
-        ctx.enemy_battle_score = ctx.enemy_battle_score + 55
-        ctx.enemy_specific_food = 0
-        ctx.enemy_specific_arrows = 0
-        ctx.enemy_specific_gold = 5
-        ctx.enemy_food = ctx.enemy_food + ctx.enemy_specific_food
-        ctx.enemy_arrows = ctx.enemy_arrows + ctx.enemy_specific_arrows
-        ctx.enemy_gold = ctx.enemy_gold + ctx.enemy_specific_gold
-
-    if ctx.enemy_number == 4:
-        ctx.enemy_type = 'Dark Cultist'
-        ctx.enemy_battle_score = ctx.enemy_battle_score + 85
-        ctx.enemy_specific_food = 10
-        ctx.enemy_specific_arrows = 0
-        ctx.enemy_specific_gold = 10
-        ctx.enemy_food = ctx.enemy_food + ctx.enemy_specific_food
-        ctx.enemy_arrows = ctx.enemy_arrows + ctx.enemy_specific_arrows
-        ctx.enemy_gold = ctx.enemy_gold + ctx.enemy_specific_gold
-
-    if ctx.enemy_number == 5:
-        ctx.enemy_type = 'Doppelganger'
-        ctx.enemy_battle_score = ctx.enemy_battle_score + 105
-        ctx.enemy_specific_food = 10
-        ctx.enemy_specific_arrows = 0
-        ctx.enemy_specific_gold = 10
-        ctx.enemy_food = ctx.enemy_food + ctx.enemy_specific_food
-        ctx.enemy_arrows = ctx.enemy_arrows + ctx.enemy_specific_arrows
-        ctx.enemy_gold = ctx.enemy_gold + ctx.enemy_specific_gold
-
-    # Enemy Adjective Generator #
+    ctx.enemy_type = enemy.get('name')
+    ctx.enemy_battle_score += enemy.get('battle_score')
+    ctx.enemy_specific_food = enemy.get('food')
+    ctx.enemy_specific_arrows = enemy.get('arrows')
+    ctx.enemy_specific_gold = enemy.get('gold')
+    ctx.enemy_food += ctx.enemy_specific_food
+    ctx.enemy_arrows += ctx.enemy_specific_arrows
+    ctx.enemy_gold += ctx.enemy_specific_gold
 
 
+# Enemy Adjective Generator #
 def enemy_adjective_generator(ctx: Context):
     j = random.randint(1, 3)
-    if j == 1:
-        ctx.enemy_adjective = 'Bloodthirsty'
-        ctx.enemy_battle_score = ctx.enemy_battle_score + 35
-    if j == 2:
-        ctx.enemy_adjective = 'Regular'
-        ctx.enemy_battle_score = ctx.enemy_battle_score + 0
-    if j == 3:
-        ctx.enemy_adjective = 'Starved'
-        ctx.enemy_battle_score = ctx.enemy_battle_score - 10
+
+    adj = enemies_config.get('adjectives')[j]
+    ctx.enemy_adjective = adj.get('name')
+    ctx.enemy_battle_score = adj.get('battle_score')
 
 
 # Chest #

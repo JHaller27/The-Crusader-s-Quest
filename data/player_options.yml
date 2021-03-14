@@ -1,6 +1,5 @@
 races:
-  -
-    name: Human
+  - name: Human
     hp: 25
     martial_prowess: 10
     consumption_rate: 10
@@ -8,8 +7,8 @@ races:
     gold: 100
     luck: 0
     speed: 0
-  -
-    name: Dwarf
+
+  - name: Dwarf
     hp: 50
     martial_prowess: 30
     consumption_rate: 20
@@ -17,8 +16,8 @@ races:
     gold: 200
     luck: 0
     speed: 0
-  -
-    name: Satyr
+
+  - name: Satyr
     hp: 100
     martial_prowess: 0
     consumption_rate: 20
@@ -26,8 +25,8 @@ races:
     gold: 0
     luck: 0
     speed: 0
-  -
-    name: Halfling
+
+  - name: Halfling
     hp: 25
     martial_prowess: 0
     consumption_rate: 20
@@ -35,8 +34,8 @@ races:
     gold: 100
     luck: 0
     speed: 0
-  -
-    name: Elf
+
+  - name: Elf
     hp: 10
     martial_prowess: 0
     consumption_rate: 10
@@ -44,8 +43,8 @@ races:
     gold: 100
     luck: 0
     speed: 0
-  -
-    name: Tigerman
+
+  - name: Tigerman
     hp: 25
     martial_prowess: 50
     consumption_rate: 20
@@ -53,8 +52,8 @@ races:
     gold: 0
     luck: 0
     speed: 0
-  -
-    name: Leprechaun
+
+  - name: Leprechaun
     hp: 10
     martial_prowess: 0
     consumption_rate: 0
@@ -64,8 +63,8 @@ races:
     speed: 0
 
 occupations:
-  -
-    name: Hunter
+
+  - name: Hunter
     hp: 0
     food:
       curr: 50
@@ -77,8 +76,8 @@ occupations:
       curr: 0
       max: 800
     martial_prowess: 0
-  -
-    name: Knight
+
+  - name: Knight
     hp: 100
     food:
       curr: 25
@@ -90,8 +89,8 @@ occupations:
       curr: 400
       max: 1000
     martial_prowess: 20
-  -
-    name: Adventurer
+
+  - name: Adventurer
     hp: 25
     food:
       curr: 75
@@ -103,8 +102,8 @@ occupations:
       curr: 100
       max: 800
     martial_prowess: 10
-  -
-    name: Assassin
+
+  - name: Assassin
     hp: 0
     food:
       curr: 25
@@ -116,8 +115,8 @@ occupations:
       curr: 100
       max: 1000
     martial_prowess: 60
-  -
-    name: Glutton
+
+  - name: Glutton
     hp: 25
     food:
       curr: 500

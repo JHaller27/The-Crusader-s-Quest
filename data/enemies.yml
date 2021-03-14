@@ -1,0 +1,40 @@
+types:
+  - name: Lone Wolf
+    battle_score: 35
+    food: 2
+    arrows: 0
+    gold: 0
+
+  - name: Large Maggot
+    battle_score: 15
+    food: 1
+    arrows: 0
+    gold: 0
+
+  - name: Rogue Vampire
+    battle_score: 55
+    food: 0
+    arrows: 0
+    gold: 5
+
+  - name: Dark Cultist
+    battle_score: 85
+    food: 10
+    arrows: 0
+    gold: 10
+
+  - name: Doppelganger
+    battle_score: 105
+    food: 10
+    arrows: 0
+    gold: 10
+
+adjectives:
+  - name: Bloodthirsty
+    battle_score: 35
+
+  - name: Regular
+    battle_score: 0
+
+  - name: Starved
+    battle_score: -10
