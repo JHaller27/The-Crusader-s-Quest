@@ -302,108 +302,24 @@ class DaysToGo(TransientState):
     def _do(self) -> Optional[State]:
         ctx = self.ctx
 
-        if ctx.location == 'Goodshire':
-            if not ctx.adventure_state:
-                ctx.counter_set = 7
-                ctx.counter = 7
-                ctx.ui.print('You will brave the wilds for ' + str(ctx.counter_set) + ' days.')
-                selection = ctx.ui.choose(['Continue', 'Go back'])
-                if selection == 1:
-                    return Adventuring(self.ctx)
+        if ctx.adventure_state:
+            ctx.ui.print('You have ' + str(ctx.counter) + ' days to go.')
+            ctx.ui.wait()
 
-                elif selection == 2:
-                    return Town(self.ctx)
-                else:
-                    return Town(self.ctx)
-            else:
-                ctx.ui.print('You have ' + str(ctx.counter) + ' days to go.')
-                ctx.ui.wait()
+            return None
 
-        if ctx.location == 'Rodez':
-            if not ctx.adventure_state:
-                ctx.counter_set = 11
-                ctx.counter = 11
-                ctx.ui.print('You will brave the wilds for ' + str(ctx.counter_set) + ' days.')
-                selection = ctx.ui.choose(['Continue', 'Go back'])
-                if selection == 1:
-                    ctx.ui.wait()
-                    Adventuring(self.ctx)
+        location = map_config.get("locations").get(ctx.location)
+        distance = location.get("travel").get("distance")
+        ctx.counter_set = ctx.counter = distance
 
-                if selection == 2:
-                    return Town(self.ctx)
-                else:
-                    return Town(self.ctx)
-            else:
-                ctx.ui.print('You have ' + str(ctx.counter) + ' days to go.')
-                ctx.ui.wait()
-        if ctx.location == 'Oristano':
-            if not ctx.adventure_state:
-                ctx.counter_set = 15
-                ctx.counter = 15
-                ctx.ui.print('You will brave the wilds for ' + str(ctx.counter_set) + ' days.')
-                selection = ctx.ui.choose(['Continue', 'Go back'])
-                if selection == 1:
-                    ctx.ui.wait()
-                    Adventuring(self.ctx)
+        ctx.ui.print(f"You will brave the wilds for {distance} days.")
+        selection = ctx.ui.choose(['Continue', 'Go back'])
 
-                if selection == 2:
-                    return Town(self.ctx)
-                else:
-                    return Town(self.ctx)
-            else:
-                ctx.ui.print('You have ' + str(ctx.counter) + ' days to go.')
-                ctx.ui.wait()
-        if ctx.location == 'Thasos':
-            if not ctx.adventure_state:
-                ctx.counter_set = 19
-                ctx.counter = 19
-                ctx.ui.print('You will brave the wilds for ' + str(ctx.counter_set) + ' days.')
-                selection = ctx.ui.choose(['Continue', 'Go back'])
-                if selection == 1:
-                    ctx.ui.wait()
-                    Adventuring(self.ctx)
+        if selection == 1:
+            ctx.ui.wait()
+            return Adventuring(self.ctx)
 
-                if selection == 2:
-                    return Town(self.ctx)
-                else:
-                    return Town(self.ctx)
-            else:
-                ctx.ui.print('You have ' + str(ctx.counter) + ' days to go.')
-                ctx.ui.wait()
-        if ctx.location == 'Karabuk':
-            if not ctx.adventure_state:
-                ctx.counter_set = 25
-                ctx.counter = 25
-                ctx.ui.print('You will brave the wilds for ' + str(ctx.counter_set) + ' days.')
-                selection = ctx.ui.choose(['Continue', 'Go back'])
-                if selection == 1:
-                    ctx.ui.wait()
-                    Adventuring(self.ctx)
-
-                if selection == 2:
-                    return Town(self.ctx)
-                else:
-                    return Town(self.ctx)
-            else:
-                ctx.ui.print('You have ' + str(ctx.counter) + ' days to go.')
-                ctx.ui.wait()
-        if ctx.location == 'Last Refuge':
-            if not ctx.adventure_state:
-                ctx.counter_set = 25
-                ctx.counter = 25
-                ctx.ui.print('You will brave the wilds for ' + str(ctx.counter_set) + ' days.')
-                selection = ctx.ui.choose(['Continue', 'Go back'])
-                if selection == 1:
-                    ctx.ui.wait()
-                    Adventuring(self.ctx)
-
-                if selection == 2:
-                    return Town(self.ctx)
-                else:
-                    return Town(self.ctx)
-            else:
-                ctx.ui.print('You have ' + str(ctx.counter) + ' days to go.')
-                ctx.ui.wait()
+        return Town(self.ctx)
 
 
 # Treasure Generator #

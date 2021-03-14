@@ -9,6 +9,9 @@ locations:
     col: 0
     blacksmith_price: 0
     enemy_exclude: [3,4,5]
+    travel:
+      destination: Rodez
+      distance: 7
 
   Rodez:
     description: |
@@ -17,14 +20,20 @@ locations:
     col: 0
     blacksmith_price: 25
     enemy_exclude: [2,4,5]
+    travel:
+      destination: Oristano
+      distance: 11
 
   Oristano:
     description: |
-      The surrounding trees loom over the town like giants, and block the sun\'s rays.
+      The surrounding trees loom over the town like giants, and block the sun's rays.
     row: 2
     col: 1
     blacksmith_price: 45
     enemy_exclude: [1,2,5]
+    travel:
+      destination: Thasos
+      distance: 15
 
   Thasos:
     description: |
@@ -33,6 +42,9 @@ locations:
     col: 1
     blacksmith_price: 65
     enemy_exclude: [1,2]
+    travel:
+      destination: Karabuk
+      distance: 19
 
   Karabuk:
     description: |
@@ -41,13 +53,19 @@ locations:
     col: 2
     blacksmith_price: 85
     enemy_exclude: [1,2,3]
-
-  Salem:
-    row: 4
-    col: 3
+    travel:
+      destination: Salem
+      distance: 25
 
   Last Refuge:
     row: -1
     col: -1
     blacksmith_price: 105
     enemy_exclude: [1,5]
+    travel:
+      destination: Rodez
+      distance: 25
+
+  Salem:
+    row: 4
+    col: 3
