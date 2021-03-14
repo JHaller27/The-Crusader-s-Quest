@@ -86,7 +86,7 @@ class Context:
         self.ui = ui
 
     def _run_once(self):
-        self.ui.debug(f"~~~~~~~~~~  Running state '{type(self._state).__name__}'")
+        self.ui.debug(f"Running state '{type(self._state).__name__}'")
         self._state = self._state.do()
 
     def run(self, init: Optional[State]):
