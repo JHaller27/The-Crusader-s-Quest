@@ -16,13 +16,6 @@ with open('./data/player_options.yml', 'r') as fp:
 with open('./data/enemies.yml', 'r') as fp:
     enemies_config = yaml.safe_load(fp)
 
-ui = ConsoleInterface()
-ui = DebugInterfaceDecorator(ui)
-
-map_data = get_map('./data/map.yml')
-
-global_context = Context(ui, map_data)
-
 
 # Title Screen #
 class TitleScreen(State):
@@ -1426,4 +1419,15 @@ class Salem(State):
             return Salem(self.ctx)
 
 
-global_context.run(TitleScreen(global_context))
+def main():
+    ui = ConsoleInterface()
+    ui = DebugInterfaceDecorator(ui)
+
+    map_data = get_map('./data/map.yml')
+
+    global_context = Context(ui, map_data)
+    global_context.run(TitleScreen(global_context))
+
+
+if __name__ == "__main__":
+    main()
