@@ -76,11 +76,12 @@ class SetupGame(State):
         selected_race = races[selection]
 
         ctx.player.race = selected_race.get('name')
-        ctx.player.hp = selected_race.get('hp')
         ctx.player.max_hp = selected_race.get('hp')
+        ctx.player.hp = selected_race.get('hp')
         ctx.player.martial_prowess = selected_race.get('martial_prowess')
         ctx.player.consumption_rate = selected_race.get('consumption_rate')
         ctx.player.endurance = selected_race.get('endurance')
+        ctx.player.max_gold = selected_race.get('gold')
         ctx.player.gold = selected_race.get('gold')
         ctx.player.luck = selected_race.get('luck')
         ctx.player.speed = selected_race.get('speed')
@@ -96,14 +97,14 @@ class SetupGame(State):
         selected_occupation = occupations[selection]
 
         ctx.player.occupation = selected_occupation.get('name')
-        ctx.player.hp += selected_occupation.get('hp')
         ctx.player.max_hp += selected_occupation.get('hp')
-        ctx.player.food += selected_occupation.get('food').get('curr')
+        ctx.player.hp += selected_occupation.get('hp')
         ctx.player.max_food += selected_occupation.get('food').get('max')
-        ctx.player.arrows += selected_occupation.get('arrows').get('curr')
+        ctx.player.food += selected_occupation.get('food').get('curr')
         ctx.player.max_arrows += selected_occupation.get('arrows').get('max')
-        ctx.player.gold += selected_occupation.get('arrows').get('curr')
-        ctx.player.max_gold += selected_occupation.get('arrows').get('max')
+        ctx.player.arrows += selected_occupation.get('arrows').get('curr')
+        ctx.player.max_gold += selected_occupation.get('gold').get('max')
+        ctx.player.gold += selected_occupation.get('gold').get('curr')
         ctx.player.martial_prowess += selected_occupation.get('martial_prowess')
 
         ctx.ui.clear()

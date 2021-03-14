@@ -131,6 +131,7 @@ class Context:
             self.ui.print('There is a foul stench in the air, and the ground is covered bubbling puddles of unknown origin.')
 
     def display_map(self):
+        self.ui.clear()
         self.ui.display_map(self.map)
 
     def at_end_location(self) -> bool:

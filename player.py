@@ -7,31 +7,31 @@ def sanitize_value(val: int, lower_bound: int = None, upper_bound: int = None) -
 
 
 class Player:
-    name: str
-    race: str
-    occupation: str
+    name = ''
+    race = ''
+    occupation = ''
 
-    _hp: int
-    max_hp: int
+    _hp = 0
+    max_hp = 0
 
-    _food: int
-    max_food: int
+    _food = 0
+    max_food = 0
 
-    _arrows: int
-    max_arrows: int
+    _arrows = 0
+    max_arrows = 0
 
-    _gold: int
-    max_gold: int
+    _gold = 0
+    max_gold = 0
 
-    _endurance: int
+    _endurance = 0
 
-    martial_prowess: int
-    consumption_rate: int
-    luck: int
-    speed: int
+    martial_prowess = 0
+    consumption_rate = 0
+    luck = 0
+    speed = 0
     illness = None
 
-    weapon = 'Sword'
+    weapon = ''
 
     @property
     def hp(self) -> int:
