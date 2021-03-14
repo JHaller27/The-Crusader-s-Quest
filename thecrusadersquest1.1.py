@@ -697,17 +697,8 @@ class Blacksmith(State):
 
 # Blacksmith Price Generator #
 def blacksmith_price_generator(ctx: Context):
-    ctx.blacksmith_price = random.randint(51, 75)
-    if ctx.location == 'Rodez':
-        ctx.blacksmith_price = ctx.blacksmith_price + 25
-    if ctx.location == 'Oristano':
-        ctx.blacksmith_price = ctx.blacksmith_price + 45
-    if ctx.location == 'Thasos':
-        ctx.blacksmith_price = ctx.blacksmith_price + 65
-    if ctx.location == 'Karabuk':
-        ctx.blacksmith_price = ctx.blacksmith_price + 85
-    if ctx.location == 'Last Refuge':
-        ctx.blacksmith_price = ctx.blacksmith_price + 105
+    location = map_config.get(ctx.location)
+    ctx.blacksmith_price = random.randint(51, 75) + location.get('blacksmith_price')
 
 
 # Adventuring #
