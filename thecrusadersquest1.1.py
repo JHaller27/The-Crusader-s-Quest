@@ -26,7 +26,7 @@ class title_screen_selections(State):
         if option.lower() == '1':
             return setup_game(self.ctx)
         elif option.lower() == '2':
-            return help_menu(self.ctx)
+            return title_screen_selections(self.ctx)
         elif option.lower() == '0':
             return None
         while option.lower() not in ['1', '2', '0']:
@@ -34,7 +34,7 @@ class title_screen_selections(State):
             if option.lower() == '1':
                 return setup_game(self.ctx)
             elif option.lower() == '2':
-                return help_menu(self.ctx)
+                return title_screen_selections(self.ctx)
             elif option.lower() == '0':
                 return None
 
@@ -66,15 +66,6 @@ class title_screen(State):
         ctx.ui.print('  1 Play  ')
         ctx.ui.print('  2 Help  ')
         ctx.ui.print('  0 Quit  ')
-        return title_screen_selections(self.ctx)
-
-
-class help_menu(State):
-    def do(self) -> Optional[State]:
-        ctx = self.ctx
-
-        ctx.ui.print('Put in controls')
-        ctx.ui.print('Etc.')
         return title_screen_selections(self.ctx)
 
 
