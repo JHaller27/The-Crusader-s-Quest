@@ -335,33 +335,14 @@ class LocationChanger(State):
 
         ctx.adventure_state = False
 
-        if ctx.location == 'Goodshire':
-            ctx.location = 'Rodez'
-            blacksmith_price_generator(self.ctx)
-            # treasure_generator()
+        location = map_config.get("locations").get(ctx.location)
+        end_location = map_config.get("end")
 
-        elif ctx.location == 'Rodez':
-            ctx.location = 'Oristano'
-            blacksmith_price_generator(self.ctx)
+        ctx.location = location.get("travel").get("destination")
+        blacksmith_price_generator(self.ctx)
 
-        elif ctx.location == 'Oristano':
-            ctx.location = 'Thasos'
-            blacksmith_price_generator(self.ctx)
-
-        elif ctx.location == 'Thasos':
-            ctx.location = 'Karabuk'
-            blacksmith_price_generator(self.ctx)
-
-        elif ctx.location == 'Karabuk':
-            ctx.location = 'Salem'
-            blacksmith_price_generator(self.ctx)
+        if location == end_location:
             return Salem(self.ctx)
-
-        elif ctx.location == 'Last Refuge':
-            ctx.location = 'Rodez'
-            blacksmith_price_generator(self.ctx)
-            # end_game()
-            return None
 
         return Town(self.ctx)
 
@@ -374,9 +355,10 @@ def town_description(ctx: Context):
 # Start Game #
 class StartGame(State):
     def do(self) -> Optional['State']:
-        self.ctx.location = 'Goodshire'
+        self.ctx.location = map_config.get("start")
         blacksmith_price_generator(self.ctx)
         enemy_locator_generator(self.ctx)
+
         return Town(self.ctx)
 
 
