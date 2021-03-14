@@ -19,7 +19,7 @@ def clear():
 
 
 # Title Screen #
-class title_screen(State):
+class TitleScreen(State):
     def do(self) -> Optional[State]:
         ctx = self.ctx
 
@@ -45,13 +45,13 @@ class title_screen(State):
         ctx.ui.print('The Crusader\'s Quest: Survival Text RPG.\n')
         ctx.ui.wait('play')
 
-        return setup_game(self.ctx)
+        return SetupGame(self.ctx)
 
 
 # Character Creation #
 
 # Name #
-class setup_game(State):
+class SetupGame(State):
     def do(self) -> Optional[State]:
         ctx = self.ctx
 
@@ -236,13 +236,13 @@ class setup_game(State):
         ctx.ui.print('You are ' + ctx.name + ', the ' + ctx.race + ' ' + ctx.occupation + '. You wield a ' + ctx.weapon + '.\n')
         selection = ctx.ui.choose(["Begin Adventure", "Restart"])
         if selection == 1:
-            return start_game(self.ctx)
+            return StartGame(self.ctx)
         else:
-            return title_screen(self.ctx)
+            return TitleScreen(self.ctx)
 
 
 # Death #
-class death(State):
+class Death(State):
     def do(self) -> Optional[State]:
         ctx = self.ctx
 
@@ -253,19 +253,19 @@ class death(State):
         ctx.ui.print()
         ctx.ui.wait("return to menu")
 
-        return title_screen(self.ctx)
+        return TitleScreen(self.ctx)
 
 
 # Food and Endurance Mechanic #
 
 def food_endurance_mechanic(ctx: Context):
-    ctx.food_endurance_mechanic(death)
+    ctx.food_endurance_mechanic(Death)
 
 
 # Resource Mechanics #
 
 def hp_mechanic(ctx: Context):
-    ctx.hp_mechanic(death)
+    ctx.hp_mechanic(Death)
 
 
 def gold_mechanic(ctx: Context):
@@ -309,7 +309,7 @@ def adventure_menu(ctx: Context):
 
 
 # Map ###         Update this to turn X into another symbol when that ctx.location is active
-class the_map(TransientState):
+class TheMap(TransientState):
     def _do(self) -> Optional[State]:
         ctx = self.ctx
 
@@ -393,11 +393,11 @@ class the_map(TransientState):
             ctx.ui.print('|   |   |   | S |')
             ctx.ui.print('+---------------+\n')
 
-        return days_to_go(self.ctx, self.default)
+        return DaysToGo(self.ctx, self.default)
 
 
 # Days to Go #
-class days_to_go(TransientState):
+class DaysToGo(TransientState):
     def _do(self) -> Optional[State]:
         ctx = self.ctx
 
@@ -408,12 +408,12 @@ class days_to_go(TransientState):
                 ctx.ui.print('You will brave the wilds for ' + str(ctx.counter_set) + ' days.')
                 selection = ctx.ui.choose(['Continue', 'Go back'])
                 if selection == 1:
-                    return adventuring(self.ctx)
+                    return Adventuring(self.ctx)
 
                 elif selection == 2:
-                    return town(self.ctx)
+                    return Town(self.ctx)
                 else:
-                    return town(self.ctx)
+                    return Town(self.ctx)
             else:
                 ctx.ui.print('You have ' + str(ctx.counter) + ' days to go.')
                 ctx.ui.wait()
@@ -426,12 +426,12 @@ class days_to_go(TransientState):
                 selection = ctx.ui.choose(['Continue', 'Go back'])
                 if selection == 1:
                     ctx.ui.wait()
-                    adventuring(self.ctx)
+                    Adventuring(self.ctx)
 
                 if selection == 2:
-                    return town(self.ctx)
+                    return Town(self.ctx)
                 else:
-                    return town(self.ctx)
+                    return Town(self.ctx)
             else:
                 ctx.ui.print('You have ' + str(ctx.counter) + ' days to go.')
                 ctx.ui.wait()
@@ -443,12 +443,12 @@ class days_to_go(TransientState):
                 selection = ctx.ui.choose(['Continue', 'Go back'])
                 if selection == 1:
                     ctx.ui.wait()
-                    adventuring(self.ctx)
+                    Adventuring(self.ctx)
 
                 if selection == 2:
-                    return town(self.ctx)
+                    return Town(self.ctx)
                 else:
-                    return town(self.ctx)
+                    return Town(self.ctx)
             else:
                 ctx.ui.print('You have ' + str(ctx.counter) + ' days to go.')
                 ctx.ui.wait()
@@ -460,12 +460,12 @@ class days_to_go(TransientState):
                 selection = ctx.ui.choose(['Continue', 'Go back'])
                 if selection == 1:
                     ctx.ui.wait()
-                    adventuring(self.ctx)
+                    Adventuring(self.ctx)
 
                 if selection == 2:
-                    return town(self.ctx)
+                    return Town(self.ctx)
                 else:
-                    return town(self.ctx)
+                    return Town(self.ctx)
             else:
                 ctx.ui.print('You have ' + str(ctx.counter) + ' days to go.')
                 ctx.ui.wait()
@@ -477,12 +477,12 @@ class days_to_go(TransientState):
                 selection = ctx.ui.choose(['Continue', 'Go back'])
                 if selection == 1:
                     ctx.ui.wait()
-                    adventuring(self.ctx)
+                    Adventuring(self.ctx)
 
                 if selection == 2:
-                    return town(self.ctx)
+                    return Town(self.ctx)
                 else:
-                    return town(self.ctx)
+                    return Town(self.ctx)
             else:
                 ctx.ui.print('You have ' + str(ctx.counter) + ' days to go.')
                 ctx.ui.wait()
@@ -494,12 +494,12 @@ class days_to_go(TransientState):
                 selection = ctx.ui.choose(['Continue', 'Go back'])
                 if selection == 1:
                     ctx.ui.wait()
-                    adventuring(self.ctx)
+                    Adventuring(self.ctx)
 
                 if selection == 2:
-                    return town(self.ctx)
+                    return Town(self.ctx)
                 else:
-                    return town(self.ctx)
+                    return Town(self.ctx)
             else:
                 ctx.ui.print('You have ' + str(ctx.counter) + ' days to go.')
                 ctx.ui.wait()
@@ -512,7 +512,7 @@ class days_to_go(TransientState):
 
 
 # Location Changer #
-class location_changer(State):
+class LocationChanger(State):
     def do(self) -> Optional['State']:
         ctx = self.ctx
 
@@ -538,7 +538,7 @@ class location_changer(State):
         elif ctx.location == 'Karabuk':
             ctx.location = 'Salem'
             blacksmith_price_generator(self.ctx)
-            return salem(self.ctx)
+            return Salem(self.ctx)
 
         elif ctx.location == 'Last Refuge':
             ctx.location = 'Rodez'
@@ -546,7 +546,7 @@ class location_changer(State):
             # end_game()
             return None
 
-        return town(self.ctx)
+        return Town(self.ctx)
 
 
 # Town Description #
@@ -555,16 +555,16 @@ def town_description(ctx: Context):
 
 
 # Start Game #
-class start_game(State):
+class StartGame(State):
     def do(self) -> Optional['State']:
         self.ctx.location = 'Goodshire'
         blacksmith_price_generator(self.ctx)
         enemy_locator_generator(self.ctx)
-        return town(self.ctx)
+        return Town(self.ctx)
 
 
 # Town #
-class town(State):
+class Town(State):
     def do(self) -> Optional['State']:
         ctx = self.ctx
 
@@ -575,20 +575,20 @@ class town(State):
         selection = ctx.ui.choose(["Tavern", "Blacksmith", "Character", "Adventure"])
         if selection == 1:
             clear()
-            return tavern(self.ctx)
+            return Tavern(self.ctx)
 
         if selection == 4:
             clear()
             ctx.counter = 0
-            return the_map(ctx, LeaveTown)
+            return TheMap(ctx, LeaveTown)
 
         if selection == 2:
             clear()
-            return blacksmith(self.ctx)
+            return Blacksmith(self.ctx)
         if selection == 3:
             clear()
             char_menu(self.ctx)
-        return town(self.ctx)
+        return Town(self.ctx)
 
 
 class LeaveTown(State):
@@ -597,11 +597,11 @@ class LeaveTown(State):
 
         ctx.ui.print('You will brave the wilds for 5 days.')
         ctx.ui.wait()
-        return adventuring(self.ctx)
+        return Adventuring(self.ctx)
 
 
 # Tavern #
-class tavern(State):
+class Tavern(State):
     def do(self) -> Optional['State']:
         ctx = self.ctx
 
@@ -624,39 +624,39 @@ class tavern(State):
                 hp_mechanic(self.ctx)
                 ctx.gold = ctx.gold - 1
                 ctx.ui.wait('continue')
-            return tavern(self.ctx)
+            return Tavern(self.ctx)
 
         if selection == 2:
             ctx.ui.print('How much food do you want to buy?')
             ctx.food_price = 5
             n = ctx.ui.input_text()
             if n == 0:
-                return tavern(self.ctx)
+                return Tavern(self.ctx)
             n = int(n)
             total_cost = n * ctx.food_price
             if total_cost > ctx.gold:
                 ctx.ui.print('You do not have enough gold to buy ' + str(n) + ' food.')
                 ctx.ui.wait()
-                return tavern(self.ctx)
+                return Tavern(self.ctx)
             elif total_cost <= ctx.gold:
                 ctx.food = ctx.food + n
                 food_mechanic(self.ctx)
                 ctx.gold = ctx.gold - total_cost
                 ctx.ui.print('You complete the transaction')
                 ctx.ui.wait()
-                return tavern(self.ctx)
+                return Tavern(self.ctx)
         if selection == 3:
             ctx.ui.print('How much food do you want to sell?')
             ctx.food_sell = 3
             n = ctx.ui.input_text()
             if n == 0:
-                return tavern(self.ctx)
+                return Tavern(self.ctx)
             n = int(n)
             total_sell = n * ctx.food_sell
             if ctx.food < n:
                 ctx.ui.print('You do not have that much food.')
                 ctx.ui.wait()
-                return blacksmith(self.ctx)
+                return Blacksmith(self.ctx)
             if ctx.food >= n:
                 ctx.food = ctx.food - n
                 ctx.gold = ctx.gold + total_sell
@@ -664,17 +664,17 @@ class tavern(State):
                 gold_mechanic(self.ctx)
                 ctx.ui.wait()
                 clear()
-                return tavern(self.ctx)
+                return Tavern(self.ctx)
         if selection == 4:
-            return talk(self.ctx)
+            return Talk(self.ctx)
         if selection == 5:
-            return town(self.ctx)
+            return Town(self.ctx)
         else:
-            return tavern(self.ctx)
+            return Tavern(self.ctx)
 
 
 # Talk #
-class talk(State):
+class Talk(State):
     def do(self) -> Optional['State']:
         ctx = self.ctx
 
@@ -718,11 +718,11 @@ class talk(State):
         if dialogue == 10:
             ctx.ui.print('The good thing about resting at ' + ctx.location + ' Inn is that you get a complimentary meal.')
         ctx.ui.wait()
-        return tavern(self.ctx)
+        return Tavern(self.ctx)
 
 
 # Blacksmith #
-class blacksmith(State):
+class Blacksmith(State):
     def do(self) -> Optional['State']:
         ctx = self.ctx
 
@@ -751,7 +751,7 @@ class blacksmith(State):
                 ctx.martial_prowess = ctx.martial_prowess + v
                 ctx.ui.print('Your martial prowess increases by ' + str(v) + '.')
                 ctx.ui.wait()
-            return blacksmith(self.ctx)
+            return Blacksmith(self.ctx)
         if selection == 2:
             ctx.ui.print('How many arrows do you want to buy?')
             arrow_price = 5
@@ -761,14 +761,14 @@ class blacksmith(State):
             if total_cost > ctx.gold:
                 ctx.ui.print('You do not have enough gold to buy ' + str(n) + ' arrows.')
                 ctx.ui.wait()
-                return blacksmith(self.ctx)
+                return Blacksmith(self.ctx)
             if total_cost <= ctx.gold:
                 ctx.arrows = ctx.arrows + n
                 arrows_mechanic(self.ctx)
                 ctx.gold = ctx.gold - total_cost
                 ctx.ui.print('You complete the transaction')
                 ctx.ui.wait()
-                return blacksmith(self.ctx)
+                return Blacksmith(self.ctx)
         if selection == 3:
             ctx.ui.print('How many arrows do you want to sell?')
             arrow_sell = 3
@@ -778,7 +778,7 @@ class blacksmith(State):
             if ctx.arrows < n:
                 ctx.ui.print('You do not have that many arrows.')
                 ctx.ui.wait()
-                return blacksmith(self.ctx)
+                return Blacksmith(self.ctx)
             if ctx.arrows >= n:
                 ctx.arrows = ctx.arrows - n
                 ctx.gold = ctx.gold + total_sell
@@ -786,12 +786,12 @@ class blacksmith(State):
                 gold_mechanic(self.ctx)
                 ctx.ui.wait()
                 clear()
-                return blacksmith(self.ctx)
+                return Blacksmith(self.ctx)
 
         if selection == 4:
-            return town(self.ctx)
+            return Town(self.ctx)
         else:
-            return blacksmith(self.ctx)
+            return Blacksmith(self.ctx)
 
 
 # Blacksmith Price Generator #
@@ -810,7 +810,7 @@ def blacksmith_price_generator(ctx: Context):
 
 
 # Adventuring #
-class adventuring(State):
+class Adventuring(State):
     def do(self) -> Optional['State']:
         ctx = self.ctx
 
@@ -828,17 +828,17 @@ class adventuring(State):
                 food_endurance_mechanic(ctx)
                 adventure_menu(ctx)
 
-                return random_event(ctx, adventuring)
+                return RandomEvent(ctx, Adventuring)
             if selection == 2:
-                return hunt(self.ctx, adventuring)
+                return Hunt(self.ctx, Adventuring)
             if selection == 3:
-                return rest(self.ctx, adventuring)
+                return Rest(self.ctx, Adventuring)
             if selection == 4:
-                return the_map(self.ctx, adventuring)
+                return TheMap(self.ctx, Adventuring)
             else:
-                return adventuring(self.ctx)
+                return Adventuring(self.ctx)
         else:
-            return death(self.ctx)
+            return Death(self.ctx)
 
 
 class EndAdventure(State):
@@ -852,11 +852,11 @@ class EndAdventure(State):
         ctx.adventure_state = False
         ctx.ui.wait()
 
-        return location_changer(self.ctx)
+        return LocationChanger(self.ctx)
 
 
 # Rest #
-class rest(TransientState):
+class Rest(TransientState):
     def _do(self) -> Optional[State]:
         ctx = self.ctx
 
@@ -867,7 +867,7 @@ class rest(TransientState):
             ctx.ui.print('You rest for one day. Your HP is already maxed out.')
 
             ctx.ui.wait()
-            return adventuring(self.ctx)
+            return Adventuring(self.ctx)
 
         ctx.ui.print('You rest for one day, gaining ' + str(x) + ' HP.')
         ctx.hp = ctx.hp + x
@@ -877,7 +877,7 @@ class rest(TransientState):
 
 
 # Hunt #
-class hunt(TransientState):
+class Hunt(TransientState):
     def _do(self) -> Optional[State]:
         ctx = self.ctx
 
@@ -887,7 +887,7 @@ class hunt(TransientState):
         if ctx.arrows == 0:
             ctx.ui.print('You do not have any arrows to hunt with.')
             ctx.ui.wait()
-            return adventuring(self.ctx)
+            return Adventuring(self.ctx)
 
         elif ctx.arrows < x:
             adventure_menu(self.ctx)
@@ -914,55 +914,55 @@ class hunt(TransientState):
 #
 # Random Events #
 #
-class random_event(TransientState):
+class RandomEvent(TransientState):
     def _do(self) -> Optional[State]:
         ctx = self.ctx
 
         n = random.randint(1, 20)
         if n == 1:
-            return chest(ctx, self.default)
+            return Chest(ctx, self.default)
         if n == 2:
-            return fight(ctx, self.default)
+            return Fight(ctx, self.default)
         if n == 3:
-            return robbed(ctx, self.default)
+            return Robbed(ctx, self.default)
         if n == 4:
-            return traveller(ctx, self.default)
+            return Traveller(ctx, self.default)
         if n == 5:
-            return damaged(ctx, self.default)
+            return Damaged(ctx, self.default)
         if n == 6:
-            return miracle(ctx, self.default)
+            return Miracle(ctx, self.default)
         if n == 7:
-            return mushroom(ctx, self.default)
+            return Mushroom(ctx, self.default)
         if n == 8:
-            return nothing(ctx, self.default)
+            return Nothing(ctx, self.default)
         if n == 9:
-            return fight(ctx, self.default)
+            return Fight(ctx, self.default)
         if n == 10:
-            return fight(ctx, self.default)
+            return Fight(ctx, self.default)
         if n == 11:
-            return chest(ctx, self.default)
+            return Chest(ctx, self.default)
         if n == 12:
-            return fight(ctx, self.default)
+            return Fight(ctx, self.default)
         if n == 13:
-            return robbed(ctx, self.default)
+            return Robbed(ctx, self.default)
         if n == 14:
-            return traveller(ctx, self.default)
+            return Traveller(ctx, self.default)
         if n == 15:
-            return damaged(ctx, self.default)
+            return Damaged(ctx, self.default)
         if n == 16:
-            return mystic(ctx, self.default)
+            return Mystic(ctx, self.default)
         if n == 17:
-            return bigger_bag(ctx, self.default)
+            return BiggerBag(ctx, self.default)
         if n == 18:
-            return lose_day(ctx, self.default)
+            return LoseDay(ctx, self.default)
         if n == 19:
-            return fight(ctx, self.default)
+            return Fight(ctx, self.default)
         if n == 20:
-            return fight(ctx, self.default)
+            return Fight(ctx, self.default)
 
 
 # Mushroom #
-class mushroom(TransientState):
+class Mushroom(TransientState):
     def _do(self) -> Optional[State]:
         ctx = self.ctx
 
@@ -999,17 +999,17 @@ class mushroom(TransientState):
                     ctx.endurance = 0
                     ctx.ui.print('You eat the mushroom, and then fall to the ground, foaming at the mouth.')
                     ctx.ui.wait()
-                    return death(self.ctx)
+                    return Death(self.ctx)
 
         elif selection == 2:
             ctx.ui.print('You leave the mushroom.')
         else:
-            return mushroom(self.ctx, self.default)
+            return Mushroom(self.ctx, self.default)
         ctx.ui.wait()
 
 
 # Miracle #
-class miracle(TransientState):
+class Miracle(TransientState):
     def _do(self) -> Optional[State]:
         ctx = self.ctx
 
@@ -1034,11 +1034,11 @@ class miracle(TransientState):
                 hp_mechanic(self.ctx)
             ctx.ui.wait()
         else:
-            return nothing(self.ctx, self.default)
+            return Nothing(self.ctx, self.default)
 
 
 # Bigger Bag #
-class bigger_bag(TransientState):
+class BiggerBag(TransientState):
     def _do(self) -> Optional[State]:
         ctx = self.ctx
 
@@ -1066,7 +1066,7 @@ class bigger_bag(TransientState):
 
 
 # Lose a Day #
-class lose_day(TransientState):
+class LoseDay(TransientState):
     def _do(self) -> Optional[State]:
         ctx = self.ctx
 
@@ -1102,7 +1102,7 @@ class lose_day(TransientState):
 
 
 # Mystic #
-class mystic(TransientState):
+class Mystic(TransientState):
     def _do(self) -> Optional[State]:
         ctx = self.ctx
 
@@ -1124,11 +1124,11 @@ class mystic(TransientState):
             ctx.ui.print('Your martial prowess increases by 10.')
             ctx.ui.wait()
         else:
-            return mystic(self.ctx, self.default)
+            return Mystic(self.ctx, self.default)
 
 
 # Nothing #
-class nothing(TransientState):
+class Nothing(TransientState):
     def _do(self) -> Optional[State]:
         ctx = self.ctx
 
@@ -1139,7 +1139,7 @@ class nothing(TransientState):
 
 
 # Damaged (Random Event) #
-class damaged(TransientState):
+class Damaged(TransientState):
     def _do(self) -> Optional[State]:
         ctx = self.ctx
 
@@ -1174,7 +1174,7 @@ class damaged(TransientState):
 
 
 # Traveller #
-class traveller(TransientState):
+class Traveller(TransientState):
     def _do(self) -> Optional[State]:
         ctx = self.ctx
 
@@ -1399,13 +1399,13 @@ def traveller_generation(ctx: Context):
 
 
 # Robbed #
-class robbed(TransientState):
+class Robbed(TransientState):
     def _do(self) -> Optional[State]:
         ctx = self.ctx
 
         x = random.randint(1, 3)
         if ctx.food == 0 and ctx.arrows == 0 and ctx.gold == 0:
-            return nothing(self.ctx, self.default)
+            return Nothing(self.ctx, self.default)
         elif x == 1:
             v = random.randint(1, 50)
             if ctx.food < v:
@@ -1453,7 +1453,7 @@ def doppelganger(ctx: Context):
 
 
 # Fight #
-class fight(TransientState):
+class Fight(TransientState):
     def _do(self) -> Optional[State]:
         ctx = self.ctx
 
@@ -1462,17 +1462,17 @@ class fight(TransientState):
         doppelganger(ctx)
         selection = ctx.ui.choose(["Fight", "Flee"])
         if selection == 1:
-            return fight_simulation(ctx)
+            return FightSimulation(ctx)
 
         if selection == 2:
-            return flee_fight(ctx)
+            return FleeFight(ctx)
 
         else:
-            return flee_fight(ctx)
+            return FleeFight(ctx)
 
 
 # Fight Simulation #
-class fight_simulation(State):
+class FightSimulation(State):
     def do(self) -> Optional['State']:
         ctx = self.ctx
 
@@ -1483,7 +1483,7 @@ class fight_simulation(State):
         # adventure_menu()
         ctx.counter = ctx.counter - 1
 
-        return adventuring(self.ctx)
+        return Adventuring(self.ctx)
 
 
 # Enemy Loot #
@@ -1517,7 +1517,7 @@ def your_damage_taken(ctx: Context):
 
 
 # Flee Fight #
-class flee_fight(State):
+class FleeFight(State):
     def do(self) -> Optional['State']:
         ctx = self.ctx
 
@@ -1529,10 +1529,10 @@ class flee_fight(State):
         elif n == 2:
             ctx.ui.print('You failed to flee the fight.')
             ctx.ui.wait()
-            return fight_simulation(self.ctx)
+            return FightSimulation(self.ctx)
 
         ctx.counter = ctx.counter - 1
-        return adventuring(self.ctx)
+        return Adventuring(self.ctx)
 
 
 # Enemy Generator #
@@ -1651,7 +1651,7 @@ def enemy_adjective_generator(ctx: Context):
 
 
 # Chest #
-class chest(TransientState):
+class Chest(TransientState):
     def _do(self) -> Optional[State]:
         ctx = self.ctx
 
@@ -1677,17 +1677,17 @@ class chest(TransientState):
             # ctx.ui.print('It was booby trapped. A dart flies out and hits you for 20 damage.')
             # chest_loot()
             if a == 3:
-                return chest_loot(self.ctx)
+                return ChestLoot(self.ctx)
 
         elif selection == 2:
             ctx.ui.print()
 
         else:
-            return chest(self.ctx, self.default)
+            return Chest(self.ctx, self.default)
 
 
 # Chest Loot #
-class chest_loot(State):
+class ChestLoot(State):
     def do(self) -> Optional['State']:
         ctx = self.ctx
 
@@ -1713,7 +1713,7 @@ class chest_loot(State):
 
 
 # Salem #
-class salem(State):
+class Salem(State):
     def do(self) -> Optional['State']:
         ctx = self.ctx
 
@@ -1758,7 +1758,7 @@ class salem(State):
                 'You join the forces of Chernobog, the Prince of Darkness, and forsake your old way of life. You both combine your powers and forge a New Dawn.')
             ctx.ui.print()
             ctx.ui.wait('end game')
-            return title_screen(self.ctx)
+            return TitleScreen(self.ctx)
 
         elif selection == 2:
             ctx.ui.print('"Very well, then." Chernobog stands up.')
@@ -1778,7 +1778,7 @@ class salem(State):
 
                 ctx.ui.print('Occupation: ' + ctx.occupation + '')
                 ctx.ui.wait('end game')
-                return title_screen(self.ctx)
+                return TitleScreen(self.ctx)
 
             else:
                 ctx.hp = 0.1
@@ -1786,10 +1786,10 @@ class salem(State):
                 ctx.ui.print()
                 ctx.ui.print('You have lost the fight, letting Chernobog win. He enslaves you for all eternity, and he takes over the world.\n')
                 ctx.ui.wait('end game')
-                return title_screen(self.ctx)
+                return TitleScreen(self.ctx)
 
         else:
-            return salem(self.ctx)
+            return Salem(self.ctx)
 
 
-global_context.run(title_screen(global_context))
+global_context.run(TitleScreen(global_context))
