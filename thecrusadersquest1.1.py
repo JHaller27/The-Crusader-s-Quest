@@ -24,16 +24,12 @@ map_data = get_map('./data/map.yml')
 global_context = Context(ui, map_data)
 
 
-def clear():
-    global_context.ui.clear()
-
-
 # Title Screen #
 class TitleScreen(State):
     def do(self) -> Optional[State]:
         ctx = self.ctx
 
-        clear()
+        ctx.ui.clear()
         ctx.ui.print(
             '#####################################################################################################################')
         ctx.ui.print(
@@ -77,7 +73,7 @@ class SetupGame(State):
         ctx.heal_item = 0
         ctx.endurance = 10
         ctx.adventure_state = False
-        clear()
+        ctx.ui.clear()
         ctx.ui.print(
             'The Antipope is defiling the holiest religious site in the world. You are a warrior monk from the Freemasons, and it is up to you to destroy the Antipope.\n')
         ctx.ui.print('You begin your journey in Goodshire, one of the many towns you hope to pass through.\n')
@@ -86,7 +82,7 @@ class SetupGame(State):
         ctx.name = ctx.ui.input_text()
 
         # Race #
-        clear()
+        ctx.ui.clear()
         ctx.ui.print('What is your race?\n')
 
         races = player_options_config.get('races')
@@ -104,7 +100,7 @@ class SetupGame(State):
         ctx.luck = selected_race.get('luck')
         ctx.speed = selected_race.get('speed')
 
-        clear()
+        ctx.ui.clear()
 
         # Occupation #
         ctx.ui.print('What is your occupation?\n')
@@ -125,14 +121,14 @@ class SetupGame(State):
         ctx.max_gold += selected_occupation.get('arrows').get('max')
         ctx.martial_prowess += selected_occupation.get('martial_prowess')
 
-        clear()
+        ctx.ui.clear()
 
         ctx.ui.print('What kind of weapon do you want to use? (ie. sword, poleaxe, etc.)')
 
         ctx.weapon = ctx.ui.input_text()
         gold_mechanic(self.ctx)
 
-        clear()
+        ctx.ui.clear()
 
         ctx.ui.print('You are ' + ctx.name + ', the ' + ctx.race + ' ' + ctx.occupation + '. You wield a ' + ctx.weapon + '.\n')
         selection = ctx.ui.choose(["Begin Adventure", "Restart"])
@@ -147,7 +143,7 @@ class Death(State):
     def do(self) -> Optional[State]:
         ctx = self.ctx
 
-        clear()
+        ctx.ui.clear()
         ctx.ui.print('You have died.\n')
         ctx.ui.wait()
         char_menu(self.ctx)
@@ -199,13 +195,13 @@ def arrows_mechanic(ctx: Context):
 
 # Character Menu #
 def char_menu(ctx: Context):
-    clear()
+    ctx.ui.clear()
     ctx.char_menu()
 
 
 # Adventure Menu #
 def adventure_menu(ctx: Context):
-    clear()
+    ctx.ui.clear()
     ctx.adventure_menu()
 
 
@@ -288,25 +284,25 @@ class Town(State):
     def do(self) -> Optional['State']:
         ctx = self.ctx
 
-        clear()
+        ctx.ui.clear()
         ctx.ui.print('You are in ' + ctx.location + '.')
         town_description(ctx)
         ctx.ui.print()
         selection = ctx.ui.choose(["Tavern", "Blacksmith", "Character", "Adventure"])
         if selection == 1:
-            clear()
+            ctx.ui.clear()
             return Tavern(self.ctx)
 
         if selection == 4:
-            clear()
+            ctx.ui.clear()
             ctx.counter = 0
             return TheMap(ctx, LeaveTown)
 
         if selection == 2:
-            clear()
+            ctx.ui.clear()
             return Blacksmith(self.ctx)
         if selection == 3:
-            clear()
+            ctx.ui.clear()
             char_menu(self.ctx)
         return Town(self.ctx)
 
@@ -325,7 +321,7 @@ class Tavern(State):
     def do(self) -> Optional['State']:
         ctx = self.ctx
 
-        clear()
+        ctx.ui.clear()
         ctx.ui.print('######################')
         ctx.ui.print('Gold: ' + str(ctx.gold) + '/' + str(ctx.max_gold) + '')
         ctx.ui.print('HP: ' + str(ctx.hp) + '/' + str(ctx.max_hp) + '')
@@ -383,7 +379,7 @@ class Tavern(State):
                 ctx.ui.print('You complete the transaction')
                 gold_mechanic(self.ctx)
                 ctx.ui.wait()
-                clear()
+                ctx.ui.clear()
                 return Tavern(self.ctx)
         if selection == 4:
             return Talk(self.ctx)
@@ -446,7 +442,7 @@ class Blacksmith(State):
     def do(self) -> Optional['State']:
         ctx = self.ctx
 
-        clear()
+        ctx.ui.clear()
         ctx.ui.print('######################')
         ctx.ui.print('Gold: ' + str(ctx.gold) + '/' + str(ctx.max_gold) + '')
         ctx.ui.print('Arrows: ' + str(ctx.arrows) + '/' + str(ctx.max_arrows) + '')
@@ -505,7 +501,7 @@ class Blacksmith(State):
                 ctx.ui.print('You complete the transaction')
                 gold_mechanic(self.ctx)
                 ctx.ui.wait()
-                clear()
+                ctx.ui.clear()
                 return Blacksmith(self.ctx)
 
         if selection == 4:
@@ -532,7 +528,7 @@ class Adventuring(State):
         if ctx.hp > 0:
             adventure_menu(self.ctx)
             selection = ctx.ui.choose(["Continue", "Hunt", "Rest", "Map"])
-            clear()
+            ctx.ui.clear()
             if selection == 1:
                 ctx.counter = ctx.counter - 1
 
@@ -557,7 +553,7 @@ class EndAdventure(State):
         ctx = self.ctx
 
         ctx.counter = 0
-        clear()
+        ctx.ui.clear()
         adventure_menu(self.ctx)
         ctx.ui.print('You have survived the trip.')
         ctx.adventure_state = False
@@ -1369,7 +1365,7 @@ class Salem(State):
         ctx.display_map()
         ctx.ui.print('Salem\n')
         ctx.ui.wait()
-        clear()
+        ctx.ui.clear()
 
         ctx.ui.print(
             'You enter the ancient city of Salem, now blackened with fire and as silent as a graveyard, and see a man who looks like a commoner lounging upon a throne of skeletons in the courtyard.')
@@ -1377,7 +1373,7 @@ class Salem(State):
         ctx.ui.print('Type \'who are you?\'')
         ctx.ui.input_text()
 
-        clear()
+        ctx.ui.clear()
         ctx.ui.print('"I am the called by your order the Antipope or the Prince of Darkness, but my birth name is Chernobog."')
         ctx.ui.print(
             '"As you can see, I have already razed Salem. Your sacred temples and artifacts are totally destroyed. You have failed."')
@@ -1388,7 +1384,7 @@ class Salem(State):
             '"If you decline, I won\'t kill you, but I will beat you within an inch of your life and enslave you for eternity."\n')
         ctx.ui.print('"The choice is yours, ' + ctx.name + '."\n')
         selection = ctx.ui.choose(["Accept offer", "Decline offer"])
-        clear()
+        ctx.ui.clear()
 
         if selection == 1:
             char_menu(ctx)
@@ -1411,7 +1407,7 @@ class Salem(State):
                     'Your surroundings shimmer, and the city of Salem transforms from its ruined state to its former glory. You have succeeded in every goal.')
                 ctx.ui.wait()
                 char_menu(ctx)
-                clear()
+                ctx.ui.clear()
                 ctx.ui.print('You win!')
 
                 ctx.ui.print('Occupation: ' + ctx.occupation + '')
