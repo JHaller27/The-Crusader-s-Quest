@@ -86,8 +86,6 @@ class Context:
         self.ui = ui
         self.map = map_obj
 
-        self.location = self.map.start.name
-
     def _run_once(self):
         self.ui.debug(f"Running state '{type(self._state).__name__}'")
         self._state = self._state.do()
@@ -98,13 +96,15 @@ class Context:
         while self._state is not None:
             self._run_once()
 
+    @property
+    def location(self) -> str:
+        return self.map.current.name
+
     def get_location(self) -> Location:
         return self.map.get(self.location)
 
     def set_location(self, loc: str):
-        self.location = loc
-        loc_obj = self.map.get(loc)
-        loc_obj.visit()
+        self.map.set_location(loc)
 
     def char_menu(self):
         self.ui.print('######################')

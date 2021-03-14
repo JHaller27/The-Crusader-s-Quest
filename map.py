@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, Union
 import yaml
 
 
@@ -43,6 +43,7 @@ class Map:
 
         self._start = None
         self._end = None
+        self._current = None
 
         self._locations = dict()
         self._grid = [[None for _ in range(self._width)] for _ in range(self._height)]
@@ -69,6 +70,18 @@ class Map:
         assert self._end is not None, "End not set yet"
         return self._end
 
+    @property
+    def current(self) -> Location:
+        assert self._current is not None, "No current location"
+        return self._current
+
+    def set_location(self, val: Union[Location, str]):
+        if isinstance(val, str):
+            val = self.get(val)
+
+        self._current = val
+        self._current.visit()
+
     def add_location(self, loc: Location):
         self._locations[loc.name] = loc
         self._grid[loc.row][loc.col] = loc
@@ -76,6 +89,9 @@ class Map:
     def set_start(self, name: str):
         assert name in self._locations, "Invalid start location name"
         self._start = name
+
+        if self._current is None:
+            self._current = self._start
 
     def set_end(self, name: str):
         assert name in self._locations, "Invalid end location name"
