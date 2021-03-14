@@ -9,6 +9,7 @@ import yaml
 from map import get_map
 from ui import ConsoleInterface, DebugInterfaceDecorator
 from state import Context, State, TransientState
+from enemy import get_enemy
 
 
 with open('./data/player_options.yml', 'r') as fp:
@@ -264,8 +265,6 @@ def town_description(ctx: Context):
 # Start Game #
 class StartGame(State):
     def do(self) -> Optional[State]:
-        enemy_locator_generator(self.ctx)
-
         return Town(self.ctx)
 
 
@@ -1135,8 +1134,8 @@ class Robbed(TransientState):
 
 # Doppelganger #
 def doppelganger(ctx: Context):
-    if ctx.enemy_type == 'Doppelganger':
-        ctx.ui.print('The doppelganger is wielding a ' + ctx.weapon + ' exactly like yours.')
+    if ctx.enemy.is_type("Doppelganger"):
+        ctx.ui.print(f"The doppelganger is wielding a {ctx.weapon} exactly like yours.")
 
 
 # Fight #
@@ -1145,7 +1144,7 @@ class Fight(TransientState):
         ctx = self.ctx
 
         enemy_generator(ctx)
-        ctx.ui.print('You see a ' + ctx.enemy_adjective + ' ' + ctx.enemy_type + ' approaching.')
+        ctx.ui.print(f"You see a {ctx.enemy.name} approaching.")
         doppelganger(ctx)
         selection = ctx.ui.choose(["Fight", "Flee"])
         if selection == 1:
@@ -1175,17 +1174,14 @@ class FightSimulation(State):
 
 # Enemy Loot #
 def enemy_loot(ctx: Context):
-    f = random.randint(1, 10)
-    ctx.enemy_food = ctx.enemy_food + f
-    ctx.food = ctx.food + ctx.enemy_food
-    a = random.randint(1, 5)
-    ctx.enemy_arrows = ctx.enemy_arrows + a
-    ctx.arrows = ctx.arrows + ctx.enemy_arrows
-    g = random.randint(1, 10)
-    ctx.enemy_gold = ctx.enemy_gold + g
-    ctx.gold = ctx.gold + ctx.enemy_gold
-    ctx.ui.print('You found ' + str(ctx.enemy_food) + ' food, ' + str(ctx.enemy_arrows) + ' arrows, and ' + str(
-        ctx.enemy_gold) + ' gold on the corpse.')
+    ctx.food += ctx.enemy.food
+    ctx.arrows += ctx.enemy.arrows
+    ctx.gold += ctx.enemy.gold
+
+    ctx.ui.print(f"You found {ctx.enemy.food} food, "
+                 f"{ctx.enemy.arrows} arrows, and"
+                 f"{ctx.enemy.gold} gold on the corpse.")
+
     food_mechanic(ctx)
     arrows_mechanic(ctx)
     gold_mechanic(ctx)
@@ -1193,14 +1189,14 @@ def enemy_loot(ctx: Context):
 
 # Your Damage Taken #
 def your_damage_taken(ctx: Context):
-    ctx.damage_taken = ctx.enemy_battle_score - ctx.martial_prowess
-    ctx.hp = int(ctx.hp - ctx.damage_taken)
-    if ctx.damage_taken < 1:
-        ctx.hp = ctx.hp + ctx.damage_taken
-        ctx.damage_taken = 0
-        ctx.ui.print('The enemy was slain, and you took no damage.')
+    damage_taken = max(ctx.enemy.battle_score - ctx.martial_prowess, 0)
+
+    ctx.hp -= damage_taken
+
+    if damage_taken < 1:
+        ctx.ui.print("The enemy was slain, and you took no damage.")
     else:
-        ctx.ui.print('The enemy was slain, but you took ' + str(ctx.damage_taken) + ' damage.')
+        ctx.ui.print(f"The enemy was slain, but you took {damage_taken} damage.")
 
 
 # Flee Fight #
@@ -1224,56 +1220,18 @@ class FleeFight(State):
 
 # Enemy Generator #
 def enemy_generator(ctx: Context):
-    enemy_resetter(ctx)
-    enemy_adjective_generator(ctx)
-    enemy_type_generator(ctx)
-
-
-# Enemy Resetter #
-def enemy_resetter(ctx: Context):
-    ctx.enemy_type = ''
-    ctx.enemy_food = 0
-    ctx.enemy_arrows = 0
-    ctx.enemy_gold = 0
-    ctx.enemy_specific_gold = 0
-    ctx.enemy_specific_arrows = 0
-    ctx.enemy_specific_food = 0
-    ctx.enemy_battle_score = 0
-    ctx.enemy_adjective = ''
+    ctx.enemy = get_enemy(enemy_locator_generator(ctx))
 
 
 # Enemy Locator and Excluder Generator #
-def enemy_locator_generator(ctx: Context):
+def enemy_locator_generator(ctx: Context) -> int:
     location = ctx.get_location()
 
-    ctx.enemy_number = random.randint(1, 5)
-    while ctx.enemy_number in location.enemy_exclude:
-        ctx.enemy_number = random.randint(1, 5)
+    enemy_number = random.randint(1, 5)
+    while enemy_number in location.enemy_exclude:
+        enemy_number = random.randint(1, 5)
 
-
-# Enemy Type Generator #
-def enemy_type_generator(ctx: Context):
-    enemy_locator_generator(ctx)
-
-    enemy = enemies_config.get('types')[ctx.enemy_number]
-
-    ctx.enemy_type = enemy.get('name')
-    ctx.enemy_battle_score += enemy.get('battle_score')
-    ctx.enemy_specific_food = enemy.get('food')
-    ctx.enemy_specific_arrows = enemy.get('arrows')
-    ctx.enemy_specific_gold = enemy.get('gold')
-    ctx.enemy_food += ctx.enemy_specific_food
-    ctx.enemy_arrows += ctx.enemy_specific_arrows
-    ctx.enemy_gold += ctx.enemy_specific_gold
-
-
-# Enemy Adjective Generator #
-def enemy_adjective_generator(ctx: Context):
-    j = random.randint(1, 3)
-
-    adj = enemies_config.get('adjectives')[j]
-    ctx.enemy_adjective = adj.get('name')
-    ctx.enemy_battle_score = adj.get('battle_score')
+    return enemy_number
 
 
 # Chest #
@@ -1380,8 +1338,8 @@ class Salem(State):
             ctx.ui.wait('fight')
 
             ctx.enemy_battle_score = 170
-            ctx.damage_taken = ctx.enemy_battle_score - ctx.martial_prowess
-            ctx.hp = int(ctx.hp - ctx.damage_taken)
+            damage_taken = ctx.enemy_battle_score - ctx.martial_prowess
+            ctx.hp = int(ctx.hp - damage_taken)
             if ctx.hp > 0:
                 ctx.ui.print('You have slain the Antipope. His body magically lights on fire, and leaves ashes on the ground.')
                 ctx.ui.print(

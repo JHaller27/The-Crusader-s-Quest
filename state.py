@@ -64,17 +64,7 @@ class Context:
     days_to_go = 0
     adventure_state = False
 
-    enemy_adjective = ''
-    enemy_type = ''
-    enemy_number = ''
-    enemy_battle_score = 0
-    enemy_gold = 0
-    enemy_arrows = 0
-    enemy_food = 0
-    enemy_specific_gold = 0
-    enemy_specific_arrows = 0
-    enemy_specific_food = 0
-    damage_taken = 0
+    enemy = None
 
     _state = None
 
