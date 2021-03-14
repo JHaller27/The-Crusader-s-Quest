@@ -2,6 +2,8 @@ from typing import Optional, Type
 
 from ui import UserInterface
 from map import Map, Location
+from player import Player
+from enemy import Enemy
 
 
 class State:
@@ -39,38 +41,18 @@ class Context:
     counter = 0
     counter_set = 0
 
-    name = ''
-    hp = 0
-    max_hp = 0
-
-    martial_prowess = 0
-    consumption_rate = 10
-    endurance = 10
-    food = 0
-    max_food = 0
-    race = ''
-    luck = 0
-    arrows = 0
-    max_arrows = 0
-    speed = 0
-    occupation = ''
-    illness = 'None'
-    gold = 100
-    max_gold = 0
-
-    weapon = 'Sword'
-    weapon_type = 'sword'
-
     days_to_go = 0
     adventure_state = False
 
-    enemy = None
+    player: Player
+    enemy: Enemy
 
-    _state = None
+    _state: State
 
     def __init__(self, ui: UserInterface, map_obj: Map):
         self.ui = ui
         self.map = map_obj
+        self.player = Player()
 
     def _run_once(self):
         self.ui.debug(f"Running state '{type(self._state).__name__}'")
@@ -99,41 +81,41 @@ class Context:
     def combat_damage(self) -> int:
         assert self.enemy is not None, "No enemy set, combat failed"
 
-        return max(self.enemy.battle_score - self.martial_prowess, 0)
+        return max(self.enemy.battle_score - self.player.martial_prowess, 0)
 
     def char_menu(self):
         self.ui.print('######################')
-        self.ui.print('Name: ' + self.name + '')
-        self.ui.print('Race: ' + self.race + '')
-        self.ui.print('Occupation: ' + self.occupation + '')
+        self.ui.print('Name: ' + self.player.name + '')
+        self.ui.print('Race: ' + self.player.race + '')
+        self.ui.print('Occupation: ' + self.player.occupation + '')
         self.ui.print('######################')
-        self.ui.print('HP: ' + str(self.hp) + '/' + str(self.max_hp) + '')
-        self.ui.print('Martial Prowess: ' + str(self.martial_prowess) + '')
-        self.ui.print('Weapon: ' + self.weapon + '')
+        self.ui.print('HP: ' + str(self.player.hp) + '/' + str(self.player.max_hp) + '')
+        self.ui.print('Martial Prowess: ' + str(self.player.martial_prowess) + '')
+        self.ui.print('Weapon: ' + self.player.weapon + '')
         self.ui.print('######################')
-        self.ui.print('Consumption Rate: ' + str(self.consumption_rate) + '')
-        self.ui.print('Food: ' + str(self.food) + '/' + str(self.max_food) + '')
-        self.ui.print('Endurance: ' + str(self.endurance) + '')
-        self.ui.print('Arrows: ' + str(self.arrows) + '/' + str(self.max_arrows) + '')
+        self.ui.print('Consumption Rate: ' + str(self.player.consumption_rate) + '')
+        self.ui.print('Food: ' + str(self.player.food) + '/' + str(self.player.max_food) + '')
+        self.ui.print('Endurance: ' + str(self.player.endurance) + '')
+        self.ui.print('Arrows: ' + str(self.player.arrows) + '/' + str(self.player.max_arrows) + '')
+        self.ui.print('Gold: ' + str(self.player.gold) + '/' + str(self.player.max_gold) + '')
         self.ui.print('######################')
-        # self.ui.print('Luck: ' + str(self.luck) + '')
-        # self.ui.print('Speed: ' + str(self.speed) + '\n')
-        # self.ui.print('Illness: ' + self.illness + '')
-        self.ui.print('Gold: ' + str(self.gold) + '/' + str(self.max_gold) + '')
-        self.ui.print('######################\n')
+        # self.ui.print('Luck: ' + str(self.player.luck) + '')
+        # self.ui.print('Speed: ' + str(self.player.speed) + '\n')
+        # self.ui.print('Illness: ' + self.player.illness + '')
+        # self.ui.print('######################\n')
         input('Press enter to continue')
 
     def adventure_menu(self):
         self.ui.print('######################')
-        self.ui.print('HP: ' + str(self.hp) + '/' + str(self.max_hp) + '')
-        self.ui.print('Food: ' + str(self.food) + '/' + str(self.max_food) + '')
-        self.ui.print('Arrows: ' + str(self.arrows) + '/' + str(self.max_arrows) + '')
-        self.ui.print('Gold: ' + str(self.gold) + '/' + str(self.max_gold) + '')
-        self.ui.print('Endurance: ' + str(self.endurance) + '')
+        self.ui.print('HP: ' + str(self.player.hp) + '/' + str(self.player.max_hp) + '')
+        self.ui.print('Food: ' + str(self.player.food) + '/' + str(self.player.max_food) + '')
+        self.ui.print('Arrows: ' + str(self.player.arrows) + '/' + str(self.player.max_arrows) + '')
+        self.ui.print('Gold: ' + str(self.player.gold) + '/' + str(self.player.max_gold) + '')
+        self.ui.print('Endurance: ' + str(self.player.endurance) + '')
         self.ui.print('######################')
-        self.ui.print('Martial Prowess: ' + str(self.martial_prowess) + '')
-        self.ui.print('Weapon: ' + self.weapon + '')
-        self.ui.print('Consumption Rate: ' + str(self.consumption_rate) + '')
+        self.ui.print('Martial Prowess: ' + str(self.player.martial_prowess) + '')
+        self.ui.print('Weapon: ' + self.player.weapon + '')
+        self.ui.print('Consumption Rate: ' + str(self.player.consumption_rate) + '')
         self.ui.print('######################\n')
 
     def town_description(self):
@@ -147,27 +129,6 @@ class Context:
             self.ui.print('A hot, dry wind blows clouds across the yellow sun, and you feel hot.')
         elif self.location == 'Karabuk':
             self.ui.print('There is a foul stench in the air, and the ground is covered bubbling puddles of unknown origin.')
-
-    def hp_mechanic(self, death: Type[State]):
-        if self.hp > self.max_hp:
-            self.hp = self.max_hp
-            self.ui.print('You have max HP.')
-        if self.hp < 1:
-            self.hp = 0
-            self._state = death(self)
-
-    def food_endurance_mechanic(self, death: Type[State]):
-        if self.consumption_rate > self.food > 0:
-            self.food = 0
-        elif self.food > 1:
-            self.food = self.food - self.consumption_rate
-        elif self.food < 1:
-            self.food = 0
-            self.endurance = self.endurance - self.consumption_rate
-            if self.endurance < 1:
-                self.endurance = 0
-                self._state = death(self)
-        # need to work on restoring endurance#
 
     def display_map(self):
         self.ui.display_map(self.map)
