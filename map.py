@@ -96,15 +96,13 @@ class Map:
         self._grid[loc.row][loc.col] = loc
 
     def set_start(self, name: str):
-        assert name in self._locations, "Invalid start location name"
-        self._start = name
+        self._start = self._locations.get(name)
 
         if self._current is None:
             self._current = self._start
 
     def set_end(self, name: str):
-        assert name in self._locations, "Invalid end location name"
-        self._end = name
+        self._end = self._locations.get(name)
 
     def get(self, name: str) -> Optional[Location]:
         return self._locations.get(name)
