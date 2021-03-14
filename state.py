@@ -58,8 +58,6 @@ class Context:
     gold = 100
     max_gold = 0
 
-    blacksmith_price = 500
-
     weapon = 'Sword'
     weapon_type = 'sword'
 
@@ -99,6 +97,10 @@ class Context:
     @property
     def location(self) -> str:
         return self.map.current.name
+
+    @property
+    def blacksmith_price(self) -> int:
+        return self.map.current.blacksmith_price
 
     def get_location(self) -> Location:
         return self.map.get(self.location)

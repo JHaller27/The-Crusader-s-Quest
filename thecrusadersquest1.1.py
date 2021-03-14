@@ -250,8 +250,6 @@ class LocationChanger(State):
         location = ctx.get_location()
         ctx.set_location(location.destination)
 
-        blacksmith_price_generator(self.ctx)
-
         if ctx.at_end_location():
             return Salem(self.ctx)
 
@@ -266,7 +264,6 @@ def town_description(ctx: Context):
 # Start Game #
 class StartGame(State):
     def do(self) -> Optional[State]:
-        blacksmith_price_generator(self.ctx)
         enemy_locator_generator(self.ctx)
 
         return Town(self.ctx)
@@ -501,12 +498,6 @@ class Blacksmith(State):
             return Town(self.ctx)
         else:
             return Blacksmith(self.ctx)
-
-
-# Blacksmith Price Generator #
-def blacksmith_price_generator(ctx: Context):
-    location = ctx.get_location()
-    ctx.blacksmith_price = random.randint(51, 75) + location.blacksmith_price
 
 
 # Adventuring #

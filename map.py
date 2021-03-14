@@ -1,4 +1,5 @@
 from typing import Optional, Union
+import random
 import yaml
 
 
@@ -8,7 +9,8 @@ class Location:
         self.name = name
         self.description = description
         self.row, self.col = pos
-        self.blacksmith_price = blacksmith_price
+        self._blacksmith_mod = blacksmith_price
+        self._blacksmith_base = 0
         self.enemy_exclude = enemy_exclude
         self.destination = destination
         self.distance = distance
@@ -29,6 +31,13 @@ class Location:
             destination=dest,
             distance=dist,
         )
+
+    @property
+    def blacksmith_price(self) -> int:
+        return self._blacksmith_base + self._blacksmith_base
+
+    def randomize_blacksmith_price(self):
+        self._blacksmith_base = random.randint(51, 75)
 
     def visit(self):
         self.visited = True
@@ -108,6 +117,8 @@ def get_map(data_path: str) -> Map:
     map_obj = Map(map_config.get("width"), map_config.get("height"))
     for name, loc in map_config.get("locations").items():
         loc_obj = Location.from_yaml(name, loc)
+        loc_obj.randomize_blacksmith_price()
+
         map_obj.add_location(loc_obj)
 
     map_obj.set_start(map_config.get("start"))
