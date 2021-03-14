@@ -16,10 +16,13 @@ class UserInterface:
     def debug(self, text=''):
         pass
 
-    def wait(self):
+    def wait(self, do=None):
         raise NotImplementedError
 
     def choose(self, options: list[str]) -> int:
+        raise NotImplementedError
+
+    def input_text(self) -> str:
         raise NotImplementedError
 
 
@@ -30,26 +33,32 @@ class ConsoleInterface(UserInterface):
     def print(self, text=''):
         print(text)
 
-    def wait(self):
-        input("Press enter enter to continue")
+    def wait(self, do=None):
+        if do is None:
+            do = 'continue'
+
+        input(f"Press enter to {do}")
 
     def choose(self, options: list[str]) -> int:
         for i, opt in enumerate(options):
             print(f"{i + 1} {opt}")
 
-        prompt = True
-        while prompt:
-            selection = input(">: ")
+        have_valid_value = False
+        while not have_valid_value:
+            selection = self.input_text()
             try:
                 selection = int(selection)
             except ValueError:
                 self.print(f"'{selection}' is not a valid choice")
                 selection = -1
             finally:
-                prompt = 1 <= selection <= len(options)
+                have_valid_value = 1 <= selection <= len(options)
 
         # noinspection PyUnboundLocalVariable
-        return selection - 1
+        return selection
+
+    def input_text(self) -> str:
+        return input(">: ")
 
 
 class DebugInterfaceDecorator(UserInterface):
@@ -80,3 +89,9 @@ class DebugInterfaceDecorator(UserInterface):
 
     def choose(self, options: list[str]) -> int:
         return self._base.choose(options)
+
+    def wait(self, do=None):
+        self._base.wait(do)
+
+    def input_text(self) -> str:
+        return self._base.input_text()

@@ -9,7 +9,7 @@ from ui import ConsoleInterface, DebugInterfaceDecorator
 from state import Context, State, TransientState
 
 ui = ConsoleInterface()
-# ui = DebugInterfaceDecorator(ui)
+ui = DebugInterfaceDecorator(ui)
 
 global_context = Context(ui)
 
@@ -19,26 +19,6 @@ def clear():
 
 
 # Title Screen #
-class title_screen_selections(State):
-    def do(self) -> Optional[State]:
-        option = input('>: ')
-
-        if option.lower() == '1':
-            return setup_game(self.ctx)
-        elif option.lower() == '2':
-            return title_screen_selections(self.ctx)
-        elif option.lower() == '0':
-            return None
-        while option.lower() not in ['1', '2', '0']:
-            option = input('>: ')
-            if option.lower() == '1':
-                return setup_game(self.ctx)
-            elif option.lower() == '2':
-                return title_screen_selections(self.ctx)
-            elif option.lower() == '0':
-                return None
-
-
 class title_screen(State):
     def do(self) -> Optional[State]:
         ctx = self.ctx
@@ -63,10 +43,9 @@ class title_screen(State):
         ctx.ui.print(
             '#####################################################################################################################')
         ctx.ui.print('The Crusader\'s Quest: Survival Text RPG.\n')
-        ctx.ui.print('  1 Play  ')
-        ctx.ui.print('  2 Help  ')
-        ctx.ui.print('  0 Quit  ')
-        return title_screen_selections(self.ctx)
+        ctx.ui.wait('play')
+
+        return setup_game(self.ctx)
 
 
 # Character Creation #
@@ -94,15 +73,14 @@ class setup_game(State):
         ctx.ui.print('You begin your journey in Goodshire, one of the many towns you hope to pass through.\n')
         ctx.ui.print('What is your name?\n')
 
-        ctx.name = input('>: ')
+        ctx.name = ctx.ui.input_text()
 
         # Race #
         clear()
         ctx.ui.print('What is your race?\n')
-        ctx.ui.print('1 Human\n2 Dwarf\n3 Satyr\n4 Halfling\n5 Elf\n6 Tigerman\n7 Leprechaun\n')
 
-        selection = input('>: ')
-        if selection == '1':
+        selection = ctx.ui.choose(["Human", "Dwarf", "Satyr", "Halfling", "Elf", "Tigerman", "Leprechaun"])
+        if selection == 1:
             ctx.race = "Human"
             ctx.hp = 25
             ctx.max_hp = 25
@@ -113,7 +91,7 @@ class setup_game(State):
             ctx.luck = 0
             ctx.speed = 0
 
-        elif selection == '2':
+        elif selection == 2:
             ctx.race = "Dwarf"
             ctx.hp = 50
             ctx.max_hp = 50
@@ -124,7 +102,7 @@ class setup_game(State):
             ctx.luck = 0
             ctx.speed = 0
 
-        elif selection == '3':
+        elif selection == 3:
             ctx.race = "Satyr"
             ctx.hp = 100
             ctx.max_hp = 100
@@ -135,7 +113,7 @@ class setup_game(State):
             ctx.luck = 0
             ctx.speed = 0
 
-        elif selection == '4':
+        elif selection == 4:
             ctx.race = "Halfling"
             ctx.hp = 25
             ctx.max_hp = 25
@@ -146,7 +124,7 @@ class setup_game(State):
             ctx.luck = 0
             ctx.speed = 0
 
-        elif selection == '5':
+        elif selection == 5:
             ctx.race = "Elf"
             ctx.hp = 10
             ctx.max_hp = 10
@@ -157,7 +135,7 @@ class setup_game(State):
             ctx.luck = 0
             ctx.speed = 0
 
-        elif selection == '6':
+        elif selection == 6:
             ctx.race = "Tigerman"
             ctx.hp = 25
             ctx.max_hp = 25
@@ -168,7 +146,7 @@ class setup_game(State):
             ctx.luck = 0
             ctx.speed = 0
 
-        elif selection == '7':
+        elif selection == 7:
             ctx.race = "Leprechaun"
             ctx.hp = 10
             ctx.max_hp = 10
@@ -179,25 +157,13 @@ class setup_game(State):
             ctx.luck = 0
             ctx.speed = 0
 
-        else:
-            ctx.race = "Human"
-            ctx.hp = 25
-            ctx.max_hp = 25
-            ctx.martial_prowess = 10
-            ctx.consumption_rate = 10
-            ctx.endurance = ctx.endurance + 30
-            ctx.gold = 100
-            ctx.luck = 0
-            ctx.speed = 0
-
         clear()
 
         # Occupation #
         ctx.ui.print('What is your occupation?\n')
-        ctx.ui.print('1 Hunter\n2 Knight\n3 Adventurer\n4 Assassin\n5 Glutton\n')
 
-        selection = input('>: ')
-        if selection == '1':
+        selection = ctx.ui.choose(["Hunter", "Knight", "Adventurer", "Assassin", "Glutton"])
+        if selection == 1:
             ctx.occupation = 'Hunter'
             ctx.hp = ctx.hp + 0
             ctx.max_hp = ctx.max_hp + 0
@@ -208,7 +174,7 @@ class setup_game(State):
             ctx.gold = ctx.gold + 0
             ctx.max_gold = ctx.max_gold + 800
             ctx.martial_prowess = ctx.martial_prowess + 0
-        elif selection == '2':
+        elif selection == 2:
             ctx.occupation = 'Knight'
             ctx.hp = ctx.hp + 100
             ctx.max_hp = ctx.max_hp + 100
@@ -219,7 +185,7 @@ class setup_game(State):
             ctx.gold = ctx.gold + 400
             ctx.max_gold = ctx.max_gold + 1000
             ctx.martial_prowess = ctx.martial_prowess + 20
-        elif selection == '3':
+        elif selection == 3:
             ctx.occupation = 'Adventurer'
             ctx.hp = ctx.hp + 25
             ctx.max_hp = ctx.max_hp + 25
@@ -230,7 +196,7 @@ class setup_game(State):
             ctx.gold = ctx.gold + 100
             ctx.max_gold = ctx.max_gold + 800
             ctx.martial_prowess = ctx.martial_prowess + 10
-        elif selection == '4':
+        elif selection == 4:
             ctx.occupation = 'Assassin'
             ctx.hp = ctx.hp + 0
             ctx.max_hp = ctx.max_hp + 0
@@ -241,7 +207,7 @@ class setup_game(State):
             ctx.gold = ctx.gold + 100
             ctx.max_gold = ctx.max_gold + 1000
             ctx.martial_prowess = ctx.martial_prowess + 60
-        elif selection == '5':
+        elif selection == 5:
             ctx.occupation = 'Glutton'
             ctx.hp = ctx.hp + 25
             ctx.max_hp = ctx.max_hp + 25
@@ -252,36 +218,24 @@ class setup_game(State):
             ctx.gold = ctx.gold + 0
             ctx.max_gold = ctx.max_gold + 1000
             ctx.martial_prowess = ctx.martial_prowess + 0
-        else:
-            ctx.occupation = 'Hunter'
-            ctx.hp = ctx.hp + 25
-            ctx.max_hp = ctx.max_hp + 25
-            ctx.food = ctx.food + 50
-            ctx.max_food = ctx.max_food + 150
-            ctx.arrows = ctx.arrows + 75
-            ctx.max_arrows = ctx.max_arrows + 100
-            ctx.gold = ctx.gold + 0
-            ctx.max_gold = ctx.max_gold + 300
-            ctx.martial_prowess = ctx.martial_prowess + 0
 
         clear()
 
         ctx.ui.print('What kind of weapon do you want to use? (ie. sword, poleaxe, etc.)')
 
-        ctx.weapon = input('>: ')
+        ctx.weapon = ctx.ui.input_text()
         gold_mechanic(self.ctx)
 
         clear()
 
         # ctx.ui.print('What is your ctx.weapon called? (ie. Thorn, Crusher, etc.)')
 
-        # ctx.weapon = input('>: ')
+        # ctx.weapon = ctx.ui.input('>: ')
         clear()
 
         ctx.ui.print('You are ' + ctx.name + ', the ' + ctx.race + ' ' + ctx.occupation + '. You wield a ' + ctx.weapon + '.\n')
-        ctx.ui.print('1 Begin Adventure\n2 Restart')
-        selection = input('>: ')
-        if selection == '1':
+        selection = ctx.ui.choose(["Begin Adventure", "Restart"])
+        if selection == 1:
             return start_game(self.ctx)
         else:
             return title_screen(self.ctx)
@@ -294,15 +248,12 @@ class death(State):
 
         clear()
         ctx.ui.print('You have died.\n')
-        input('Press enter enter to continue')
+        ctx.ui.wait()
         char_menu(self.ctx)
         ctx.ui.print()
-        ctx.ui.print('1 Menu\n')
-        selection = input('>: ')
-        if selection == '1':
-            return title_screen(self.ctx)
-        else:
-            return title_screen(self.ctx)
+        ctx.ui.wait("return to menu")
+
+        return title_screen(self.ctx)
 
 
 # Food and Endurance Mechanic #
@@ -377,7 +328,7 @@ class the_map(TransientState):
             ctx.ui.print('|   |   |   | X |')
             ctx.ui.print('+---------------+\n')
 
-        if ctx.location == 'Rodez':
+        elif ctx.location == 'Rodez':
             ctx.ui.print('-----------------')
             ctx.ui.print('| G |   |   |   |')
             ctx.ui.print('+---+---+---+---+')
@@ -390,7 +341,7 @@ class the_map(TransientState):
             ctx.ui.print('|   |   |   | X |')
             ctx.ui.print('+---------------+\n')
 
-        if ctx.location == 'Oristano':
+        elif ctx.location == 'Oristano':
             ctx.ui.print('-----------------')
             ctx.ui.print('| G |   |   |   |')
             ctx.ui.print('+---+---+---+---+')
@@ -403,7 +354,7 @@ class the_map(TransientState):
             ctx.ui.print('|   |   |   | X |')
             ctx.ui.print('+---------------+\n')
 
-        if ctx.location == 'Thasos':
+        elif ctx.location == 'Thasos':
             ctx.ui.print('-----------------')
             ctx.ui.print('| G |   |   |   |')
             ctx.ui.print('+---+---+---+---+')
@@ -416,7 +367,7 @@ class the_map(TransientState):
             ctx.ui.print('|   |   |   | X |')
             ctx.ui.print('+---------------+\n')
 
-        if ctx.location == 'Karabuk':
+        elif ctx.location == 'Karabuk':
             ctx.ui.print('-----------------')
             ctx.ui.print('| G |   |   |   |')
             ctx.ui.print('+---+---+---+---+')
@@ -429,7 +380,7 @@ class the_map(TransientState):
             ctx.ui.print('|   |   |   | X |')
             ctx.ui.print('+---------------+\n')
 
-        if ctx.location == 'Salem':
+        elif ctx.location == 'Salem':
             ctx.ui.print('-----------------')
             ctx.ui.print('| G |   |   |   |')
             ctx.ui.print('+---+---+---+---+')
@@ -455,110 +406,103 @@ class days_to_go(TransientState):
                 ctx.counter_set = 7
                 ctx.counter = 7
                 ctx.ui.print('You will brave the wilds for ' + str(ctx.counter_set) + ' days.')
-                ctx.ui.print('1 Continue\n2 Back')
-                selection = input('>: ')
-                if selection == '1':
-                    input('Press enter to continue')
+                selection = ctx.ui.choose(['Continue', 'Go back'])
+                if selection == 1:
                     return adventuring(self.ctx)
 
-                elif selection == '2':
+                elif selection == 2:
                     return town(self.ctx)
                 else:
                     return town(self.ctx)
             else:
                 ctx.ui.print('You have ' + str(ctx.counter) + ' days to go.')
-                input('Press enter to continue')
+                ctx.ui.wait()
 
         if ctx.location == 'Rodez':
             if not ctx.adventure_state:
                 ctx.counter_set = 11
                 ctx.counter = 11
                 ctx.ui.print('You will brave the wilds for ' + str(ctx.counter_set) + ' days.')
-                ctx.ui.print('1 Continue\n2 Back')
-                selection = input('>: ')
-                if selection == '1':
-                    input('Press enter to continue')
+                selection = ctx.ui.choose(['Continue', 'Go back'])
+                if selection == 1:
+                    ctx.ui.wait()
                     adventuring(self.ctx)
 
-                if selection == '2':
+                if selection == 2:
                     return town(self.ctx)
                 else:
                     return town(self.ctx)
             else:
                 ctx.ui.print('You have ' + str(ctx.counter) + ' days to go.')
-                input('Press enter to continue')
+                ctx.ui.wait()
         if ctx.location == 'Oristano':
             if not ctx.adventure_state:
                 ctx.counter_set = 15
                 ctx.counter = 15
                 ctx.ui.print('You will brave the wilds for ' + str(ctx.counter_set) + ' days.')
-                ctx.ui.print('1 Continue\n2 Back')
-                selection = input('>: ')
-                if selection == '1':
-                    input('Press enter to continue')
+                selection = ctx.ui.choose(['Continue', 'Go back'])
+                if selection == 1:
+                    ctx.ui.wait()
                     adventuring(self.ctx)
 
-                if selection == '2':
+                if selection == 2:
                     return town(self.ctx)
                 else:
                     return town(self.ctx)
             else:
                 ctx.ui.print('You have ' + str(ctx.counter) + ' days to go.')
-                input('Press enter to continue')
+                ctx.ui.wait()
         if ctx.location == 'Thasos':
             if not ctx.adventure_state:
                 ctx.counter_set = 19
                 ctx.counter = 19
                 ctx.ui.print('You will brave the wilds for ' + str(ctx.counter_set) + ' days.')
-                ctx.ui.print('1 Continue\n2 Back')
-                selection = input('>: ')
-                if selection == '1':
-                    input('Press enter to continue')
+                selection = ctx.ui.choose(['Continue', 'Go back'])
+                if selection == 1:
+                    ctx.ui.wait()
                     adventuring(self.ctx)
 
-                if selection == '2':
+                if selection == 2:
                     return town(self.ctx)
                 else:
                     return town(self.ctx)
             else:
                 ctx.ui.print('You have ' + str(ctx.counter) + ' days to go.')
-                input('Press enter to continue')
+                ctx.ui.wait()
         if ctx.location == 'Karabuk':
             if not ctx.adventure_state:
                 ctx.counter_set = 25
                 ctx.counter = 25
                 ctx.ui.print('You will brave the wilds for ' + str(ctx.counter_set) + ' days.')
-                ctx.ui.print('1 Continue\n2 Back')
-                selection = input('>: ')
-                if selection == '1':
-                    input('Press enter to continue')
+                selection = ctx.ui.choose(['Continue', 'Go back'])
+                if selection == 1:
+                    ctx.ui.wait()
                     adventuring(self.ctx)
 
-                if selection == '2':
+                if selection == 2:
                     return town(self.ctx)
                 else:
                     return town(self.ctx)
             else:
                 ctx.ui.print('You have ' + str(ctx.counter) + ' days to go.')
-                input('Press enter to continue')
+                ctx.ui.wait()
         if ctx.location == 'Last Refuge':
             if not ctx.adventure_state:
                 ctx.counter_set = 25
                 ctx.counter = 25
                 ctx.ui.print('You will brave the wilds for ' + str(ctx.counter_set) + ' days.')
-                ctx.ui.print('1 Continue\n2 Back')
-                selection = input('>: ')
-                if selection == '1':
-                    input('Press enter to continue')
+                selection = ctx.ui.choose(['Continue', 'Go back'])
+                if selection == 1:
+                    ctx.ui.wait()
                     adventuring(self.ctx)
 
-                if selection == '2':
+                if selection == 2:
                     return town(self.ctx)
                 else:
                     return town(self.ctx)
             else:
                 ctx.ui.print('You have ' + str(ctx.counter) + ' days to go.')
-                input('Press enter to continue')
+                ctx.ui.wait()
 
 
 # Treasure Generator #
@@ -628,21 +572,20 @@ class town(State):
         ctx.ui.print('You are in ' + ctx.location + '.')
         town_description(ctx)
         ctx.ui.print()
-        ctx.ui.print('1 Tavern\n2 Blacksmith\n3 Character\n4 Adventure')
-        selection = input('>: ')
-        if selection == '1':
+        selection = ctx.ui.choose(["Tavern", "Blacksmith", "Character", "Adventure"])
+        if selection == 1:
             clear()
             return tavern(self.ctx)
 
-        if selection == '4':
+        if selection == 4:
             clear()
             ctx.counter = 0
             return the_map(ctx, LeaveTown)
 
-        if selection == '2':
+        if selection == 2:
             clear()
             return blacksmith(self.ctx)
-        if selection == '3':
+        if selection == 3:
             clear()
             char_menu(self.ctx)
         return town(self.ctx)
@@ -653,7 +596,7 @@ class LeaveTown(State):
         ctx = self.ctx
 
         ctx.ui.print('You will brave the wilds for 5 days.')
-        input('Press enter to continue')
+        ctx.ui.wait()
         return adventuring(self.ctx)
 
 
@@ -669,62 +612,62 @@ class tavern(State):
         ctx.ui.print('Food: ' + str(ctx.food) + '/' + str(ctx.max_food) + '')
         ctx.ui.print('######################\n')
         ctx.ui.print('"Welcome to the ' + ctx.location + ' Inn. How may I serve you?"\n')
-        ctx.ui.print('1 Rest (1 gold)\n2 Buy Food (5 gold)\n3 Sell Food (3 gold)\n4 Speak with random patron\n5 Back')
-        selection = input('>: ')
-        if selection == '1':
+
+        selection = ctx.ui.choose(['Rest (1 gold)', 'Buy Food (5 gold)', 'Sell Food (3 gold)', 'Speak with random patron', 'Back'])
+        if selection == 1:
             if ctx.gold < 1:
                 ctx.ui.print('You cannot afford a bed here.')
-                input('Press enter to continue.')
+                ctx.ui.wait('continue.')
             else:
                 ctx.ui.print('You slept like a rock.')
                 ctx.hp = ctx.hp + 99999
                 hp_mechanic(self.ctx)
                 ctx.gold = ctx.gold - 1
-                input('Press enter to continue.')
+                ctx.ui.wait('continue')
             return tavern(self.ctx)
 
-        if selection == '2':
+        if selection == 2:
             ctx.ui.print('How much food do you want to buy?')
             ctx.food_price = 5
-            n = input('>: ')
-            if n == '0':
+            n = ctx.ui.input_text()
+            if n == 0:
                 return tavern(self.ctx)
             n = int(n)
             total_cost = n * ctx.food_price
             if total_cost > ctx.gold:
                 ctx.ui.print('You do not have enough gold to buy ' + str(n) + ' food.')
-                input('Press enter to continue')
+                ctx.ui.wait()
                 return tavern(self.ctx)
             elif total_cost <= ctx.gold:
                 ctx.food = ctx.food + n
                 food_mechanic(self.ctx)
                 ctx.gold = ctx.gold - total_cost
                 ctx.ui.print('You complete the transaction')
-                input('Press enter to continue')
+                ctx.ui.wait()
                 return tavern(self.ctx)
-        if selection == '3':
+        if selection == 3:
             ctx.ui.print('How much food do you want to sell?')
             ctx.food_sell = 3
-            n = input('>: ')
-            if n == '0':
+            n = ctx.ui.input_text()
+            if n == 0:
                 return tavern(self.ctx)
             n = int(n)
             total_sell = n * ctx.food_sell
             if ctx.food < n:
                 ctx.ui.print('You do not have that much food.')
-                input('Press enter to continue')
+                ctx.ui.wait()
                 return blacksmith(self.ctx)
             if ctx.food >= n:
                 ctx.food = ctx.food - n
                 ctx.gold = ctx.gold + total_sell
                 ctx.ui.print('You complete the transaction')
                 gold_mechanic(self.ctx)
-                input('Press enter to continue')
+                ctx.ui.wait()
                 clear()
                 return tavern(self.ctx)
-        if selection == '4':
+        if selection == 4:
             return talk(self.ctx)
-        if selection == '5':
+        if selection == 5:
             return town(self.ctx)
         else:
             return tavern(self.ctx)
@@ -774,7 +717,7 @@ class talk(State):
             ctx.ui.print('Tales of the beasts and Satanic denizens in the wilds have kept me inside the city walls.')
         if dialogue == 10:
             ctx.ui.print('The good thing about resting at ' + ctx.location + ' Inn is that you get a complimentary meal.')
-        input('Press enter to continue')
+        ctx.ui.wait()
         return tavern(self.ctx)
 
 
@@ -790,58 +733,62 @@ class blacksmith(State):
         ctx.ui.print('Martial Prowess: ' + str(ctx.martial_prowess) + '')
         ctx.ui.print('######################\n')
         ctx.ui.print('"What can I do for you, traveler?"')
-        ctx.ui.print('1 Upgrade your ' + ctx.weapon + ' (' + str(
-            ctx.blacksmith_price) + ') gold.\n2 Buy Arrows (5 gold)\n3 Sell Arrows (3 gold) \n4 Back')
-        selection = input('>: ')
-        if selection == '1':
+
+        selection = ctx.ui.choose([
+            f"Upgrade your {ctx.weapon} ({ctx.blacksmith_price} gold)",
+            "Buy Arrows (5 gold)",
+            "Sell Arrows (3 gold)",
+            "Back",
+        ])
+        if selection == 1:
             if ctx.gold < ctx.blacksmith_price:
                 ctx.ui.print('You do not have enough gold to upgrade your ' + ctx.weapon_type + '.')
-                input('Press enter to continue')
+                ctx.ui.wait()
             else:
                 ctx.gold = ctx.gold - ctx.blacksmith_price
                 gold_mechanic(self.ctx)
                 v = random.randint(10, 30)
                 ctx.martial_prowess = ctx.martial_prowess + v
                 ctx.ui.print('Your martial prowess increases by ' + str(v) + '.')
-                input('Press enter to continue')
+                ctx.ui.wait()
             return blacksmith(self.ctx)
-        if selection == '2':
+        if selection == 2:
             ctx.ui.print('How many arrows do you want to buy?')
             arrow_price = 5
-            n = input('>: ')
+            n = ctx.ui.input_text()
             n = int(n)
             total_cost = n * arrow_price
             if total_cost > ctx.gold:
                 ctx.ui.print('You do not have enough gold to buy ' + str(n) + ' arrows.')
-                input('Press enter to continue')
+                ctx.ui.wait()
                 return blacksmith(self.ctx)
             if total_cost <= ctx.gold:
                 ctx.arrows = ctx.arrows + n
                 arrows_mechanic(self.ctx)
                 ctx.gold = ctx.gold - total_cost
                 ctx.ui.print('You complete the transaction')
-                input('Press enter to continue')
+                ctx.ui.wait()
                 return blacksmith(self.ctx)
-        if selection == '3':
+        if selection == 3:
             ctx.ui.print('How many arrows do you want to sell?')
             arrow_sell = 3
-            n = input('>: ')
+            n = ctx.ui.input_text()
             n = int(n)
             total_sell = n * arrow_sell
             if ctx.arrows < n:
                 ctx.ui.print('You do not have that many arrows.')
-                input('Press enter to continue')
+                ctx.ui.wait()
                 return blacksmith(self.ctx)
             if ctx.arrows >= n:
                 ctx.arrows = ctx.arrows - n
                 ctx.gold = ctx.gold + total_sell
                 ctx.ui.print('You complete the transaction')
                 gold_mechanic(self.ctx)
-                input('Press enter to continue')
+                ctx.ui.wait()
                 clear()
                 return blacksmith(self.ctx)
 
-        if selection == '4':
+        if selection == 4:
             return town(self.ctx)
         else:
             return blacksmith(self.ctx)
@@ -867,31 +814,31 @@ class adventuring(State):
     def do(self) -> Optional['State']:
         ctx = self.ctx
 
-        if ctx.counter != 0:
-            ctx.adventure_state = True
-            if ctx.hp > 0:
-                adventure_menu(self.ctx)
-                ctx.ui.print('1 Continue\n2 Hunt\n3 Rest\n4 Map\n')
-                selection = input('>: ')
-                clear()
-                if selection == '1':
-                    food_endurance_mechanic(ctx)
-                    adventure_menu(ctx)
-                    ctx.counter = ctx.counter - 1
+        if ctx.counter == 0:
+            return EndAdventure(self.ctx)
 
-                    return random_event(ctx, adventuring)
-                if selection == '2':
-                    return hunt(self.ctx, adventuring)
-                if selection == '3':
-                    return rest(self.ctx, adventuring)
-                if selection == '4':
-                    return the_map(self.ctx, adventuring)
-                else:
-                    return adventuring(self.ctx)
+        ctx.adventure_state = True
+        if ctx.hp > 0:
+            adventure_menu(self.ctx)
+            selection = ctx.ui.choose(["Continue", "Hunt", "Rest", "Map"])
+            clear()
+            if selection == 1:
+                ctx.counter = ctx.counter - 1
+
+                food_endurance_mechanic(ctx)
+                adventure_menu(ctx)
+
+                return random_event(ctx, adventuring)
+            if selection == 2:
+                return hunt(self.ctx, adventuring)
+            if selection == 3:
+                return rest(self.ctx, adventuring)
+            if selection == 4:
+                return the_map(self.ctx, adventuring)
             else:
-                return death(self.ctx)
-
-        return EndAdventure(self.ctx)
+                return adventuring(self.ctx)
+        else:
+            return death(self.ctx)
 
 
 class EndAdventure(State):
@@ -903,12 +850,9 @@ class EndAdventure(State):
         adventure_menu(self.ctx)
         ctx.ui.print('You have survived the trip.')
         ctx.adventure_state = False
-        ctx.ui.print('Enter 0 to continue.')
-        selection = input('>: ')
-        if selection == '0':
-            return location_changer(self.ctx)
-        else:
-            return adventuring(self.ctx)  # was location_changer()
+        ctx.ui.wait()
+
+        return location_changer(self.ctx)
 
 
 # Rest #
@@ -922,14 +866,14 @@ class rest(TransientState):
         if ctx.hp == ctx.max_hp:
             ctx.ui.print('You rest for one day. Your HP is already maxed out.')
 
-            input('Press enter to continue')
+            ctx.ui.wait()
             return adventuring(self.ctx)
 
         ctx.ui.print('You rest for one day, gaining ' + str(x) + ' HP.')
         ctx.hp = ctx.hp + x
         hp_mechanic(self.ctx)
 
-        input('Press enter to continue')
+        ctx.ui.wait()
 
 
 # Hunt #
@@ -942,7 +886,7 @@ class hunt(TransientState):
 
         if ctx.arrows == 0:
             ctx.ui.print('You do not have any arrows to hunt with.')
-            input('Press enter to continue')
+            ctx.ui.wait()
             return adventuring(self.ctx)
 
         elif ctx.arrows < x:
@@ -962,7 +906,7 @@ class hunt(TransientState):
             food_mechanic(self.ctx)
             ctx.ui.print('You shot ' + str(x) + ' arrows, and gained ' + str(y) + ' food.')
 
-        input('Press enter to continue')
+        ctx.ui.wait()
 
         return None
 
@@ -1023,9 +967,8 @@ class mushroom(TransientState):
         ctx = self.ctx
 
         ctx.ui.print('You see a strange mushroom.')
-        ctx.ui.print('1 Consume\n2 Leave')
-        selection = input('>: ')
-        if selection == '1':
+        selection = ctx.ui.choose(["Consume", "Leave"])
+        if selection == 1:
             x = random.randint(1, 4)
             if x == 1:
                 if ctx.race == 'Satyr':
@@ -1055,14 +998,14 @@ class mushroom(TransientState):
                     ctx.hp = 0
                     ctx.endurance = 0
                     ctx.ui.print('You eat the mushroom, and then fall to the ground, foaming at the mouth.')
-                    input('Press enter to continue')
+                    ctx.ui.wait()
                     return death(self.ctx)
 
-        elif selection == '2':
+        elif selection == 2:
             ctx.ui.print('You leave the mushroom.')
         else:
             return mushroom(self.ctx, self.default)
-        input('Press enter to continue')
+        ctx.ui.wait()
 
 
 # Miracle #
@@ -1075,21 +1018,21 @@ class miracle(TransientState):
             ctx.ui.print('"Ho, there, traveler!"')
             ctx.ui.print('"I did not expect to see a Halfing out in the wilderness."')
             ctx.ui.print('"This is delightful. Here, have a gift."')
-            ctx.ui.print('Fill:\n1 Food\n2 Arrows\n3 Gold\n4 HP')
-            selection = input('>: ')
-            if selection == '1':
+
+            selection = ctx.ui.choose(["Fill Food", "Fill Arrows", "Fill Gold", "Fill HP"])
+            if selection == 1:
                 ctx.food = ctx.max_food
                 food_mechanic(self.ctx)
-            if selection == '2':
+            if selection == 2:
                 ctx.arrows = ctx.max_arrows
                 arrows_mechanic(self.ctx)
-            if selection == '3':
+            if selection == 3:
                 ctx.gold = ctx.max_gold
                 gold_mechanic(self.ctx)
-            if selection == '4':
+            if selection == 4:
                 ctx.hp = ctx.max_hp
                 hp_mechanic(self.ctx)
-            input('Press enter to continue')
+            ctx.ui.wait()
         else:
             return nothing(self.ctx, self.default)
 
@@ -1104,20 +1047,20 @@ class bigger_bag(TransientState):
             ctx.max_food = ctx.max_food + 10
             ctx.ui.print(
                 'You find an empty food storage container on the side of the path, and it holds more food than your current one.')
-            input('Press enter to take\n')
+            ctx.ui.wait('take\n')
             ctx.ui.print('Max food increased by 10.')
         if y == 2:
             ctx.max_arrows = ctx.max_arrows + 10
             ctx.ui.print('You spot an empty quiver on the side of the path. It holds more arrows than your current one.')
-            input('Press enter to take\n')
+            ctx.ui.wait('take\n')
             ctx.ui.print('Max arrows increased by 10.')
         if y == 3:
             ctx.max_gold = ctx.max_gold + 100
             ctx.ui.print('You discover an empty coin purse on the side of the path. It holds more gold than your current one.')
-            input('Press enter to take\n')
+            ctx.ui.wait('take\n')
             ctx.ui.print('Max gold increased by 100.')
         ctx.ui.print()
-        input('Press enter to continue')
+        ctx.ui.wait()
 
         return None
 
@@ -1141,19 +1084,19 @@ class lose_day(TransientState):
         # ctx.ui.print('You arrive at a bridge spanning an enormous chasm that is guarded by a score of bandits. One bandit approaches you.')
         # ctx.ui.print('"If you want to cross this bridge, you have to pay us, ' + str(k) 'ctx.gold.\n')
         #        ctx.ui.print('1 Pay ctx.gold\n2 Take a detour\n')
-        #        selection = input('>: ')
-        #        if selection == '1':
+        #        selection = ctx.ui.input('>: ')
+        #        if selection == 1:
         #            if k > ctx.gold:
         #            ctx.ui.print('"That is not enough to cross, but we will keep what you gave us, and you can find another way around. Have fun out there."')
         #            ctx.gold = 0
         #            else:
         #               ctx.gold = ctx.gold - k
         #               ctx.ui.print('You gave the bandit ' + str(k) + ' ctx.gold, and they let you cross the bridge.')
-        #       elif selection == '2'
+        #       elif selection == 2
         #       else:
-        #           selection = input('>: ')
+        #           selection = ctx.ui.input('>: ')
 
-        input('Press enter to continue')
+        ctx.ui.wait()
 
         return None
 
@@ -1165,23 +1108,21 @@ class mystic(TransientState):
 
         ctx.ui.print('You come upon a roaming mystic.')
         ctx.ui.print('The mystic offers you a blessing.\n')
-        ctx.ui.print('Increase:\n1 Max HP\n2 Endurance\n3 Martial Prowess\n')
-        # ctx.ui.print('Fill: ')
-        selection = input('>: ')
-        clear()
-        if selection == '1':
+
+        selection = ctx.ui.choose(["Increase Max HP", "Increase Endurance", "Increase Martial Prowess"])
+        if selection == 1:
             ctx.max_hp = ctx.max_hp + 10
             ctx.hp = ctx.hp + 10
             ctx.ui.print('Your max HP increases by 10.')
-            input('Press enter to continue')
-        elif selection == '2':
+            ctx.ui.wait()
+        elif selection == 2:
             ctx.endurance = ctx.endurance + ctx.consumption_rate
             ctx.ui.print('Your endurance increases by ' + str(ctx.consumption_rate) + '.')
-            input('Press enter to continue')
-        elif selection == '3':
+            ctx.ui.wait()
+        elif selection == 3:
             ctx.martial_prowess = ctx.martial_prowess + 10
             ctx.ui.print('Your martial prowess increases by 10.')
-            input('Press enter to continue')
+            ctx.ui.wait()
         else:
             return mystic(self.ctx, self.default)
 
@@ -1192,7 +1133,7 @@ class nothing(TransientState):
         ctx = self.ctx
 
         ctx.ui.print('Nothing notable happens.')
-        input('Press enter to continue')
+        ctx.ui.wait()
 
         return None
 
@@ -1227,7 +1168,7 @@ class damaged(TransientState):
             ctx.ui.print('However, you find ' + str(a) + ' arrows nearby.')
             arrows_mechanic(self.ctx)
 
-        input('Press enter to continue')
+        ctx.ui.wait()
 
         return None
 
@@ -1254,7 +1195,7 @@ class traveller(TransientState):
 # Traveller Values #
 def traveller_values(ctx: Context):
     traveller_generation(ctx)
-    input('Press enter to continue')
+    ctx.ui.wait()
 
 
 # Traveller Generation #
@@ -1268,9 +1209,8 @@ def traveller_generation(ctx: Context):
         p = random.randint(1, 3)  # what trader is giving
         if p == 1:
             ctx.ui.print('The trader is willing to give ' + str(v) + ' arrows.')
-            ctx.ui.print('1 Accept\n2 Decline')
-            selection = input('>: ')
-            if selection == '1':
+            selection = ctx.ui.choose(["Accept", "Decline"])
+            if selection == 1:
                 if ctx.food < x:
                     ctx.ui.print('You cannot afford the trade.')
                 else:
@@ -1284,9 +1224,8 @@ def traveller_generation(ctx: Context):
 
         if p == 2:
             ctx.ui.print('The trader is willing to pay ' + str(v) + ' gold.')
-            ctx.ui.print('1 Accept\n2 Decline')
-            selection = input('>: ')
-            if selection == '1':
+            selection = ctx.ui.choose(["Accept", "Decline"])
+            if selection == 1:
                 if ctx.food < x:
                     ctx.ui.print('You cannot afford the trade.')
                 else:
@@ -1300,9 +1239,8 @@ def traveller_generation(ctx: Context):
 
         if p == 3:
             ctx.ui.print('The trader is willing to heal you ' + str(v) + ' HP.')
-            ctx.ui.print('1 Accept\n2 Decline')
-            selection = input('>: ')
-            if selection == '1':
+            selection = ctx.ui.choose(["Accept", "Decline"])
+            if selection == 1:
                 if ctx.food < x:
                     ctx.ui.print('You cannot afford the trade.')
                 else:
@@ -1318,9 +1256,8 @@ def traveller_generation(ctx: Context):
         p = random.randint(1, 3)  # what trader is giving
         if p == 1:
             ctx.ui.print('The trader is willing to give ' + str(v) + ' food.')
-            ctx.ui.print('1 Accept\n2 Decline')
-            selection = input('>: ')
-            if selection == '1':
+            selection = ctx.ui.choose(["Accept", "Decline"])
+            if selection == 1:
                 if ctx.arrows < x:
                     ctx.ui.print('You cannot afford the trade.')
                 else:
@@ -1333,9 +1270,8 @@ def traveller_generation(ctx: Context):
                 ctx.ui.print('You decline the trade.')
         if p == 2:
             ctx.ui.print('The trader is willing to give ' + str(v) + ' gold.')
-            ctx.ui.print('1 Accept\n2 Decline')
-            selection = input('>: ')
-            if selection == '1':
+            selection = ctx.ui.choose(["Accept", "Decline"])
+            if selection == 1:
                 if ctx.arrows < x:
                     ctx.ui.print('You cannot afford the trade.')
                 else:
@@ -1348,9 +1284,8 @@ def traveller_generation(ctx: Context):
                 ctx.ui.print('You decline the trade.')
         if p == 3:
             ctx.ui.print('The trader is willing to heal you for ' + str(v) + ' HP.')
-            ctx.ui.print('1 Accept\n2 Decline')
-            selection = input('>: ')
-            if selection == '1':
+            selection = ctx.ui.choose(["Accept", "Decline"])
+            if selection == 1:
                 if ctx.arrows < x:
                     ctx.ui.print('You cannot afford the trade.')
                 else:
@@ -1366,9 +1301,8 @@ def traveller_generation(ctx: Context):
         p = random.randint(1, 3)  # what trader is giving
         if p == 1:
             ctx.ui.print('The trader is willing to give ' + str(v) + ' food.')
-            ctx.ui.print('1 Accept\n2 Decline')
-            selection = input('>: ')
-            if selection == '1':
+            selection = ctx.ui.choose(["Accept", "Decline"])
+            if selection == 1:
                 if ctx.gold < x:
                     ctx.ui.print('You cannot afford the trade.')
                 else:
@@ -1381,9 +1315,8 @@ def traveller_generation(ctx: Context):
                 ctx.ui.print('You decline the trade.')
         if p == 2:
             ctx.ui.print('The trader is willing to give ' + str(v) + ' arrows.')
-            ctx.ui.print('1 Accept\n2 Decline')
-            selection = input('>: ')
-            if selection == '1':
+            selection = ctx.ui.choose(["Accept", "Decline"])
+            if selection == 1:
                 if ctx.gold < x:
                     ctx.ui.print('You cannot afford the trade.')
                 else:
@@ -1397,9 +1330,8 @@ def traveller_generation(ctx: Context):
 
         if p == 3:
             ctx.ui.print('The trader is willing to heal you ' + str(v) + ' HP.')
-            ctx.ui.print('1 Accept\n2 Decline')
-            selection = input('>: ')
-            if selection == '1':
+            selection = ctx.ui.choose(["Accept", "Decline"])
+            if selection == 1:
                 if ctx.gold < x:
                     ctx.ui.print('You cannot afford the trade.')
                 else:
@@ -1415,9 +1347,8 @@ def traveller_generation(ctx: Context):
         p = random.randint(1, 3)  # what trader is giving
         if p == 1:
             ctx.ui.print('The trader is willing to give ' + str(v) + ' food.')
-            ctx.ui.print('1 Accept\n2 Decline')
-            selection = input('>: ')
-            if selection == '1':
+            selection = ctx.ui.choose(["Accept", "Decline"])
+            if selection == 1:
                 if ctx.hp < x:
                     ctx.ui.print('You cannot afford the trade, but the trader is willing to let you slide, this time.')
                     ctx.hp = ctx.hp - x
@@ -1433,9 +1364,8 @@ def traveller_generation(ctx: Context):
                 ctx.ui.print('You decline the trade.')
         if p == 2:
             ctx.ui.print('The trader is willing to give ' + str(v) + ' arrows.')
-            ctx.ui.print('1 Accept\n2 Decline')
-            selection = input('>: ')
-            if selection == '1':
+            selection = ctx.ui.choose(["Accept", "Decline"])
+            if selection == 1:
                 if ctx.hp < x:
                     ctx.ui.print('You cannot afford the trade, but the trader is willing to let you slide, this time.')
                     ctx.hp = ctx.hp - x
@@ -1451,9 +1381,8 @@ def traveller_generation(ctx: Context):
                 ctx.ui.print('You decline the trade.')
         if p == 3:
             ctx.ui.print('The trader is willing to give ' + str(v) + ' gold.')
-            ctx.ui.print('1 Accept\n2 Decline')
-            selection = input('>: ')
-            if selection == '1':
+            selection = ctx.ui.choose(["Accept", "Decline"])
+            if selection == 1:
                 if ctx.hp < x:
                     ctx.ui.print('You cannot afford the trade, but the trader is willing to let you slide, this time.')
                     ctx.hp = ctx.hp - x
@@ -1516,8 +1445,6 @@ class robbed(TransientState):
             elif y == 2:
                 ctx.ui.print('You check your coin purse, and find that ' + str(v) + ' gold is missing.')
 
-        input('Press enter to continue')
-
 
 # Doppelganger #
 def doppelganger(ctx: Context):
@@ -1533,12 +1460,11 @@ class fight(TransientState):
         enemy_generator(ctx)
         ctx.ui.print('You see a ' + ctx.enemy_adjective + ' ' + ctx.enemy_type + ' approaching.')
         doppelganger(ctx)
-        ctx.ui.print('1 Fight\n2 Flee')
-        selection = input('>: ')
-        if selection == '1':
+        selection = ctx.ui.choose(["Fight", "Flee"])
+        if selection == 1:
             return fight_simulation(ctx)
 
-        if selection == '2':
+        if selection == 2:
             return flee_fight(ctx)
 
         else:
@@ -1553,7 +1479,7 @@ class fight_simulation(State):
         your_damage_taken(ctx)
         enemy_loot(ctx)
 
-        input('Press enter to continue')
+        ctx.ui.wait()
         # adventure_menu()
         ctx.counter = ctx.counter - 1
 
@@ -1598,11 +1524,11 @@ class flee_fight(State):
         n = random.randint(1, 2)
         if n == 1:
             ctx.ui.print('You escaped the fight.')
-            input('Press enter to continue')
+            ctx.ui.wait()
             adventure_menu(ctx)
         elif n == 2:
             ctx.ui.print('You failed to flee the fight.')
-            input('Press enter to continue')
+            ctx.ui.wait()
             return fight_simulation(self.ctx)
 
         ctx.counter = ctx.counter - 1
@@ -1734,18 +1660,17 @@ class chest(TransientState):
             ctx.ui.print('You see a treasure chest.')
         if p == 2:
             ctx.ui.print('You see a large hollow tree.')
-        ctx.ui.print('1 Inspect\n2 Avoid')
-        selection = input('>: ')
-        if selection == '1':
+        selection = ctx.ui.choose(["Inspect", "Avoid"])
+        if selection == 1:
             a = random.randint(1, 3)
             if a == 1:
                 ctx.ui.print('It is empty. Nothing but cobwebs remain.')
-                input('Press enter to continue')
+                ctx.ui.wait()
                 adventure_menu(self.ctx)
             if a == 2:
                 ctx.ui.print('It was booby trapped. A dart flies out and hits you for 20 damage.')
                 ctx.hp = ctx.hp - 20
-                input('Press enter to continue')
+                ctx.ui.wait()
                 hp_mechanic(self.ctx)
                 adventure_menu(self.ctx)
             # if a == 2 and ctx.luck > 0:
@@ -1754,7 +1679,7 @@ class chest(TransientState):
             if a == 3:
                 return chest_loot(self.ctx)
 
-        elif selection == '2':
+        elif selection == 2:
             ctx.ui.print()
 
         else:
@@ -1783,7 +1708,7 @@ class chest_loot(State):
             ctx.ui.print('Inside, you found ' + str(v) + ' gold.')
             gold_mechanic(ctx)
 
-        input('Press enter to continue')
+        ctx.ui.wait()
         return adventure_menu(self.ctx)
 
 
@@ -1805,14 +1730,14 @@ class salem(State):
         ctx.ui.print('|   |   |   | S |')
         ctx.ui.print('+---------------+\n')
         ctx.ui.print('Salem\n')
-        input('Press enter to continue')
+        ctx.ui.wait()
         clear()
 
         ctx.ui.print(
             'You enter the ancient city of Salem, now blackened with fire and as silent as a graveyard, and see a man who looks like a commoner lounging upon a throne of skeletons in the courtyard.')
         ctx.ui.print('"Ah, ' + ctx.name + '", I was expecting you."\n')
         ctx.ui.print('Type \'who are you?\'')
-        input('>: ')
+        ctx.ui.input_text()
 
         clear()
         ctx.ui.print('"I am the called by your order the Antipope or the Prince of Darkness, but my birth name is Chernobog."')
@@ -1824,21 +1749,20 @@ class salem(State):
         ctx.ui.print(
             '"If you decline, I won\'t kill you, but I will beat you within an inch of your life and enslave you for eternity."\n')
         ctx.ui.print('"The choice is yours, ' + ctx.name + '."\n')
-        ctx.ui.print('1 Accept offer\n2 Decline offer\n')
-        selection = input('>: ')
+        selection = ctx.ui.choose(["Accept offer", "Decline offer"])
         clear()
 
-        if selection == '1':
+        if selection == 1:
             char_menu(ctx)
             ctx.ui.print(
                 'You join the forces of Chernobog, the Prince of Darkness, and forsake your old way of life. You both combine your powers and forge a New Dawn.')
             ctx.ui.print()
-            input('Press enter to end game')
+            ctx.ui.wait('end game')
             return title_screen(self.ctx)
 
-        elif selection == '2':
+        elif selection == 2:
             ctx.ui.print('"Very well, then." Chernobog stands up.')
-            input('Press enter to fight')
+            ctx.ui.wait('fight')
 
             ctx.enemy_battle_score = 170
             ctx.damage_taken = ctx.enemy_battle_score - ctx.martial_prowess
@@ -1847,13 +1771,13 @@ class salem(State):
                 ctx.ui.print('You have slain the Antipope. His body magically lights on fire, and leaves ashes on the ground.')
                 ctx.ui.print(
                     'Your surroundings shimmer, and the city of Salem transforms from its ruined state to its former glory. You have succeeded in every goal.')
-                input('Press enter to continue')
+                ctx.ui.wait()
                 char_menu(ctx)
                 clear()
                 ctx.ui.print('You win!')
 
                 ctx.ui.print('Occupation: ' + ctx.occupation + '')
-                input('Press enter to end game')
+                ctx.ui.wait('end game')
                 return title_screen(self.ctx)
 
             else:
@@ -1861,7 +1785,7 @@ class salem(State):
                 char_menu(ctx)
                 ctx.ui.print()
                 ctx.ui.print('You have lost the fight, letting Chernobog win. He enslaves you for all eternity, and he takes over the world.\n')
-                input('Press enter to end game')
+                ctx.ui.wait('end game')
                 return title_screen(self.ctx)
 
         else:
