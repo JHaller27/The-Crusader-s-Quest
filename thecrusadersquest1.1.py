@@ -242,7 +242,7 @@ class DaysToGo(TransientState):
 
 # Location Changer #
 class LocationChanger(State):
-    def do(self) -> Optional['State']:
+    def do(self) -> Optional[State]:
         ctx = self.ctx
 
         ctx.adventure_state = False
@@ -265,7 +265,7 @@ def town_description(ctx: Context):
 
 # Start Game #
 class StartGame(State):
-    def do(self) -> Optional['State']:
+    def do(self) -> Optional[State]:
         blacksmith_price_generator(self.ctx)
         enemy_locator_generator(self.ctx)
 
@@ -274,7 +274,7 @@ class StartGame(State):
 
 # Town #
 class Town(State):
-    def do(self) -> Optional['State']:
+    def do(self) -> Optional[State]:
         ctx = self.ctx
 
         ctx.ui.clear()
@@ -301,7 +301,7 @@ class Town(State):
 
 
 class LeaveTown(State):
-    def do(self) -> Optional['State']:
+    def do(self) -> Optional[State]:
         ctx = self.ctx
 
         ctx.ui.print('You will brave the wilds for 5 days.')
@@ -311,7 +311,7 @@ class LeaveTown(State):
 
 # Tavern #
 class Tavern(State):
-    def do(self) -> Optional['State']:
+    def do(self) -> Optional[State]:
         ctx = self.ctx
 
         ctx.ui.clear()
@@ -384,7 +384,7 @@ class Tavern(State):
 
 # Talk #
 class Talk(State):
-    def do(self) -> Optional['State']:
+    def do(self) -> Optional[State]:
         ctx = self.ctx
 
         dialogue = random.randint(1, 10)
@@ -432,7 +432,7 @@ class Talk(State):
 
 # Blacksmith #
 class Blacksmith(State):
-    def do(self) -> Optional['State']:
+    def do(self) -> Optional[State]:
         ctx = self.ctx
 
         ctx.ui.clear()
@@ -511,7 +511,7 @@ def blacksmith_price_generator(ctx: Context):
 
 # Adventuring #
 class Adventuring(State):
-    def do(self) -> Optional['State']:
+    def do(self) -> Optional[State]:
         ctx = self.ctx
 
         if ctx.counter == 0:
@@ -542,7 +542,7 @@ class Adventuring(State):
 
 
 class EndAdventure(State):
-    def do(self) -> Optional['State']:
+    def do(self) -> Optional[State]:
         ctx = self.ctx
 
         ctx.counter = 0
@@ -1169,7 +1169,7 @@ class Fight(TransientState):
 
 # Fight Simulation #
 class FightSimulation(State):
-    def do(self) -> Optional['State']:
+    def do(self) -> Optional[State]:
         ctx = self.ctx
 
         your_damage_taken(ctx)
@@ -1214,7 +1214,7 @@ def your_damage_taken(ctx: Context):
 
 # Flee Fight #
 class FleeFight(State):
-    def do(self) -> Optional['State']:
+    def do(self) -> Optional[State]:
         ctx = self.ctx
 
         n = random.randint(1, 2)
@@ -1326,7 +1326,7 @@ class Chest(TransientState):
 
 # Chest Loot #
 class ChestLoot(State):
-    def do(self) -> Optional['State']:
+    def do(self) -> Optional[State]:
         ctx = self.ctx
 
         x = random.randint(1, 3)
@@ -1352,7 +1352,7 @@ class ChestLoot(State):
 
 # Salem #
 class Salem(State):
-    def do(self) -> Optional['State']:
+    def do(self) -> Optional[State]:
         ctx = self.ctx
 
         ctx.display_map()
