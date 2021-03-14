@@ -41,6 +41,9 @@ class Map:
         self._width = width
         self._height = height
 
+        self._start = None
+        self._end = None
+
         self._locations = dict()
         self._grid = [[None for _ in range(self._width)] for _ in range(self._height)]
 
@@ -56,15 +59,33 @@ class Map:
     def grid(self) -> list[list[Optional[Location]]]:
         return self._grid
 
+    @property
+    def start(self) -> Location:
+        assert self._start is not None, "Start not set yet"
+        return self._start
+
+    @property
+    def end(self) -> Location:
+        assert self._end is not None, "End not set yet"
+        return self._end
+
     def add_location(self, loc: Location):
         self._locations[loc.name] = loc
         self._grid[loc.row][loc.col] = loc
+
+    def set_start(self, name: str):
+        assert name in self._locations, "Invalid start location name"
+        self._start = name
+
+    def set_end(self, name: str):
+        assert name in self._locations, "Invalid end location name"
+        self._end = name
 
     def get(self, name: str) -> Optional[Location]:
         return self._locations.get(name)
 
 
-def get_map(data_path: str) -> (Map, dict):
+def get_map(data_path: str) -> Map:
     with open(data_path, 'r') as fp:
         map_config = yaml.safe_load(fp)
 
@@ -73,6 +94,9 @@ def get_map(data_path: str) -> (Map, dict):
         loc_obj = Location.from_yaml(name, loc)
         map_obj.add_location(loc_obj)
 
-    map_obj.get(map_config.get("start")).visit()
+    map_obj.set_start(map_config.get("start"))
+    map_obj.start.visit()
 
-    return map_obj, map_config
+    map_obj.set_end(map_config.get("end"))
+
+    return map_obj

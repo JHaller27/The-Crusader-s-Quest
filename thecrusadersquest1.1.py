@@ -16,7 +16,7 @@ with open('./data/player_options.yml', 'r') as fp:
 with open('./data/enemies.yml', 'r') as fp:
     enemies_config = yaml.safe_load(fp)
 
-map_obj, map_config = get_map('./data/map.yml')
+map_obj = get_map('./data/map.yml')
 
 
 ui = ConsoleInterface()
@@ -260,7 +260,7 @@ class LocationChanger(State):
         ctx.adventure_state = False
 
         location = map_obj.get(ctx.location)
-        end_location = map_config.get("end")
+        end_location = map_obj.end
 
         ctx.location = location.destination
         map_obj.get(ctx.location).visit()
@@ -281,7 +281,7 @@ def town_description(ctx: Context):
 # Start Game #
 class StartGame(State):
     def do(self) -> Optional['State']:
-        self.ctx.location = map_config.get("start")
+        self.ctx.location = map_obj.start
         blacksmith_price_generator(self.ctx)
         enemy_locator_generator(self.ctx)
 
