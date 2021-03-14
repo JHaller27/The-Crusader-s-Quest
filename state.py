@@ -1,5 +1,7 @@
 from typing import Optional, Type
 
+from ui import UserInterface
+
 
 class State:
     def __init__(self, ctx: 'Context'):
@@ -80,8 +82,11 @@ class Context:
 
     _state = None
 
+    def __init__(self, ui: UserInterface):
+        self.ui = ui
+
     def _run_once(self):
-        print(f"~~~~~~~~~~  Running state '{type(self._state).__name__}'")
+        self.ui.debug(f"~~~~~~~~~~  Running state '{type(self._state).__name__}'")
         self._state = self._state.do()
 
     def run(self, init: Optional[State]):
@@ -91,56 +96,56 @@ class Context:
             self._run_once()
 
     def char_menu(self):
-        print('######################')
-        print('Name: ' + self.name + '')
-        print('Race: ' + self.race + '')
-        print('Occupation: ' + self.occupation + '')
-        print('######################')
-        print('HP: ' + str(self.hp) + '/' + str(self.max_hp) + '')
-        print('Martial Prowess: ' + str(self.martial_prowess) + '')
-        print('Weapon: ' + self.weapon + '')
-        print('######################')
-        print('Consumption Rate: ' + str(self.consumption_rate) + '')
-        print('Food: ' + str(self.food) + '/' + str(self.max_food) + '')
-        print('Endurance: ' + str(self.endurance) + '')
-        print('Arrows: ' + str(self.arrows) + '/' + str(self.max_arrows) + '')
-        print('######################')
-        # print('Luck: ' + str(self.luck) + '')
-        # print('Speed: ' + str(self.speed) + '\n')
-        # print('Illness: ' + self.illness + '')
-        print('Gold: ' + str(self.gold) + '/' + str(self.max_gold) + '')
-        print('######################\n')
+        self.ui.print('######################')
+        self.ui.print('Name: ' + self.name + '')
+        self.ui.print('Race: ' + self.race + '')
+        self.ui.print('Occupation: ' + self.occupation + '')
+        self.ui.print('######################')
+        self.ui.print('HP: ' + str(self.hp) + '/' + str(self.max_hp) + '')
+        self.ui.print('Martial Prowess: ' + str(self.martial_prowess) + '')
+        self.ui.print('Weapon: ' + self.weapon + '')
+        self.ui.print('######################')
+        self.ui.print('Consumption Rate: ' + str(self.consumption_rate) + '')
+        self.ui.print('Food: ' + str(self.food) + '/' + str(self.max_food) + '')
+        self.ui.print('Endurance: ' + str(self.endurance) + '')
+        self.ui.print('Arrows: ' + str(self.arrows) + '/' + str(self.max_arrows) + '')
+        self.ui.print('######################')
+        # self.ui.print('Luck: ' + str(self.luck) + '')
+        # self.ui.print('Speed: ' + str(self.speed) + '\n')
+        # self.ui.print('Illness: ' + self.illness + '')
+        self.ui.print('Gold: ' + str(self.gold) + '/' + str(self.max_gold) + '')
+        self.ui.print('######################\n')
         input('Press enter to continue')
 
     def adventure_menu(self):
-        print('######################')
-        print('HP: ' + str(self.hp) + '/' + str(self.max_hp) + '')
-        print('Food: ' + str(self.food) + '/' + str(self.max_food) + '')
-        print('Arrows: ' + str(self.arrows) + '/' + str(self.max_arrows) + '')
-        print('Gold: ' + str(self.gold) + '/' + str(self.max_gold) + '')
-        print('Endurance: ' + str(self.endurance) + '')
-        print('######################')
-        print('Martial Prowess: ' + str(self.martial_prowess) + '')
-        print('Weapon: ' + self.weapon + '')
-        print('Consumption Rate: ' + str(self.consumption_rate) + '')
-        print('######################\n')
+        self.ui.print('######################')
+        self.ui.print('HP: ' + str(self.hp) + '/' + str(self.max_hp) + '')
+        self.ui.print('Food: ' + str(self.food) + '/' + str(self.max_food) + '')
+        self.ui.print('Arrows: ' + str(self.arrows) + '/' + str(self.max_arrows) + '')
+        self.ui.print('Gold: ' + str(self.gold) + '/' + str(self.max_gold) + '')
+        self.ui.print('Endurance: ' + str(self.endurance) + '')
+        self.ui.print('######################')
+        self.ui.print('Martial Prowess: ' + str(self.martial_prowess) + '')
+        self.ui.print('Weapon: ' + self.weapon + '')
+        self.ui.print('Consumption Rate: ' + str(self.consumption_rate) + '')
+        self.ui.print('######################\n')
 
     def town_description(self):
         if self.location == 'Goodshire':
-            print('The sun shines brightly on the lazy Halfling natives.')
+            self.ui.print('The sun shines brightly on the lazy Halfling natives.')
         elif self.location == 'Rodez':
-            print('The sky is overcast, and your feet squelch in the mud from a recent rain.')
+            self.ui.print('The sky is overcast, and your feet squelch in the mud from a recent rain.')
         elif self.location == 'Oristano':
-            print('The surrounding trees loom over the town like giants, and block the sun\'s rays.')
+            self.ui.print('The surrounding trees loom over the town like giants, and block the sun\'s rays.')
         elif self.location == 'Thasos':
-            print('A hot, dry wind blows clouds across the yellow sun, and you feel hot.')
+            self.ui.print('A hot, dry wind blows clouds across the yellow sun, and you feel hot.')
         elif self.location == 'Karabuk':
-            print('There is a foul stench in the air, and the ground is covered bubbling puddles of unknown origin.')
+            self.ui.print('There is a foul stench in the air, and the ground is covered bubbling puddles of unknown origin.')
 
     def hp_mechanic(self, death: Type[State]):
         if self.hp > self.max_hp:
             self.hp = self.max_hp
-            print('You have max HP.')
+            self.ui.print('You have max HP.')
         if self.hp < 1:
             self.hp = 0
             self._state = death(self)
