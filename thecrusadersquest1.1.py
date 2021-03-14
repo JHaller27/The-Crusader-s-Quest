@@ -9,7 +9,7 @@ import yaml
 from map import get_map
 from ui import ConsoleInterface, DebugInterfaceDecorator
 from state import Context, State, TransientState
-from enemy import get_enemy
+from enemy import Enemy, get_enemy
 
 
 with open('./data/player_options.yml', 'r') as fp:
@@ -1331,15 +1331,15 @@ class Salem(State):
                 'You join the forces of Chernobog, the Prince of Darkness, and forsake your old way of life. You both combine your powers and forge a New Dawn.')
             ctx.ui.print()
             ctx.ui.wait('end game')
-            return TitleScreen(self.ctx)
 
         elif selection == 2:
             ctx.ui.print('"Very well, then." Chernobog stands up.')
             ctx.ui.wait('fight')
 
-            ctx.enemy_battle_score = 170
-            damage_taken = ctx.enemy_battle_score - ctx.martial_prowess
-            ctx.hp = int(ctx.hp - damage_taken)
+            ctx.enemy = Enemy('', 'Chernobog', 170)
+            damage_taken = ctx.enemy.battle_score - ctx.martial_prowess
+            ctx.hp -= damage_taken
+
             if ctx.hp > 0:
                 ctx.ui.print('You have slain the Antipope. His body magically lights on fire, and leaves ashes on the ground.')
                 ctx.ui.print(
@@ -1351,7 +1351,6 @@ class Salem(State):
 
                 ctx.ui.print('Occupation: ' + ctx.occupation + '')
                 ctx.ui.wait('end game')
-                return TitleScreen(self.ctx)
 
             else:
                 ctx.hp = 0.1
@@ -1359,10 +1358,11 @@ class Salem(State):
                 ctx.ui.print()
                 ctx.ui.print('You have lost the fight, letting Chernobog win. He enslaves you for all eternity, and he takes over the world.\n')
                 ctx.ui.wait('end game')
-                return TitleScreen(self.ctx)
 
         else:
-            return Salem(self.ctx)
+            raise RuntimeError("Invalid selection (this should never happen)")
+
+        return TitleScreen(self.ctx)
 
 
 def main():
