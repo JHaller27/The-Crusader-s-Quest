@@ -1,6 +1,7 @@
 from typing import Optional, Type
 
 from ui import UserInterface
+from map import Map, Location
 
 
 class State:
@@ -62,7 +63,6 @@ class Context:
     weapon = 'Sword'
     weapon_type = 'sword'
 
-    location = ''
     days_to_go = 0
     adventure_state = False
 
@@ -82,8 +82,11 @@ class Context:
 
     _state = None
 
-    def __init__(self, ui: UserInterface):
+    def __init__(self, ui: UserInterface, map_obj: Map):
         self.ui = ui
+        self.map = map_obj
+
+        self.location = self.map.start.name
 
     def _run_once(self):
         self.ui.debug(f"Running state '{type(self._state).__name__}'")
@@ -94,6 +97,14 @@ class Context:
 
         while self._state is not None:
             self._run_once()
+
+    def get_location(self) -> Location:
+        return self.map.get(self.location)
+
+    def set_location(self, loc: str):
+        self.location = loc
+        loc_obj = self.map.get(loc)
+        loc_obj.visit()
 
     def char_menu(self):
         self.ui.print('######################')
@@ -162,3 +173,9 @@ class Context:
                 self.endurance = 0
                 self._state = death(self)
         # need to work on restoring endurance#
+
+    def display_map(self):
+        self.ui.display_map(self.map)
+
+    def at_end_location(self) -> bool:
+        return self.location == self.map.end.name

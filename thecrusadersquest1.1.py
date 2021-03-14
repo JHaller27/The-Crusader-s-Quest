@@ -16,13 +16,12 @@ with open('./data/player_options.yml', 'r') as fp:
 with open('./data/enemies.yml', 'r') as fp:
     enemies_config = yaml.safe_load(fp)
 
-map_obj = get_map('./data/map.yml')
-
-
 ui = ConsoleInterface()
 ui = DebugInterfaceDecorator(ui)
 
-global_context = Context(ui)
+map_data = get_map('./data/map.yml')
+
+global_context = Context(ui, map_data)
 
 
 def clear():
@@ -216,7 +215,7 @@ class TheMap(TransientState):
         ctx = self.ctx
 
         # ctx.ui.print('Key: T = Town; C = City; etc.)
-        ctx.ui.display_map(map_obj)
+        ctx.display_map()
 
         return DaysToGo(self.ctx, self.default)
 
@@ -232,7 +231,7 @@ class DaysToGo(TransientState):
 
             return None
 
-        location = map_obj.get(ctx.location)
+        location = ctx.get_location()
         distance = location.distance
         ctx.counter_set = ctx.counter = distance
 
@@ -259,15 +258,12 @@ class LocationChanger(State):
 
         ctx.adventure_state = False
 
-        location = map_obj.get(ctx.location)
-        end_location = map_obj.end
-
-        ctx.location = location.destination
-        map_obj.get(ctx.location).visit()
+        location = ctx.get_location()
+        ctx.set_location(location.destination)
 
         blacksmith_price_generator(self.ctx)
 
-        if location == end_location:
+        if ctx.at_end_location():
             return Salem(self.ctx)
 
         return Town(self.ctx)
@@ -281,7 +277,6 @@ def town_description(ctx: Context):
 # Start Game #
 class StartGame(State):
     def do(self) -> Optional['State']:
-        self.ctx.location = map_obj.start
         blacksmith_price_generator(self.ctx)
         enemy_locator_generator(self.ctx)
 
@@ -521,7 +516,7 @@ class Blacksmith(State):
 
 # Blacksmith Price Generator #
 def blacksmith_price_generator(ctx: Context):
-    location = map_obj.get(ctx.location)
+    location = ctx.get_location()
     ctx.blacksmith_price = random.randint(51, 75) + location.blacksmith_price
 
 
@@ -1269,9 +1264,9 @@ def enemy_resetter(ctx: Context):
 
 # Enemy Locator and Excluder Generator #
 def enemy_locator_generator(ctx: Context):
-    location = map_obj.get(ctx.location)
+    location = ctx.get_location()
 
-    ctx.enemy_locator = ctx.location
+    ctx.enemy_locator = location.name
     ctx.enemy_exclude = location.enemy_exclude
 
     ctx.enemy_number = random.randint(1, 5)
@@ -1371,8 +1366,7 @@ class Salem(State):
     def do(self) -> Optional['State']:
         ctx = self.ctx
 
-        clear()
-        ctx.ui.display_map(map_obj)
+        ctx.display_map()
         ctx.ui.print('Salem\n')
         ctx.ui.wait()
         clear()

@@ -74,6 +74,8 @@ class ConsoleInterface(UserInterface):
                 return 'X'
             return loc.name[0]
 
+        self.clear()
+
         for r_idx, r in enumerate(map_obj.grid):
             if r_idx == 0:
                 print("╔" + "═══╤" * (map_obj.width - 1) + "═══╗")
