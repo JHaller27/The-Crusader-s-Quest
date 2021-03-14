@@ -4,9 +4,15 @@
 
 from typing import Optional
 import random
+import yaml
 
 from ui import ConsoleInterface, DebugInterfaceDecorator
 from state import Context, State, TransientState
+
+
+with open('./data/player_options.yml', 'r') as fp:
+    player_options_config = yaml.load(fp)
+
 
 ui = ConsoleInterface()
 ui = DebugInterfaceDecorator(ui)
@@ -79,145 +85,41 @@ class SetupGame(State):
         clear()
         ctx.ui.print('What is your race?\n')
 
-        selection = ctx.ui.choose(["Human", "Dwarf", "Satyr", "Halfling", "Elf", "Tigerman", "Leprechaun"])
-        if selection == 1:
-            ctx.race = "Human"
-            ctx.hp = 25
-            ctx.max_hp = 25
-            ctx.martial_prowess = 10
-            ctx.consumption_rate = 10
-            ctx.endurance = 30
-            ctx.gold = 100
-            ctx.luck = 0
-            ctx.speed = 0
+        races = player_options_config.get('races')
 
-        elif selection == 2:
-            ctx.race = "Dwarf"
-            ctx.hp = 50
-            ctx.max_hp = 50
-            ctx.martial_prowess = 30
-            ctx.consumption_rate = 20
-            ctx.endurance = 200
-            ctx.gold = 200
-            ctx.luck = 0
-            ctx.speed = 0
+        selection = ctx.ui.choose([r['name'] for r in races]) - 1
+        selected_race = races[selection]
 
-        elif selection == 3:
-            ctx.race = "Satyr"
-            ctx.hp = 100
-            ctx.max_hp = 100
-            ctx.martial_prowess = 0
-            ctx.consumption_rate = 20
-            ctx.endurance = 200
-            ctx.gold = 0
-            ctx.luck = 0
-            ctx.speed = 0
-
-        elif selection == 4:
-            ctx.race = "Halfling"
-            ctx.hp = 25
-            ctx.max_hp = 25
-            ctx.martial_prowess = 0
-            ctx.consumption_rate = 20
-            ctx.endurance = 200
-            ctx.gold = 100
-            ctx.luck = 0
-            ctx.speed = 0
-
-        elif selection == 5:
-            ctx.race = "Elf"
-            ctx.hp = 10
-            ctx.max_hp = 10
-            ctx.martial_prowess = 0
-            ctx.consumption_rate = 10
-            ctx.endurance = 1000
-            ctx.gold = 100
-            ctx.luck = 0
-            ctx.speed = 0
-
-        elif selection == 6:
-            ctx.race = "Tigerman"
-            ctx.hp = 25
-            ctx.max_hp = 25
-            ctx.martial_prowess = 50
-            ctx.consumption_rate = 20
-            ctx.endurance = 100
-            ctx.gold = 0
-            ctx.luck = 0
-            ctx.speed = 0
-
-        elif selection == 7:
-            ctx.race = "Leprechaun"
-            ctx.hp = 10
-            ctx.max_hp = 10
-            ctx.martial_prowess = 0
-            ctx.consumption_rate = 10
-            ctx.endurance = 10
-            ctx.gold = 1000
-            ctx.luck = 0
-            ctx.speed = 0
+        ctx.race = selected_race.get('name')
+        ctx.hp = selected_race.get('hp')
+        ctx.max_hp = selected_race.get('hp')
+        ctx.martial_prowess = selected_race.get('martial_prowess')
+        ctx.consumption_rate = selected_race.get('consumption_rate')
+        ctx.endurance = selected_race.get('endurance')
+        ctx.gold = selected_race.get('gold')
+        ctx.luck = selected_race.get('luck')
+        ctx.speed = selected_race.get('speed')
 
         clear()
 
         # Occupation #
         ctx.ui.print('What is your occupation?\n')
 
-        selection = ctx.ui.choose(["Hunter", "Knight", "Adventurer", "Assassin", "Glutton"])
-        if selection == 1:
-            ctx.occupation = 'Hunter'
-            ctx.hp = ctx.hp + 0
-            ctx.max_hp = ctx.max_hp + 0
-            ctx.food = ctx.food + 50
-            ctx.max_food = ctx.max_food + 150
-            ctx.arrows = ctx.arrows + 75
-            ctx.max_arrows = ctx.max_arrows + 100
-            ctx.gold = ctx.gold + 0
-            ctx.max_gold = ctx.max_gold + 800
-            ctx.martial_prowess = ctx.martial_prowess + 0
-        elif selection == 2:
-            ctx.occupation = 'Knight'
-            ctx.hp = ctx.hp + 100
-            ctx.max_hp = ctx.max_hp + 100
-            ctx.food = ctx.food + 25
-            ctx.max_food = ctx.max_food + 100
-            ctx.arrows = ctx.arrows + 8
-            ctx.max_arrows = ctx.max_arrows + 10
-            ctx.gold = ctx.gold + 400
-            ctx.max_gold = ctx.max_gold + 1000
-            ctx.martial_prowess = ctx.martial_prowess + 20
-        elif selection == 3:
-            ctx.occupation = 'Adventurer'
-            ctx.hp = ctx.hp + 25
-            ctx.max_hp = ctx.max_hp + 25
-            ctx.food = ctx.food + 75
-            ctx.max_food = ctx.max_food + 100
-            ctx.arrows = ctx.arrows + 20
-            ctx.max_arrows = ctx.max_arrows + 20
-            ctx.gold = ctx.gold + 100
-            ctx.max_gold = ctx.max_gold + 800
-            ctx.martial_prowess = ctx.martial_prowess + 10
-        elif selection == 4:
-            ctx.occupation = 'Assassin'
-            ctx.hp = ctx.hp + 0
-            ctx.max_hp = ctx.max_hp + 0
-            ctx.food = ctx.food + 25
-            ctx.max_food = ctx.max_food + 100
-            ctx.arrows = ctx.arrows + 8
-            ctx.max_arrows = ctx.max_arrows + 10
-            ctx.gold = ctx.gold + 100
-            ctx.max_gold = ctx.max_gold + 1000
-            ctx.martial_prowess = ctx.martial_prowess + 60
-        elif selection == 5:
-            ctx.occupation = 'Glutton'
-            ctx.hp = ctx.hp + 25
-            ctx.max_hp = ctx.max_hp + 25
-            ctx.food = ctx.food + 500
-            ctx.max_food = ctx.max_food + 500
-            ctx.arrows = ctx.arrows + 0
-            ctx.max_arrows = ctx.max_arrows + 1
-            ctx.gold = ctx.gold + 0
-            ctx.max_gold = ctx.max_gold + 1000
-            ctx.martial_prowess = ctx.martial_prowess + 0
+        occupations = player_options_config.get('occupations')
+
+        selection = ctx.ui.choose([o['name'] for o in occupations]) - 1
+        selected_occupation = occupations[selection]
+
+        ctx.occupation = selected_occupation.get('name')
+        ctx.hp += selected_occupation.get('hp')
+        ctx.max_hp += selected_occupation.get('hp')
+        ctx.food += selected_occupation.get('food').get('curr')
+        ctx.max_food += selected_occupation.get('food').get('max')
+        ctx.arrows += selected_occupation.get('arrows').get('curr')
+        ctx.max_arrows += selected_occupation.get('arrows').get('max')
+        ctx.gold += selected_occupation.get('arrows').get('curr')
+        ctx.max_gold += selected_occupation.get('arrows').get('max')
+        ctx.martial_prowess += selected_occupation.get('martial_prowess')
 
         clear()
 
@@ -226,11 +128,6 @@ class SetupGame(State):
         ctx.weapon = ctx.ui.input_text()
         gold_mechanic(self.ctx)
 
-        clear()
-
-        # ctx.ui.print('What is your ctx.weapon called? (ie. Thorn, Crusher, etc.)')
-
-        # ctx.weapon = ctx.ui.input('>: ')
         clear()
 
         ctx.ui.print('You are ' + ctx.name + ', the ' + ctx.race + ' ' + ctx.occupation + '. You wield a ' + ctx.weapon + '.\n')

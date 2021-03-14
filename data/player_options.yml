@@ -1,0 +1,131 @@
+races:
+  -
+    name: Human
+    hp: 25
+    martial_prowess: 10
+    consumption_rate: 10
+    endurance: 30
+    gold: 100
+    luck: 0
+    speed: 0
+  -
+    name: Dwarf
+    hp: 50
+    martial_prowess: 30
+    consumption_rate: 20
+    endurance: 200
+    gold: 200
+    luck: 0
+    speed: 0
+  -
+    name: Satyr
+    hp: 100
+    martial_prowess: 0
+    consumption_rate: 20
+    endurance: 200
+    gold: 0
+    luck: 0
+    speed: 0
+  -
+    name: Halfling
+    hp: 25
+    martial_prowess: 0
+    consumption_rate: 20
+    endurance: 200
+    gold: 100
+    luck: 0
+    speed: 0
+  -
+    name: Elf
+    hp: 10
+    martial_prowess: 0
+    consumption_rate: 10
+    endurance: 1000
+    gold: 100
+    luck: 0
+    speed: 0
+  -
+    name: Tigerman
+    hp: 25
+    martial_prowess: 50
+    consumption_rate: 20
+    endurance: 100
+    gold: 0
+    luck: 0
+    speed: 0
+  -
+    name: Leprechaun
+    hp: 10
+    martial_prowess: 0
+    consumption_rate: 0
+    endurance: 10
+    gold: 1000
+    luck: 0
+    speed: 0
+
+occupations:
+  -
+    name: Hunter
+    hp: 0
+    food:
+      curr: 50
+      max: 150
+    arrows:
+      curr: 75
+      max: 100
+    gold:
+      curr: 0
+      max: 800
+    martial_prowess: 0
+  -
+    name: Knight
+    hp: 100
+    food:
+      curr: 25
+      max: 100
+    arrows:
+      curr: 8
+      max: 10
+    gold:
+      curr: 400
+      max: 1000
+    martial_prowess: 20
+  -
+    name: Adventurer
+    hp: 25
+    food:
+      curr: 75
+      max: 100
+    arrows:
+      curr: 20
+      max: 20
+    gold:
+      curr: 100
+      max: 800
+    martial_prowess: 10
+  -
+    name: Assassin
+    hp: 0
+    food:
+      curr: 25
+      max: 100
+    arrows:
+      curr: 8
+      max: 10
+    gold:
+      curr: 100
+      max: 1000
+    martial_prowess: 60
+  -
+    name: Glutton
+    hp: 25
+    food:
+      curr: 500
+      max: 500
+    arrows:
+      curr: 0
+      max: 1
+    gold:
+      curr: 0
+      max: 1000
+    martial_prowess: 0
