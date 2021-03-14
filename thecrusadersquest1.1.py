@@ -210,7 +210,7 @@ def adventure_menu(ctx: Context):
     ctx.adventure_menu()
 
 
-# Map ###         Update this to turn X into another symbol when that ctx.location is active
+# Map #
 class TheMap(TransientState):
     def _do(self) -> Optional[State]:
         ctx = self.ctx
@@ -233,7 +233,7 @@ class DaysToGo(TransientState):
             return None
 
         location = map_obj.get(ctx.location)
-        distance = location.get("travel").get("distance")
+        distance = location.distance
         ctx.counter_set = ctx.counter = distance
 
         ctx.ui.print(f"You will brave the wilds for {distance} days.")
@@ -262,7 +262,7 @@ class LocationChanger(State):
         location = map_obj.get(ctx.location)
         end_location = map_config.get("end")
 
-        ctx.location = location.get("travel").get("destination")
+        ctx.location = location.destination
         map_obj.get(ctx.location).visit()
 
         blacksmith_price_generator(self.ctx)
@@ -1272,7 +1272,7 @@ def enemy_locator_generator(ctx: Context):
     location = map_obj.get(ctx.location)
 
     ctx.enemy_locator = ctx.location
-    ctx.enemy_exclude = location.get('enemy_exclude')
+    ctx.enemy_exclude = location.enemy_exclude
 
     ctx.enemy_number = random.randint(1, 5)
     while ctx.enemy_number in ctx.enemy_exclude:
@@ -1372,17 +1372,7 @@ class Salem(State):
         ctx = self.ctx
 
         clear()
-        ctx.ui.print('-----------------')
-        ctx.ui.print('| G |   |   |   |')
-        ctx.ui.print('+---+---+---+---+')
-        ctx.ui.print('| R |   |   |   |')
-        ctx.ui.print('+---+---+---+---+')
-        ctx.ui.print('|   | O |   |   |')
-        ctx.ui.print('+---+---+---+---+')
-        ctx.ui.print('|   | T | K |   |')
-        ctx.ui.print('+---+---+---+---+')
-        ctx.ui.print('|   |   |   | S |')
-        ctx.ui.print('+---------------+\n')
+        ctx.ui.display_map(map_obj)
         ctx.ui.print('Salem\n')
         ctx.ui.wait()
         clear()
