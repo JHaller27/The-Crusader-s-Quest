@@ -84,51 +84,13 @@ class Context:
         return max(self.enemy.battle_score - self.player.martial_prowess, 0)
 
     def char_menu(self):
-        self.ui.print('######################')
-        self.ui.print('Name: ' + self.player.name + '')
-        self.ui.print('Race: ' + self.player.race + '')
-        self.ui.print('Occupation: ' + self.player.occupation + '')
-        self.ui.print('######################')
-        self.ui.print('HP: ' + str(self.player.hp) + '/' + str(self.player.max_hp) + '')
-        self.ui.print('Martial Prowess: ' + str(self.player.martial_prowess) + '')
-        self.ui.print('Weapon: ' + self.player.weapon + '')
-        self.ui.print('######################')
-        self.ui.print('Consumption Rate: ' + str(self.player.consumption_rate) + '')
-        self.ui.print('Food: ' + str(self.player.food) + '/' + str(self.player.max_food) + '')
-        self.ui.print('Endurance: ' + str(self.player.endurance) + '')
-        self.ui.print('Arrows: ' + str(self.player.arrows) + '/' + str(self.player.max_arrows) + '')
-        self.ui.print('Gold: ' + str(self.player.gold) + '/' + str(self.player.max_gold) + '')
-        self.ui.print('######################')
-        # self.ui.print('Luck: ' + str(self.player.luck) + '')
-        # self.ui.print('Speed: ' + str(self.player.speed) + '\n')
-        # self.ui.print('Illness: ' + self.player.illness + '')
-        # self.ui.print('######################\n')
-        input('Press enter to continue')
+        self.ui.display_basic_player_info(self.player)
+        self.ui.display_combat_stats(self.player)
+        self.ui.display_resources(self.player)
 
     def adventure_menu(self):
-        self.ui.print('######################')
-        self.ui.print('HP: ' + str(self.player.hp) + '/' + str(self.player.max_hp) + '')
-        self.ui.print('Food: ' + str(self.player.food) + '/' + str(self.player.max_food) + '')
-        self.ui.print('Arrows: ' + str(self.player.arrows) + '/' + str(self.player.max_arrows) + '')
-        self.ui.print('Gold: ' + str(self.player.gold) + '/' + str(self.player.max_gold) + '')
-        self.ui.print('Endurance: ' + str(self.player.endurance) + '')
-        self.ui.print('######################')
-        self.ui.print('Martial Prowess: ' + str(self.player.martial_prowess) + '')
-        self.ui.print('Weapon: ' + self.player.weapon + '')
-        self.ui.print('Consumption Rate: ' + str(self.player.consumption_rate) + '')
-        self.ui.print('######################\n')
-
-    def town_description(self):
-        if self.location == 'Goodshire':
-            self.ui.print('The sun shines brightly on the lazy Halfling natives.')
-        elif self.location == 'Rodez':
-            self.ui.print('The sky is overcast, and your feet squelch in the mud from a recent rain.')
-        elif self.location == 'Oristano':
-            self.ui.print('The surrounding trees loom over the town like giants, and block the sun\'s rays.')
-        elif self.location == 'Thasos':
-            self.ui.print('A hot, dry wind blows clouds across the yellow sun, and you feel hot.')
-        elif self.location == 'Karabuk':
-            self.ui.print('There is a foul stench in the air, and the ground is covered bubbling puddles of unknown origin.')
+        self.ui.display_combat_stats(self.player)
+        self.ui.display_resources(self.player)
 
     def display_map(self):
         self.ui.clear()

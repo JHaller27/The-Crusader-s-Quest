@@ -236,11 +236,6 @@ class LocationChanger(State):
         return Town(self.ctx)
 
 
-# Town Description #
-def town_description(ctx: Context):
-    ctx.town_description()
-
-
 # Start Game #
 class StartGame(State):
     def do(self) -> Optional[State]:
@@ -254,7 +249,7 @@ class Town(State):
 
         ctx.ui.clear()
         ctx.ui.print('You are in ' + ctx.location + '.')
-        town_description(ctx)
+        ctx.ui.print(ctx.get_location().description)
         ctx.ui.print()
         selection = ctx.ui.choose(["Tavern", "Blacksmith", "Character", "Adventure"])
         if selection == 1:
@@ -272,6 +267,7 @@ class Town(State):
         if selection == 3:
             ctx.ui.clear()
             char_menu(self.ctx)
+            ctx.ui.wait()
         return Town(self.ctx)
 
 
@@ -1319,7 +1315,7 @@ class Salem(State):
             damage_taken = ctx.combat_damage()
             ctx.player.hp -= damage_taken
 
-            if ctx.player.hp > 0:
+            if ctx.player.is_alive():
                 ctx.ui.print('You have slain the Antipope. His body magically lights on fire, and leaves ashes on the ground.')
                 ctx.ui.print(
                     'Your surroundings shimmer, and the city of Salem transforms from its ruined state to its former glory. You have succeeded in every goal.')
@@ -1332,7 +1328,6 @@ class Salem(State):
                 ctx.ui.wait('end game')
 
             else:
-                ctx.player.hp = 0.1
                 char_menu(ctx)
                 ctx.ui.print()
                 ctx.ui.print('You have lost the fight, letting Chernobog win. He enslaves you for all eternity, and he takes over the world.\n')

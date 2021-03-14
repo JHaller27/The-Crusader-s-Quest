@@ -2,6 +2,7 @@ import os
 from typing import Optional
 
 from map import Map, Location
+from player import Player
 
 
 class UserInterface:
@@ -31,13 +32,26 @@ class UserInterface:
     def display_map(self, map_obj: Map):
         raise NotImplementedError
 
+    def display_basic_player_info(self, player: Player):
+        raise NotImplementedError
+
+    def display_combat_stats(self, player: Player):
+        raise NotImplementedError
+
+    def display_resources(self, player: Player):
+        raise NotImplementedError
+
 
 class ConsoleInterface(UserInterface):
+    def __init__(self):
+        self._last_printed_sep = False
+
     def clear(self):
         os.system("cls" if os.name == "nt" else "clear")
 
     def print(self, text=''):
         print(text)
+        self._last_printed_sep = False
 
     def wait(self, do=None):
         if do is None:
@@ -82,6 +96,34 @@ class ConsoleInterface(UserInterface):
             print(f"║ " + " │ ".join(map(opt_loc_to_chr, r)) + " ║")
         print("╚" + "═══╧" * (map_obj.width - 1) + "═══╝")
 
+    def _print_sep(self):
+        if not self._last_printed_sep:
+            self.print('######################')
+            self._last_printed_sep = True
+
+    def display_basic_player_info(self, player: Player):
+        self._print_sep()
+        self.print(f"Name: {player.name}")
+        self.print(f"Race: {player.race}")
+        self.print(f"Occupation: {player.occupation}")
+        self._print_sep()
+
+    def display_combat_stats(self, player: Player):
+        self._print_sep()
+        self.print(f"HP: {player.hp} / {player.max_hp}")
+        self.print(f"Martial Prowess: {player.martial_prowess}")
+        self.print(f"Weapon: {player.weapon}")
+        self._print_sep()
+
+    def display_resources(self, player: Player):
+        self._print_sep()
+        self.print(f"Consumption Rate:{player.consumption_rate}")
+        self.print(f"Food:{player.food}/{player.max_food}")
+        self.print(f"Endurance:{player.endurance}")
+        self.print(f"Arrows:{player.arrows}/{player.max_arrows}")
+        self.print(f"Gold:{player.gold}/{player.max_gold}")
+        self._print_sep()
+
 
 class DebugInterfaceDecorator(UserInterface):
     """
@@ -120,3 +162,12 @@ class DebugInterfaceDecorator(UserInterface):
 
     def display_map(self, map_obj: Map):
         self._base.display_map(map_obj)
+
+    def display_basic_player_info(self, player: Player):
+        self._base.display_basic_player_info(player)
+
+    def display_combat_stats(self, player: Player):
+        self._base.display_combat_stats(player)
+
+    def display_resources(self, player: Player):
+        self._base.display_resources(player)
