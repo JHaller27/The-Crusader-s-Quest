@@ -96,6 +96,11 @@ class Context:
     def set_location(self, loc: str):
         self.map.set_location(loc)
 
+    def combat_damage(self) -> int:
+        assert self.enemy is not None, "No enemy set, combat failed"
+
+        return max(self.enemy.battle_score - self.martial_prowess, 0)
+
     def char_menu(self):
         self.ui.print('######################')
         self.ui.print('Name: ' + self.name + '')

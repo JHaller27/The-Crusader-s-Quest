@@ -1132,42 +1132,35 @@ class Robbed(TransientState):
                 ctx.ui.print('You check your coin purse, and find that ' + str(v) + ' gold is missing.')
 
 
-# Doppelganger #
-def doppelganger(ctx: Context):
-    if ctx.enemy.is_type("Doppelganger"):
-        ctx.ui.print(f"The doppelganger is wielding a {ctx.weapon} exactly like yours.")
-
-
 # Fight #
 class Fight(TransientState):
     def _do(self) -> Optional[State]:
         ctx = self.ctx
 
-        enemy_generator(ctx)
+        ctx.enemy = get_enemy(enemy_locator_generator(ctx))
         ctx.ui.print(f"You see a {ctx.enemy.name} approaching.")
-        doppelganger(ctx)
+
+        if ctx.enemy.is_type("Doppelganger"):
+            ctx.ui.print(f"The doppelganger is wielding a {ctx.weapon} exactly like yours.")
+
         selection = ctx.ui.choose(["Fight", "Flee"])
         if selection == 1:
-            return FightSimulation(ctx)
+            return FightSimulation(ctx, self.default)
 
-        if selection == 2:
-            return FleeFight(ctx)
-
-        else:
-            return FleeFight(ctx)
+        return FleeFight(ctx, self.default)
 
 
 # Fight Simulation #
-class FightSimulation(State):
-    def do(self) -> Optional[State]:
+class FightSimulation(TransientState):
+    def _do(self) -> Optional[State]:
         ctx = self.ctx
 
         your_damage_taken(ctx)
         enemy_loot(ctx)
 
         ctx.ui.wait()
-        # adventure_menu()
-        ctx.counter = ctx.counter - 1
+
+        ctx.enemy = None
 
         return Adventuring(self.ctx)
 
@@ -1189,7 +1182,7 @@ def enemy_loot(ctx: Context):
 
 # Your Damage Taken #
 def your_damage_taken(ctx: Context):
-    damage_taken = max(ctx.enemy.battle_score - ctx.martial_prowess, 0)
+    damage_taken = ctx.combat_damage()
 
     ctx.hp -= damage_taken
 
@@ -1200,27 +1193,22 @@ def your_damage_taken(ctx: Context):
 
 
 # Flee Fight #
-class FleeFight(State):
-    def do(self) -> Optional[State]:
+class FleeFight(TransientState):
+    def _do(self) -> Optional[State]:
         ctx = self.ctx
 
         n = random.randint(1, 2)
-        if n == 1:
-            ctx.ui.print('You escaped the fight.')
-            ctx.ui.wait()
-            adventure_menu(ctx)
-        elif n == 2:
+        if n == 2:
             ctx.ui.print('You failed to flee the fight.')
             ctx.ui.wait()
-            return FightSimulation(self.ctx)
 
-        ctx.counter = ctx.counter - 1
+            return FightSimulation(self.ctx, self.default)
+
+        ctx.ui.print('You escaped the fight.')
+        ctx.ui.wait()
+        adventure_menu(ctx)
+
         return Adventuring(self.ctx)
-
-
-# Enemy Generator #
-def enemy_generator(ctx: Context):
-    ctx.enemy = get_enemy(enemy_locator_generator(ctx))
 
 
 # Enemy Locator and Excluder Generator #
@@ -1337,7 +1325,7 @@ class Salem(State):
             ctx.ui.wait('fight')
 
             ctx.enemy = Enemy('', 'Chernobog', 170)
-            damage_taken = ctx.enemy.battle_score - ctx.martial_prowess
+            damage_taken = ctx.combat_damage()
             ctx.hp -= damage_taken
 
             if ctx.hp > 0:
