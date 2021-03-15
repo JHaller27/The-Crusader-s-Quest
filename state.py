@@ -1,9 +1,6 @@
 from typing import Optional
 
-from ui import ui
-from utils import Map, Location
-from utils import Player
-from utils import Enemy
+from utils import Map, Location, Player, Enemy, ui
 
 
 class State:
@@ -60,10 +57,6 @@ class Context:
         assert self.enemy is not None, "No enemy set, combat failed"
 
         return max(self.enemy.battle_score - self.player.martial_prowess, 0)
-
-    def display_map(self):
-        ui.clear()
-        ui.display_map(self.map)
 
     # Information Menus #
     def adventure_menu(self):

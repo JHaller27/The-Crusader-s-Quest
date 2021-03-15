@@ -2,7 +2,7 @@ from typing import Optional
 import random
 
 from state import State
-from ui import ui
+from utils import ui
 
 from scenes import Traveller, Fight
 

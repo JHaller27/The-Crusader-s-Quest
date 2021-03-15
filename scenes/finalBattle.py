@@ -1,8 +1,7 @@
 from typing import Optional
 
 from state import State
-from ui import ui
-from utils.enemy import Enemy
+from utils import Enemy, ui
 
 from main import TitleScreen
 
@@ -12,11 +11,12 @@ class FinalBattle(State):
     def do(self) -> Optional[State]:
         ctx = self.ctx
 
-        ctx.display_map()
+        ui.clear()
+        ui.display_map(ctx.map)
         ui.print("Salem\n")
         ui.wait()
-        ui.clear()
 
+        ui.clear()
         ui.print("You enter the ancient city of Salem, now blackened with fire and as silent as a graveyard, and see a man who looks like a commoner lounging upon a throne of skeletons in the courtyard.")
         ui.print('"Ah, ' + ctx.player.name + '", I was expecting you."\n')
         ui.print("Type 'who are you?'")

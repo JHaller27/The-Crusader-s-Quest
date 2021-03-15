@@ -1,4 +1,4 @@
-from ui import ui
+from utils import ui
 
 
 def sanitize_value(val: int, lower_bound: int = None, upper_bound: int = None) -> int:

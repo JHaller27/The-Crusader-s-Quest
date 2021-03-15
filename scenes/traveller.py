@@ -2,7 +2,7 @@ import random
 from typing import Optional
 
 from state import State, Context
-from ui import ui
+from utils import ui
 
 from scenes import Adventuring
 

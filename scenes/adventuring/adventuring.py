@@ -2,7 +2,7 @@ from typing import Optional
 import random
 
 from state import State
-from ui import ui
+from utils import ui
 
 from main import TitleScreen
 from scenes import Town, FinalBattle
@@ -106,7 +106,8 @@ class Death(State):
 # Map #
 class TheMap(State):
     def do(self) -> Optional[State]:
-        self.ctx.display_map()
+        ui.clear()
+        ui.display_map(self.ctx.map)
 
         ui.print(f"You have {self.ctx.counter} days to go.")
         ui.wait()

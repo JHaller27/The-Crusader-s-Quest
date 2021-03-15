@@ -2,7 +2,7 @@ import random
 from typing import Optional
 
 from state import State
-from ui import ui
+from utils import ui
 
 
 class Town(State):

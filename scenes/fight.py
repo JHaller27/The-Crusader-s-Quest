@@ -2,8 +2,7 @@ from typing import Optional
 import random
 
 from state import State, Context
-from ui import ui
-from utils import get_enemy
+from utils import get_enemy, ui
 
 from scenes import Adventuring
 
