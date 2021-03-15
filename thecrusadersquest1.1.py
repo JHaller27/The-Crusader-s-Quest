@@ -11,9 +11,9 @@ from ui import ui
 from state import Context, State
 from enemy import Enemy, get_enemy
 
-with open('./data/player_options.yml', 'r') as fp:
+with open("./data/player_options.yml", "r") as fp:
     player_options_config = yaml.safe_load(fp)
-with open('./data/enemies.yml', 'r') as fp:
+with open("./data/enemies.yml", "r") as fp:
     enemies_config = yaml.safe_load(fp)
 
 
@@ -152,8 +152,9 @@ class BeginAdventure(State):
 class Death(State):
     def do(self) -> Optional[State]:
         ui.clear()
-        ui.print('You have died.\n')
+        ui.print("You have died.\n")
         ui.wait()
+
         char_menu(self.ctx)
         ui.print()
         ui.wait("return to menu")
@@ -245,27 +246,26 @@ class Tavern(State):
         ctx = self.ctx
 
         ui.clear()
-        ui.print('######################')
-        ui.print(f'Gold: {ctx.player.gold}/{ctx.player.max_gold}')
-        ui.print(f'HP: {ctx.player.hp}/{ctx.player.max_hp}')
-        ui.print(f'Food: {ctx.player.food}/{ctx.player.max_food}')
-        ui.print('######################\n')
-        ui.print('"Welcome to the ' + ctx.location + ' Inn. How may I serve you?"\n')
+        ui.print("######################")
+        ui.print(f"Gold: {ctx.player.gold}/{ctx.player.max_gold}")
+        ui.print(f"HP: {ctx.player.hp}/{ctx.player.max_hp}")
+        ui.print(f"Food: {ctx.player.food}/{ctx.player.max_food}")
+        ui.print("######################\n")
+        ui.print(f'"Welcome to the {ctx.location} Inn. How may I serve you?"\n')
 
-        selection = ui.choose(
-            ['Rest (1 gold)', 'Buy Food (5 gold)', 'Sell Food (3 gold)', 'Speak with random patron', 'Back'])
+        selection = ui.choose(["Rest (1 gold)", "Buy Food (5 gold)", "Sell Food (3 gold)", "Speak with random patron", "Back"])
         if selection == 1:
             if ctx.player.gold < 1:
-                ui.print('You cannot afford a bed here.')
-                ui.wait('continue.')
+                ui.print("You cannot afford a bed here.")
+                ui.wait("continue.")
             else:
-                ui.print('You slept like a rock.')
+                ui.print("You slept like a rock.")
                 ctx.player.fill_hp()
                 ctx.player.gold -= 1
-                ui.wait('continue')
+                ui.wait("continue")
 
         elif selection == 2:
-            ui.print('How much food do you want to buy?')
+            ui.print("How much food do you want to buy?")
             ctx.player.food_price = 5
             n = ui.input_text()
             n = int(n)
@@ -276,17 +276,17 @@ class Tavern(State):
             total_cost = n * ctx.player.food_price
 
             if total_cost > ctx.player.gold:
-                ui.print(f'You do not have enough gold to buy {n} food.')
+                ui.print(f"You do not have enough gold to buy {n} food.")
                 ui.wait()
 
             elif total_cost <= ctx.player.gold:
                 ctx.player.food = ctx.player.food + n
                 ctx.player.gold = ctx.player.gold - total_cost
-                ui.print('You complete the transaction')
+                ui.print("You complete the transaction")
                 ui.wait()
 
         elif selection == 3:
-            ui.print('How much food do you want to sell?')
+            ui.print("How much food do you want to sell?")
             food_sell = 3
             n = ui.input_text()
 
@@ -297,13 +297,13 @@ class Tavern(State):
             total_sell = n * food_sell
 
             if ctx.player.food < n:
-                ui.print('You do not have that much food.')
+                ui.print("You do not have that much food.")
                 ui.wait()
 
             if ctx.player.food >= n:
                 ctx.player.food = ctx.player.food - n
                 ctx.player.gold = ctx.player.gold + total_sell
-                ui.print('You complete the transaction')
+                ui.print("You complete the transaction")
                 ui.wait()
                 ui.clear()
 
@@ -322,44 +322,44 @@ class Talk(State):
         ctx = self.ctx
 
         dialogue = random.randint(1, 10)
-        part = ''
+        part = ""
         if dialogue == 1:
-            ui.print('I don\'t take too kindly to travelers.')
+            ui.print("I don't take too kindly to travelers.")
         if dialogue == 2:
-            ui.print('I\'m too scared to leave ' + ctx.location + '. I don\'t know how you survive out there.')
+            ui.print("I'm too scared to leave " + ctx.location + ". I don't know how you survive out there.")
         if dialogue == 3:
-            ui.print('The ' + ctx.location + ' Inn is the best tavern in the world. Not that I would know.')
+            ui.print("The " + ctx.location + " Inn is the best tavern in the world. Not that I would know.")
         if dialogue == 4:
-            ui.print('There\'s nasty things where you\'re headed.')
+            ui.print("There's nasty things where you're headed.")
         if dialogue == 5:
             ui.print("Someone I know was killed looking inside a hollow tree. You wouldn't want that happening to you.")
         if dialogue == 6:
-            ui.print('If you run out of food and arrows in the wilds, how will you survive? On pure endurance ?')
+            ui.print("If you run out of food and arrows in the wilds, how will you survive? On pure endurance ?")
         if dialogue == 7:
-            ui.print('If you want stronger equipment, I recommend going to the blacksmith.')
+            ui.print("If you want stronger equipment, I recommend going to the blacksmith.")
         if dialogue == 8:
             n = random.randint(1, 8)
             if n == 1:
-                part = 'arm'
+                part = "arm"
             if n == 2:
-                part = 'leg'
+                part = "leg"
             if n == 3:
-                part = 'hand'
+                part = "hand"
             if n == 4:
-                part = 'foot'
+                part = "foot"
             if n == 5:
-                part = 'eye'
+                part = "eye"
             if n == 6:
-                part = 'ear'
+                part = "ear"
             if n == 7:
-                part = 'finger'
+                part = "finger"
             if n == 8:
-                part = 'toe'
-            ui.print('In the wilds, I got caught in a hunter\'s trap. That\'s how I lost my ' + part + '.')
+                part = "toe"
+            ui.print(f"In the wilds, I got caught in a hunter's trap. That's how I lost my {part}.")
         if dialogue == 9:
-            ui.print('Tales of the beasts and Satanic denizens in the wilds have kept me inside the city walls.')
+            ui.print("Tales of the beasts and Satanic denizens in the wilds have kept me inside the city walls.")
         if dialogue == 10:
-            ui.print('The good thing about resting at ' + ctx.location + ' Inn is that you get a complimentary meal.')
+            ui.print(f"The good thing about resting at {ctx.location} Inn is that you get a complimentary meal.")
         ui.wait()
         return Tavern(self.ctx)
 
@@ -370,11 +370,11 @@ class Blacksmith(State):
         ctx = self.ctx
 
         ui.clear()
-        ui.print('######################')
-        ui.print(f'Gold: {ctx.player.gold}/{ctx.player.max_gold}')
-        ui.print(f'Arrows: {ctx.player.arrows}/{ctx.player.max_arrows}')
-        ui.print(f'Martial Prowess: {ctx.martial_prowess}')
-        ui.print('######################\n')
+        ui.print("######################")
+        ui.print(f"Gold: {ctx.player.gold}/{ctx.player.max_gold}")
+        ui.print(f"Arrows: {ctx.player.arrows}/{ctx.player.max_arrows}")
+        ui.print(f"Martial Prowess: {ctx.martial_prowess}")
+        ui.print("######################\n")
         ui.print('"What can I do for you, traveler?"')
 
         selection = ui.choose([
@@ -383,55 +383,53 @@ class Blacksmith(State):
             "Sell Arrows (3 gold)",
             "Back",
         ])
+
+        if selection == 4:
+            return Town(self.ctx)
+
         if selection == 1:
             if ctx.player.gold < ctx.blacksmith_price:
-                ui.print('You do not have enough gold to upgrade your ' + ctx.player.weapon + '.')
+                ui.print("You do not have enough gold to upgrade your " + ctx.player.weapon + ".")
                 ui.wait()
             else:
                 ctx.player.gold = ctx.player.gold - ctx.blacksmith_price
                 v = random.randint(10, 30)
                 ctx.martial_prowess = ctx.martial_prowess + v
-                ui.print(f'Your martial prowess increases by {v}.')
+                ui.print(f"Your martial prowess increases by {v}.")
                 ui.wait()
-            return Blacksmith(self.ctx)
-        if selection == 2:
-            ui.print('How many arrows do you want to buy?')
+
+        elif selection == 2:
+            ui.print("How many arrows do you want to buy?")
             arrow_price = 5
             n = ui.input_text()
             n = int(n)
             total_cost = n * arrow_price
             if total_cost > ctx.player.gold:
-                ui.print(f'You do not have enough gold to buy {n} arrows.')
+                ui.print(f"You do not have enough gold to buy {n} arrows.")
                 ui.wait()
-                return Blacksmith(self.ctx)
             if total_cost <= ctx.player.gold:
                 ctx.player.arrows = ctx.player.arrows + n
                 ctx.player.gold = ctx.player.gold - total_cost
-                ui.print('You complete the transaction')
+                ui.print("You complete the transaction")
                 ui.wait()
-                return Blacksmith(self.ctx)
-        if selection == 3:
-            ui.print('How many arrows do you want to sell?')
+
+        elif selection == 3:
+            ui.print("How many arrows do you want to sell?")
             arrow_sell = 3
             n = ui.input_text()
             n = int(n)
             total_sell = n * arrow_sell
             if ctx.player.arrows < n:
-                ui.print('You do not have that many arrows.')
+                ui.print("You do not have that many arrows.")
                 ui.wait()
-                return Blacksmith(self.ctx)
             if ctx.player.arrows >= n:
                 ctx.player.arrows = ctx.player.arrows - n
                 ctx.player.gold = ctx.player.gold + total_sell
-                ui.print('You complete the transaction')
+                ui.print("You complete the transaction")
                 ui.wait()
                 ui.clear()
-                return Blacksmith(self.ctx)
 
-        if selection == 4:
-            return Town(self.ctx)
-        else:
-            return Blacksmith(self.ctx)
+        return Blacksmith(self.ctx)
 
 
 # Adventuring #
@@ -477,14 +475,14 @@ class EndAdventure(State):
 # Rest #
 class Rest(State):
     def do(self) -> Optional[State]:
-        if self.ctx.player.hp == self.ctx.player.max_hp:
-            ui.print('You rest for one day. Your HP is already maxed out.')
+        if self.ctx.player.is_full_health():
+            ui.print("You rest for one day. Your HP is already maxed out.")
 
         else:
             restored_hp = random.randint(15, 25)
 
             self.ctx.player.hp += restored_hp
-            ui.print(f'You rest for one day, gaining {restored_hp} HP.')
+            ui.print(f"You rest for one day, gaining {restored_hp} HP.")
 
         ui.wait()
 
@@ -574,45 +572,47 @@ class Mushroom(State):
     def do(self) -> Optional[State]:
         ctx = self.ctx
 
-        ui.print('You see a strange mushroom.')
+        ui.print("You see a strange mushroom.")
         selection = ui.choose(["Consume", "Leave"])
         if selection == 1:
             x = random.randint(1, 4)
             if x == 1:
-                if ctx.player.race == 'Satyr':
+                if ctx.player.is_race("Satyr"):
                     w = ctx.player.consumption_rate + ctx.player.consumption_rate + ctx.player.consumption_rate
                     ctx.player.consumption_rate = ctx.player.consumption_rate + w
-                    ui.print(f'You eat the mushroom, and gain {w} Endurance.')
+                    ui.print(f"You eat the mushroom, and gain {w} Endurance.")
                 else:
-                    ui.print('You eat the mushroom, and nothing happened.')
-            if x == 2:
-                if ctx.player.race == 'Satyr':
+                    ui.print("You eat the mushroom, and nothing happened.")
+
+            elif x == 2:
+                if ctx.player.race == "Satyr":
                     w = ctx.player.consumption_rate + ctx.player.consumption_rate + ctx.player.consumption_rate
                     ctx.player.consumption_rate = ctx.player.consumption_rate + w
-                    ui.print(f'You eat the mushroom, and gain {w} Endurance.')
+                    ui.print(f"You eat the mushroom, and gain {w} Endurance.")
                 else:
-                    ui.print('You eat the mushroom, and it causes you to vomit.')
+                    ui.print("You eat the mushroom, and it causes you to vomit.")
                     if not ctx.player.is_alive():
                         return Death(self.ctx)
 
-            if x == 3:
+            elif x == 3:
                 w = ctx.player.consumption_rate + ctx.player.consumption_rate
                 ctx.player.consumption_rate = ctx.player.consumption_rate + w
-                ui.print(f'You eat the mushroom, and gain {w} Endurance.')
-            if x == 4:
-                if ctx.player.race == 'Satyr':
+                ui.print(f"You eat the mushroom, and gain {w} Endurance.")
+
+            elif x == 4:
+                if ctx.player.race == "Satyr":
                     w = ctx.player.consumption_rate + ctx.player.consumption_rate
                     ctx.player.consumption_rate = ctx.player.consumption_rate + w
-                    ui.print(f'You eat the mushroom, and gain {w} Endurance.')
+                    ui.print(f"You eat the mushroom, and gain {w} Endurance.")
                 else:
                     ctx.player.hp = 0
                     ctx.endurance = 0
-                    ui.print('You eat the mushroom, and then fall to the ground, foaming at the mouth.')
+                    ui.print("You eat the mushroom, and then fall to the ground, foaming at the mouth.")
                     ui.wait()
                     return Death(self.ctx)
 
         else:
-            ui.print('You leave the mushroom.')
+            ui.print("You leave the mushroom.")
 
         ui.wait()
         return Adventuring(self.ctx)
@@ -623,25 +623,25 @@ class Miracle(State):
     def do(self) -> Optional[State]:
         player = self.ctx.player
 
-        if not player.is_race('Halfling'):
+        if not player.is_race("Halfling"):
             return NoEvent(self.ctx)
 
-        ui.print('You see an old wizard, and the wizard beckons you over.')
+        ui.print("You see an old wizard, and the wizard beckons you over.")
         ui.print('"Ho, there, traveler!"')
         ui.print(f'"I did not expect to see a {player.race} out in the wilderness."')
         ui.print('"This is delightful. Here, have a gift."')
 
         selection = ui.choose(["Fill Food", "Fill Arrows", "Fill Gold", "Fill HP"])
         if selection == 1:
-            player.food = player.max_food
+            player.fill_food()
         if selection == 2:
-            player.arrows = player.max_arrows
+            player.fill_arrows()
         if selection == 3:
-            player.gold = player.max_gold
+            player.fill_gold()
         if selection == 4:
             player.fill_hp()
-        ui.wait()
 
+        ui.wait()
         return Adventuring(self.ctx)
 
 
@@ -652,26 +652,29 @@ class BiggerBag(State):
 
         y = random.randint(1, 3)
         if y == 1:
-            ctx.player.max_food += 10
-            ui.print("You find an empty food storage container on the side of the path, and it holds more food than your current one.")
-            ui.wait("take\n")
-            ui.print("Max food increased by 10.")
+            item_name = "food storage container"
+            resource_name = "food"
+            resource_amount = 10
+            ctx.player.max_food += resource_amount
 
         elif y == 2:
-            ctx.player.max_arrows += 10
-            ui.print("You spot an empty quiver on the side of the path. It holds more arrows than your current one.")
-            ui.wait("take\n")
-            ui.print("Max arrows increased by 10.")
+            item_name = "quiver"
+            resource_name = "arrows"
+            resource_amount = 10
+            ctx.player.max_arrows += resource_amount
 
-        elif y == 3:
-            ctx.player.max_gold += 100
-            ui.print("You discover an empty coin purse on the side of the path. It holds more gold than your current one.")
-            ui.wait("take\n")
-            ui.print("Max gold increased by 100.")
+        else:
+            item_name = "coin purse"
+            resource_name = "gold"
+            resource_amount = 100
+            ctx.player.max_gold += resource_amount
 
+        ui.print(f"You find an empty {item_name} on the side of the path. It holds more {resource_name} than your current one.")
+        ui.wait("take\n")
+        ui.print(f"Max {resource_name} increased by {resource_amount}.")
         ui.print()
-        ui.wait()
 
+        ui.wait()
         return Adventuring(self.ctx)
 
 
@@ -683,10 +686,10 @@ class LoseDay(State):
         v = random.randint(1, 3)
         # y = random.randint(1, 2)
         # k = random.randint(1, 100)
-        ctx.counter = ctx.counter + v
+        ctx.counter += v
         # if y == 1:
 
-        ui.print(f'You realize that you are lost. It will take you {v} days to get back on the right path.')
+        ui.print(f"You realize that you are lost. It will take you {v} days to get back on the right path.")
         # if y == 2:
         # if ctx.location == 'Goodshire' or 'Rodez':
         # ui.print('You arrive at a bridge spanning a massive whitewater river that is guarded by a score of bandits. One bandit approaches you.')
@@ -716,33 +719,36 @@ class Mystic(State):
     def do(self) -> Optional[State]:
         ctx = self.ctx
 
-        ui.print('You come upon a roaming mystic.')
-        ui.print('The mystic offers you a blessing.\n')
+        ui.print("You come upon a roaming mystic.")
+        ui.print("The mystic offers you a blessing.\n")
 
         selection = ui.choose(["Increase Max HP", "Increase Endurance", "Increase Martial Prowess"])
         if selection == 1:
-            ctx.player.max_hp = ctx.player.max_hp + 10
-            ctx.player.hp = ctx.player.hp + 10
-            ui.print('Your max HP increases by 10.')
-            ui.wait()
+            increase = 10
+            resource_name = "max HP"
+            ctx.player.max_hp += increase
+            ctx.player.hp += increase
 
         elif selection == 2:
-            ctx.endurance = ctx.endurance + ctx.player.consumption_rate
-            ui.print(f'Your endurance increases by {ctx.player.consumption_rate}.')
-            ui.wait()
+            increase = ctx.player.consumption_rate
+            resource_name = "endurance"
+            ctx.player.endurance += increase
 
         else:
-            ctx.martial_prowess = ctx.martial_prowess + 10
-            ui.print('Your martial prowess increases by 10.')
-            ui.wait()
+            increase = 10
+            resource_name = "martial prowess"
+            ctx.player.martial_prowess += increase
 
+        ui.print(f"Your {resource_name} increases by {increase}.")
+
+        ui.wait()
         return Adventuring(self.ctx)
 
 
 # Nothing #
 class NoEvent(State):
     def do(self) -> Optional[State]:
-        ui.print('Nothing notable happens.')
+        ui.print("Nothing notable happens.")
         ui.wait()
 
         return Adventuring(self.ctx)
@@ -750,7 +756,7 @@ class NoEvent(State):
 
 # Damaged (Random Event) #
 class Damaged(State):
-    def _do(self) -> Optional[State]:
+    def do(self) -> Optional[State]:
         ctx = self.ctx
 
         # adventure_menu()
@@ -763,31 +769,30 @@ class Damaged(State):
 
         if n == 1:
             g = random.randint(1, 20)
-            ctx.player.gold = ctx.player.gold + g
-            ui.print(f'You sprain your ankle in a divot, taking {v} damage.')
-            ui.print(f'However, you find {g} gold on the ground.')
+            ctx.player.gold += g
+            ui.print(f"You sprain your ankle in a divot, taking {v} damage.")
+            ui.print(f"However, you find {g} gold on the ground.")
 
         elif n == 2:
             f = random.randint(1, 20)
-            ctx.player.food = ctx.player.food + f
-            ui.print(f'You are stung by a swarm of bees, taking {v} damage.')
-            ui.print(f'However, you manage to take {f} honey before you flee.')
+            ctx.player.food += f
+            ui.print(f"You are stung by a swarm of bees, taking {v} damage.")
+            ui.print(f"However, you manage to take {f} honey before you flee.")
 
         else:
             a = random.randint(1, 20)
-            ctx.player.arrows = ctx.player.arrows + a
+            ctx.player.arrows += a
             ui.print(f"You walk into an hunter's trap, taking {v} damage.")
             ui.print(f"However, you find {a} arrows nearby.")
 
         ui.wait()
-
         return Adventuring(self.ctx)
 
 
 # Traveller #
 class Traveller(State):
     def do(self) -> Optional[State]:
-        time_of_day = random.choice(['morning', 'evening', 'afternoon'])
+        time_of_day = random.choice(["morning", "evening", "afternoon"])
 
         ui.print("A friendly adventurer approaches you and wants to trade.")
         ui.print(f'"Good {time_of_day}, traveler."\n')
@@ -988,46 +993,41 @@ class Robbed(State):
     def do(self) -> Optional[State]:
         ctx = self.ctx
 
-        x = random.randint(1, 3)
         if ctx.player.food == 0 and ctx.player.arrows == 0 and ctx.player.gold == 0:
             return NoEvent(self.ctx)
 
-        elif x == 1:
+        x = random.randint(1, 3)
+        if x == 1:
             v = random.randint(1, 50)
-            if ctx.player.food < v:
-                v = ctx.player.food
+            ctx.player.food -= v
 
-            ctx.player.food = ctx.player.food - v
             y = random.randint(1, 2)
-            # adventure_menu()
             if y == 1:
-                ui.print(f'During the night, a shadowy figure stole {v} of your food.')
-            elif y == 2:
-                ui.print(f'You check your food supply and find that {v} food is missing.')
+                ui.print(f"During the night, a shadowy figure stole {v} of your food.")
+            else:
+                ui.print(f"You check your food supply and find that {v} food is missing.")
+
         elif x == 2:
             v = random.randint(1, 50)
-            if ctx.player.arrows < v:
-                v = ctx.player.arrows
-            ctx.player.arrows = ctx.player.arrows - v
+            ctx.player.arrows -= v
+
             y = random.randint(1, 2)
-            # adventure_menu()
             if y == 1:
-                ui.print(f'During the night, a shadowy figure stole {v} of your arrows.')
+                ui.print(f"During the night, a shadowy figure stole {v} of your arrows.")
             elif y == 2:
-                ui.print(f'You check your arrow quill, and find that {v} arrows are missing.')
+                ui.print(f"You check your arrow quill, and find that {v} arrows are missing.")
 
         elif x == 3:
             v = random.randint(1, 50)
-            if ctx.player.gold < v:
-                v = ctx.player.gold
-            ctx.player.gold = ctx.player.gold - v
-            y = random.randint(1, 2)
-            # adventure_menu()
-            if y == 1:
-                ui.print(f'During the night, a shadowy figure stole {v} of your gold.')
-            elif y == 2:
-                ui.print(f'You check your coin purse, and find that {v} gold is missing.')
+            ctx.player.gold -= v
 
+            y = random.randint(1, 2)
+            if y == 1:
+                ui.print(f"During the night, a shadowy figure stole {v} of your gold.")
+            elif y == 2:
+                ui.print(f"You check your coin purse, and find that {v} gold is missing.")
+
+        ui.wait()
         return Adventuring(self.ctx)
 
 
@@ -1084,16 +1084,14 @@ class EndFight(State):
 # Flee Fight #
 class FleeFight(State):
     def do(self) -> Optional[State]:
-        ctx = self.ctx
-
         n = random.randint(1, 2)
         if n == 2:
-            ui.print('You failed to flee the fight.')
+            ui.print("You failed to flee the fight.")
 
             ui.wait()
             return FightSimulation(self.ctx)
 
-        ui.print('You escaped the fight.')
+        ui.print("You escaped the fight.")
 
         ui.wait()
         return Adventuring(self.ctx)
@@ -1115,21 +1113,20 @@ class Chest(State):
     def do(self) -> Optional[State]:
         ctx = self.ctx
 
-        p = random.randint(1, 2)
-        if p == 1:
-            ui.print('You see a treasure chest.')
-        if p == 2:
-            ui.print('You see a large hollow tree.')
+        chest_name = random.choice(["treasure chest", "large hollow tree"])
+        ui.print(f"You see a {chest_name}.")
+
         selection = ui.choose(["Inspect", "Avoid"])
         if selection == 1:
             a = random.randint(1, 3)
             if a == 1:
-                ui.print('It is empty. Nothing but cobwebs remain.')
+                ui.print("It is empty. Nothing but cobwebs remain.")
                 ui.wait()
                 adventure_menu(self.ctx)
             if a == 2:
-                ui.print('It was booby trapped. A dart flies out and hits you for 20 damage.')
-                ctx.player.hp -= 20
+                damage = 20
+                ui.print(f"It was booby trapped. A dart flies out and hits you for {damage} damage.")
+                ctx.player.hp -= damage
                 ui.wait()
 
                 if not ctx.player.is_alive():
@@ -1139,8 +1136,6 @@ class Chest(State):
             # if a == 2 and ctx.luck > 0:
             # ui.print('It was booby trapped. A dart flies out and hits you for 20 damage.')
             # chest_loot()
-            if a == 3:
-                return ChestLoot(self.ctx)
 
         ui.print()
 
@@ -1154,17 +1149,21 @@ class ChestLoot(State):
 
         x = random.randint(1, 3)
         if x == 1:
-            v = random.randint(50, 100)
-            ctx.player.food = ctx.player.food + v
-            ui.print(f'Inside, you found {v} food.')
-        if x == 2:
-            v = random.randint(50, 100)
-            ctx.player.arrows = ctx.player.arrows + v
-            ui.print(f'Inside, you found {v} arrows.')
-        if x == 3:
-            v = random.randint(50, 100)
-            ctx.player.gold = ctx.player.gold + v
-            ui.print(f'Inside, you found {v} gold.')
+            resource_name = "food"
+            amount = random.randint(50, 100)
+            ctx.player.food += amount
+
+        elif x == 2:
+            resource_name = "arrows"
+            amount = random.randint(50, 100)
+            ctx.player.arrows += amount
+
+        else:
+            resource_name = "gold"
+            amount = random.randint(50, 100)
+            ctx.player.gold += amount
+
+        ui.print(f"Inside, you found {amount} {resource_name}.")
 
         ui.wait()
         return adventure_menu(self.ctx)
@@ -1176,13 +1175,13 @@ class FinalBattle(State):
         ctx = self.ctx
 
         ctx.display_map()
-        ui.print('Salem\n')
+        ui.print("Salem\n")
         ui.wait()
         ui.clear()
 
-        ui.print('You enter the ancient city of Salem, now blackened with fire and as silent as a graveyard, and see a man who looks like a commoner lounging upon a throne of skeletons in the courtyard.')
+        ui.print("You enter the ancient city of Salem, now blackened with fire and as silent as a graveyard, and see a man who looks like a commoner lounging upon a throne of skeletons in the courtyard.")
         ui.print('"Ah, ' + ctx.player.name + '", I was expecting you."\n')
-        ui.print('Type \'who are you?\'')
+        ui.print("Type 'who are you?'")
         ui.input_text()
 
         ui.clear()
@@ -1198,43 +1197,41 @@ class FinalBattle(State):
 
         if selection == 1:
             char_menu(ctx)
-            ui.print('You join the forces of Chernobog, the Prince of Darkness, and forsake your old way of life. You both combine your powers and forge a New Dawn.')
+            ui.print("You join the forces of Chernobog, the Prince of Darkness, and forsake your old way of life. You both combine your powers and forge a New Dawn.")
             ui.print()
-            ui.wait('end game')
+            ui.wait("end game")
 
-        elif selection == 2:
+        else:
             ui.print('"Very well, then." Chernobog stands up.')
-            ui.wait('fight')
+            ui.wait("fight")
 
-            ctx.enemy = Enemy('', 'Chernobog', 170)
+            ctx.enemy = Enemy("", "Chernobog", 170)
             damage_taken = ctx.combat_damage()
             ctx.player.hp -= damage_taken
 
             if ctx.player.is_alive():
-                ui.print('You have slain the Antipope. His body magically lights on fire, and leaves ashes on the ground.')
-                ui.print('Your surroundings shimmer, and the city of Salem transforms from its ruined state to its former glory. You have succeeded in every goal.')
+                ui.print("You have slain the Antipope. His body magically lights on fire, and leaves ashes on the ground.")
+                ui.print("Your surroundings shimmer, and the city of Salem transforms from its ruined state to its former glory. You have succeeded in every goal.")
                 ui.wait()
+
                 char_menu(ctx)
                 ui.clear()
-                ui.print('You win!')
+                ui.print("You win!")
 
-                ui.print('Occupation: ' + ctx.player.occupation + '')
-                ui.wait('end game')
+                ui.print(f"Occupation: {ctx.player.occupation}")
 
             else:
                 char_menu(ctx)
                 ui.print()
-                ui.print('You have lost the fight, letting Chernobog win. He enslaves you for all eternity, and he takes over the world.\n')
-                ui.wait('end game')
+                ui.print("You have lost the fight, letting Chernobog win. He enslaves you for all eternity, and he takes over the world.\n")
 
-        else:
-            raise RuntimeError("Invalid selection (this should never happen)")
+            ui.wait("end game")
 
         return TitleScreen(self.ctx)
 
 
 def main():
-    map_data = get_map('./data/map.yml')
+    map_data = get_map("./data/map.yml")
 
     global_context = Context(map_data)
     global_context.run(TitleScreen(global_context))
