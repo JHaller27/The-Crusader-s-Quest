@@ -171,3 +171,7 @@ class DebugInterfaceDecorator(UserInterface):
 
     def display_resources(self, player: Player):
         self._base.display_resources(player)
+
+
+ui = ConsoleInterface()
+ui = DebugInterfaceDecorator(ui)

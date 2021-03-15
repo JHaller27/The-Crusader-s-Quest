@@ -1,6 +1,6 @@
 from typing import Optional, Type
 
-from ui import UserInterface
+from ui import ui
 from map import Map, Location
 from player import Player
 from enemy import Enemy
@@ -49,13 +49,12 @@ class Context:
 
     _state: State
 
-    def __init__(self, ui: UserInterface, map_obj: Map):
-        self.ui = ui
+    def __init__(self, map_obj: Map):
         self.map = map_obj
         self.player = Player()
 
     def _run_once(self):
-        self.ui.debug(f"Running state '{type(self._state).__name__}'")
+        ui.debug(f"Running state '{type(self._state).__name__}'")
         self._state = self._state.do()
 
     def run(self, init: Optional[State]):
@@ -84,17 +83,47 @@ class Context:
         return max(self.enemy.battle_score - self.player.martial_prowess, 0)
 
     def char_menu(self):
-        self.ui.display_basic_player_info(self.player)
-        self.ui.display_combat_stats(self.player)
-        self.ui.display_resources(self.player)
+        ui.display_basic_player_info(self.player)
+        ui.display_combat_stats(self.player)
+        ui.display_resources(self.player)
 
     def adventure_menu(self):
-        self.ui.display_combat_stats(self.player)
-        self.ui.display_resources(self.player)
+        ui.display_combat_stats(self.player)
+        ui.display_resources(self.player)
 
     def display_map(self):
-        self.ui.clear()
-        self.ui.display_map(self.map)
+        ui.clear()
+        ui.display_map(self.map)
 
     def at_end_location(self) -> bool:
         return self.location == self.map.end.name
+
+    def gold_mechanic(self):
+        if self.player.gold < 1:
+            self.player.gold = 0
+
+        if self.player.gold > self.player.max_gold:
+            self.player.gold = self.player.max_gold
+            ui.print("You have completely filled your coin purse.")
+
+        if self.player.gold < 1:
+            self.player.gold = 0
+
+    def food_mechanic(self):
+        if self.player.food > self.player.max_food:
+            self.player.food = self.player.max_food
+            ui.print("You have maxed out your food supply.")
+
+        if self.player.food < 1:
+            self.player.food = 0
+
+    def arrows_mechanic(self):
+        if self.player.arrows < 1:
+            self.player.arrows = 0
+
+        if self.player.arrows > self.player.max_arrows:
+            self.player.arrows = self.player.max_arrows
+            ui.print("You have maxed out your arrow count.")
+
+        if self.player.arrows < 1:
+            self.player.arrows = 0
