@@ -50,21 +50,20 @@ class SetRace(State):
         ui.clear()
         ui.print("What is your race?\n")
 
-        races = self.ctx.player_config.get("races")
+        races = self.ctx.player_config.races
 
-        selection = ui.choose([r.get("name") for r in races]) - 1
+        selection = ui.choose([r.name for r in races]) - 1
         selected_race = races[selection]
 
-        player.race = selected_race.get("name")
-        player.max_hp = selected_race.get("hp")
-        player.hp = selected_race.get("hp")
-        player.martial_prowess = selected_race.get("martial_prowess")
-        player.consumption_rate = selected_race.get("consumption_rate")
-        player.endurance = selected_race.get("endurance")
-        player.max_gold = selected_race.get("gold")
-        player.gold = selected_race.get("gold")
-        player.luck = selected_race.get("luck")
-        player.speed = selected_race.get("speed")
+        player.race = selected_race.name
+        player.max_hp = selected_race.hp
+        player.hp = selected_race.hp
+        player.martial_prowess = selected_race.martial_prowess
+        player.consumption_rate = selected_race.consumption_rate
+        player.endurance = selected_race.endurance
+        player.max_gold = player.gold = selected_race.gold
+        player.luck = selected_race.luck
+        player.speed = selected_race.speed
 
         return SetOccupation(self.ctx)
 
@@ -76,21 +75,21 @@ class SetOccupation(State):
         ui.clear()
         ui.print("What is your occupation?\n")
 
-        occupations = self.ctx.player_config.get("occupations")
+        occupations = self.ctx.player_config.occupations
 
-        selection = ui.choose([o.get("name") for o in occupations]) - 1
+        selection = ui.choose([o.name for o in occupations]) - 1
         selected_occupation = occupations[selection]
 
-        player.occupation = selected_occupation.get("name")
-        player.max_hp += selected_occupation.get("hp")
-        player.hp += selected_occupation.get("hp")
-        player.max_food += selected_occupation.get("food").get("max")
-        player.food += selected_occupation.get("food").get("curr")
-        player.max_arrows += selected_occupation.get("arrows").get("max")
-        player.arrows += selected_occupation.get("arrows").get("curr")
-        player.max_gold += selected_occupation.get("gold").get("max")
-        player.gold += selected_occupation.get("gold").get("curr")
-        player.martial_prowess += selected_occupation.get("martial_prowess")
+        player.occupation = selected_occupation.name
+        player.max_hp += selected_occupation.hp
+        player.hp += selected_occupation.hp
+        player.max_food += selected_occupation.max_food
+        player.food += selected_occupation.food
+        player.max_arrows += selected_occupation.max_arrows
+        player.arrows += selected_occupation.arrows
+        player.max_gold += selected_occupation.max_gold
+        player.gold += selected_occupation.gold
+        player.martial_prowess += selected_occupation.martial_prowess
 
         return SetWeapon(self.ctx)
 

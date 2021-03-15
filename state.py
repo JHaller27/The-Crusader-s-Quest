@@ -1,6 +1,7 @@
 from typing import Optional
 
 from utils import Map, Location, Player, Enemy, ui
+from utils.configs import Player as PlayerConfig
 
 
 class State:
@@ -25,7 +26,7 @@ class Context:
 
     _state: State
 
-    def __init__(self, map_obj: Map, player_config: dict, enemy_config: dict):
+    def __init__(self, map_obj: Map, player_config: PlayerConfig, enemy_config: dict):
         self.map = map_obj
         self.player_config = player_config
         self.enemy_config = enemy_config
