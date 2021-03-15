@@ -25,8 +25,11 @@ class Context:
 
     _state: State
 
-    def __init__(self, map_obj: Map):
+    def __init__(self, map_obj: Map, player_config: dict, enemy_config: dict):
         self.map = map_obj
+        self.player_config = player_config
+        self.enemy_config = enemy_config
+
         self.player = Player()
 
     def _run_once(self):

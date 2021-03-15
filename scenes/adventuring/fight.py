@@ -11,7 +11,7 @@ class Fight(State):
     def do(self) -> Optional[State]:
         ctx = self.ctx
 
-        ctx.enemy = get_enemy(enemy_locator_generator(ctx))
+        ctx.enemy = get_enemy(enemy_locator_generator(ctx), ctx.enemy_config)
         ui.print(f"You see a {ctx.enemy.name} approaching.")
 
         if ctx.enemy.is_type("Doppelganger"):

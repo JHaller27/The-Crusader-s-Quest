@@ -1,9 +1,4 @@
-import yaml
 import random
-
-
-with open('../data/enemies.yml', 'r') as fp:
-    config = yaml.safe_load(fp)
 
 
 class Enemy:
@@ -36,7 +31,7 @@ class Enemy:
         return self._type.lower() == enemy_type.lower()
 
 
-def get_enemy(type_id: int) -> Enemy:
+def get_enemy(type_id: int, config: dict) -> Enemy:
     enemy_type = config.get("types")[type_id - 1]
     type_name = enemy_type.get("name")
 

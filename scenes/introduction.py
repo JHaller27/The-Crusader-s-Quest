@@ -1,14 +1,9 @@
 from typing import Optional
-import yaml
 
 from state import State
 from utils import ui
 
 from scenes import Town
-
-
-with open("./data/player_options.yml", "r") as fp:
-    player_options_config = yaml.safe_load(fp)
 
 
 # Title Screen #
@@ -55,7 +50,7 @@ class SetRace(State):
         ui.clear()
         ui.print("What is your race?\n")
 
-        races = player_options_config.get("races")
+        races = self.ctx.player_config.get("races")
 
         selection = ui.choose([r.get("name") for r in races]) - 1
         selected_race = races[selection]
@@ -81,7 +76,7 @@ class SetOccupation(State):
         ui.clear()
         ui.print("What is your occupation?\n")
 
-        occupations = player_options_config.get("occupations")
+        occupations = self.ctx.player_config.get("occupations")
 
         selection = ui.choose([o.get("name") for o in occupations]) - 1
         selected_occupation = occupations[selection]

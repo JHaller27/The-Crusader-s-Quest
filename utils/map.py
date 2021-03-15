@@ -1,6 +1,5 @@
 from typing import Optional, Union
 import random
-import yaml
 
 
 class Location:
@@ -116,10 +115,7 @@ class Map:
         return self._current.name == self.end
 
 
-def get_map(data_path: str) -> Map:
-    with open(data_path, 'r') as fp:
-        map_config = yaml.safe_load(fp)
-
+def get_map(map_config: dict) -> Map:
     map_obj = Map(map_config.get("width"), map_config.get("height"))
     for name, loc in map_config.get("locations").items():
         loc_obj = Location.from_yaml(name, loc)
