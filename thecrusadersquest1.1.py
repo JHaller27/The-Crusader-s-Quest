@@ -161,7 +161,7 @@ class DaysToGo(TransientState):
         ctx = self.ctx
 
         if ctx.adventure_state:
-            ui.print('You have ' + str(ctx.counter) + ' days to go.')
+            ui.print(f'You have {ctx.counter} days to go.')
             ui.wait()
 
             return None
@@ -183,7 +183,7 @@ class DaysToGo(TransientState):
 # Treasure Generator #
 # def treasure_generator():
 # v = random.randint(0, 3)
-# ui.print('You found ' + str(v) + ' treasures on this leg of the journey.')
+# ui.print(f'You found {v} treasures on this leg of the journey.')
 
 
 # Location Changer #
@@ -251,9 +251,9 @@ class Tavern(State):
 
         ui.clear()
         ui.print('######################')
-        ui.print('Gold: ' + str(ctx.player.gold) + '/' + str(ctx.player.max_gold) + '')
-        ui.print('HP: ' + str(ctx.player.hp) + '/' + str(ctx.player.max_hp) + '')
-        ui.print('Food: ' + str(ctx.player.food) + '/' + str(ctx.player.max_food) + '')
+        ui.print(f'Gold: {ctx.player.gold}/{ctx.player.max_gold}')
+        ui.print(f'HP: {ctx.player.hp}/{ctx.player.max_hp}')
+        ui.print(f'Food: {ctx.player.food}/{ctx.player.max_food}')
         ui.print('######################\n')
         ui.print('"Welcome to the ' + ctx.location + ' Inn. How may I serve you?"\n')
 
@@ -281,7 +281,7 @@ class Tavern(State):
             total_cost = n * ctx.player.food_price
 
             if total_cost > ctx.player.gold:
-                ui.print('You do not have enough gold to buy ' + str(n) + ' food.')
+                ui.print(f'You do not have enough gold to buy {n} food.')
                 ui.wait()
 
             elif total_cost <= ctx.player.gold:
@@ -376,9 +376,9 @@ class Blacksmith(State):
 
         ui.clear()
         ui.print('######################')
-        ui.print('Gold: ' + str(ctx.player.gold) + '/' + str(ctx.player.max_gold) + '')
-        ui.print('Arrows: ' + str(ctx.player.arrows) + '/' + str(ctx.player.max_arrows) + '')
-        ui.print('Martial Prowess: ' + str(ctx.martial_prowess) + '')
+        ui.print(f'Gold: {ctx.player.gold}/{ctx.player.max_gold}')
+        ui.print(f'Arrows: {ctx.player.arrows}/{ctx.player.max_arrows}')
+        ui.print(f'Martial Prowess: {ctx.martial_prowess}')
         ui.print('######################\n')
         ui.print('"What can I do for you, traveler?"')
 
@@ -396,7 +396,7 @@ class Blacksmith(State):
                 ctx.player.gold = ctx.player.gold - ctx.blacksmith_price
                 v = random.randint(10, 30)
                 ctx.martial_prowess = ctx.martial_prowess + v
-                ui.print('Your martial prowess increases by ' + str(v) + '.')
+                ui.print(f'Your martial prowess increases by {v}.')
                 ui.wait()
             return Blacksmith(self.ctx)
         if selection == 2:
@@ -406,7 +406,7 @@ class Blacksmith(State):
             n = int(n)
             total_cost = n * arrow_price
             if total_cost > ctx.player.gold:
-                ui.print('You do not have enough gold to buy ' + str(n) + ' arrows.')
+                ui.print(f'You do not have enough gold to buy {n} arrows.')
                 ui.wait()
                 return Blacksmith(self.ctx)
             if total_cost <= ctx.player.gold:
@@ -504,7 +504,7 @@ class Rest(TransientState):
         x = random.randint(15, 25)
 
         ctx.player.hp += x
-        ui.print('You rest for one day, gaining ' + str(x) + ' HP.')
+        ui.print(f'You rest for one day, gaining {x} HP.')
 
         ui.wait()
 
@@ -527,13 +527,13 @@ class Hunt(TransientState):
             x = ctx.player.arrows
             ctx.player.arrows = ctx.player.arrows - x
             ctx.player.food = ctx.player.food + y
-            ui.print('You shot ' + str(x) + ' arrows, and gained ' + str(y) + ' food.')
+            ui.print(f'You shot {x} arrows, and gained {y} food.')
 
         else:
             adventure_menu(self.ctx)
             ctx.player.arrows = ctx.player.arrows - x
             ctx.player.food = ctx.player.food + y
-            ui.print('You shot ' + str(x) + ' arrows, and gained ' + str(y) + ' food.')
+            ui.print(f'You shot {x} arrows, and gained {y} food.')
 
         ui.wait()
 
@@ -603,14 +603,14 @@ class Mushroom(TransientState):
                 if ctx.player.race == 'Satyr':
                     w = ctx.player.consumption_rate + ctx.player.consumption_rate + ctx.player.consumption_rate
                     ctx.player.consumption_rate = ctx.player.consumption_rate + w
-                    ui.print('You eat the mushroom, and gain ' + str(w) + ' Endurance.')
+                    ui.print(f'You eat the mushroom, and gain {w} Endurance.')
                 else:
                     ui.print('You eat the mushroom, and nothing happened.')
             if x == 2:
                 if ctx.player.race == 'Satyr':
                     w = ctx.player.consumption_rate + ctx.player.consumption_rate + ctx.player.consumption_rate
                     ctx.player.consumption_rate = ctx.player.consumption_rate + w
-                    ui.print('You eat the mushroom, and gain ' + str(w) + ' Endurance.')
+                    ui.print(f'You eat the mushroom, and gain {w} Endurance.')
                 else:
                     ui.print('You eat the mushroom, and it causes you to vomit.')
                     if not ctx.player.is_alive():
@@ -619,12 +619,12 @@ class Mushroom(TransientState):
             if x == 3:
                 w = ctx.player.consumption_rate + ctx.player.consumption_rate
                 ctx.player.consumption_rate = ctx.player.consumption_rate + w
-                ui.print('You eat the mushroom, and gain ' + str(w) + ' Endurance.')
+                ui.print(f'You eat the mushroom, and gain {w} Endurance.')
             if x == 4:
                 if ctx.player.race == 'Satyr':
                     w = ctx.player.consumption_rate + ctx.player.consumption_rate
                     ctx.player.consumption_rate = ctx.player.consumption_rate + w
-                    ui.print('You eat the mushroom, and gain ' + str(w) + ' Endurance.')
+                    ui.print(f'You eat the mushroom, and gain {w} Endurance.')
                 else:
                     ctx.player.hp = 0
                     ctx.endurance = 0
@@ -704,7 +704,7 @@ class LoseDay(TransientState):
         ctx.counter = ctx.counter + v
         # if y == 1:
 
-        ui.print('You realize that you are lost. It will take you ' + str(v) + ' days to get back on the right path.')
+        ui.print(f'You realize that you are lost. It will take you {v} days to get back on the right path.')
         # if y == 2:
         # if ctx.location == 'Goodshire' or 'Rodez':
         # ui.print('You arrive at a bridge spanning a massive whitewater river that is guarded by a score of bandits. One bandit approaches you.')
@@ -719,7 +719,7 @@ class LoseDay(TransientState):
         #            ctx.player.gold = 0
         #            else:
         #               ctx.player.gold = ctx.player.gold - k
-        #               ui.print('You gave the bandit ' + str(k) + ' ctx.player.gold, and they let you cross the bridge.')
+        #               ui.print(f'You gave the bandit {k} ctx.player.gold, and they let you cross the bridge.')
         #       elif selection == 2
         #       else:
         #           selection = ui.input('>: ')
@@ -745,7 +745,7 @@ class Mystic(TransientState):
             ui.wait()
         elif selection == 2:
             ctx.endurance = ctx.endurance + ctx.player.consumption_rate
-            ui.print('Your endurance increases by ' + str(ctx.player.consumption_rate) + '.')
+            ui.print(f'Your endurance increases by {ctx.player.consumption_rate}.')
             ui.wait()
         elif selection == 3:
             ctx.martial_prowess = ctx.martial_prowess + 10
@@ -780,19 +780,19 @@ class Damaged(TransientState):
         if n == 1:
             g = random.randint(1, 20)
             ctx.player.gold = ctx.player.gold + g
-            ui.print('You sprain your ankle in a divot, taking ' + str(v) + ' damage.')
-            ui.print('However, you find ' + str(g) + ' gold on the ground.')
+            ui.print(f'You sprain your ankle in a divot, taking {v} damage.')
+            ui.print(f'However, you find {g} gold on the ground.')
         if n == 2:
             f = random.randint(1, 20)
             ctx.player.food = ctx.player.food + f
-            ui.print('You are stung by a swarm of bees, taking ' + str(v) + ' damage.')
-            ui.print('However, you manage to take ' + str(f) + ' honey before you flee.')
+            ui.print(f'You are stung by a swarm of bees, taking {v} damage.')
+            ui.print(f'However, you manage to take {f} honey before you flee.')
 
         if n == 3:
             a = random.randint(1, 20)
             ctx.player.arrows = ctx.player.arrows + a
-            ui.print('You walk into an hunter\'s trap, taking ' + str(v) + ' damage.')
-            ui.print('However, you find ' + str(a) + ' arrows nearby.')
+            ui.print(f"You walk into an hunter's trap, taking {v} damage.")
+            ui.print(f"However, you find {a} arrows nearby.")
 
         ui.wait()
 
@@ -825,10 +825,10 @@ def traveller_generation(ctx: Context):
     c = random.randint(1, 4)  # what trader wants
 
     if c == 1:
-        ui.print('The trader wants ' + str(x) + ' food.')
+        ui.print(f'The trader wants {x} food.')
         p = random.randint(1, 3)  # what trader is giving
         if p == 1:
-            ui.print('The trader is willing to give ' + str(v) + ' arrows.')
+            ui.print(f'The trader is willing to give {v} arrows.')
             selection = ui.choose(["Accept", "Decline"])
             if selection == 1:
                 if ctx.player.food < x:
@@ -842,7 +842,7 @@ def traveller_generation(ctx: Context):
                 ui.print('You decline the trade.')
 
         if p == 2:
-            ui.print('The trader is willing to pay ' + str(v) + ' gold.')
+            ui.print(f'The trader is willing to pay {v} gold.')
             selection = ui.choose(["Accept", "Decline"])
             if selection == 1:
                 if ctx.player.food < x:
@@ -856,7 +856,7 @@ def traveller_generation(ctx: Context):
                 ui.print('You decline the trade.')
 
         if p == 3:
-            ui.print('The trader is willing to heal you ' + str(v) + ' HP.')
+            ui.print(f'The trader is willing to heal you {v} HP.')
             selection = ui.choose(["Accept", "Decline"])
             if selection == 1:
                 if ctx.player.food < x:
@@ -869,10 +869,10 @@ def traveller_generation(ctx: Context):
             else:
                 ui.print('You decline the trade.')
     if c == 2:
-        ui.print('The trader wants ' + str(x) + ' arrows.')
+        ui.print(f'The trader wants {x} arrows.')
         p = random.randint(1, 3)  # what trader is giving
         if p == 1:
-            ui.print('The trader is willing to give ' + str(v) + ' food.')
+            ui.print(f'The trader is willing to give {v} food.')
             selection = ui.choose(["Accept", "Decline"])
             if selection == 1:
                 if ctx.player.arrows < x:
@@ -885,7 +885,7 @@ def traveller_generation(ctx: Context):
             else:
                 ui.print('You decline the trade.')
         if p == 2:
-            ui.print('The trader is willing to give ' + str(v) + ' gold.')
+            ui.print(f'The trader is willing to give {v} gold.')
             selection = ui.choose(["Accept", "Decline"])
             if selection == 1:
                 if ctx.player.arrows < x:
@@ -898,7 +898,7 @@ def traveller_generation(ctx: Context):
             else:
                 ui.print('You decline the trade.')
         if p == 3:
-            ui.print('The trader is willing to heal you for ' + str(v) + ' HP.')
+            ui.print(f'The trader is willing to heal you for {v} HP.')
             selection = ui.choose(["Accept", "Decline"])
             if selection == 1:
                 if ctx.player.arrows < x:
@@ -911,10 +911,10 @@ def traveller_generation(ctx: Context):
             else:
                 ui.print('You decline the trade.')
     if c == 3:
-        ui.print('The trader wants ' + str(x) + ' gold.')
+        ui.print(f'The trader wants {x} gold.')
         p = random.randint(1, 3)  # what trader is giving
         if p == 1:
-            ui.print('The trader is willing to give ' + str(v) + ' food.')
+            ui.print(f'The trader is willing to give {v} food.')
             selection = ui.choose(["Accept", "Decline"])
             if selection == 1:
                 if ctx.player.gold < x:
@@ -927,7 +927,7 @@ def traveller_generation(ctx: Context):
             else:
                 ui.print('You decline the trade.')
         if p == 2:
-            ui.print('The trader is willing to give ' + str(v) + ' arrows.')
+            ui.print(f'The trader is willing to give {v} arrows.')
             selection = ui.choose(["Accept", "Decline"])
             if selection == 1:
                 if ctx.player.gold < x:
@@ -941,7 +941,7 @@ def traveller_generation(ctx: Context):
                 ui.print('You decline the trade.')
 
         if p == 3:
-            ui.print('The trader is willing to heal you ' + str(v) + ' HP.')
+            ui.print(f'The trader is willing to heal you {v} HP.')
             selection = ui.choose(["Accept", "Decline"])
             if selection == 1:
                 if ctx.player.gold < x:
@@ -954,10 +954,10 @@ def traveller_generation(ctx: Context):
             else:
                 ui.print('You decline the trade.')
     if c == 4:
-        ui.print('The trader wants your blood. Specifically, ' + str(x) + ' HP.')
+        ui.print(f'The trader wants your blood. Specifically, {x} HP.')
         p = random.randint(1, 3)  # what trader is giving
         if p == 1:
-            ui.print('The trader is willing to give ' + str(v) + ' food.')
+            ui.print(f'The trader is willing to give {v} food.')
             selection = ui.choose(["Accept", "Decline"])
             if selection == 1:
                 if ctx.player.hp < x:
@@ -972,7 +972,7 @@ def traveller_generation(ctx: Context):
             else:
                 ui.print('You decline the trade.')
         if p == 2:
-            ui.print('The trader is willing to give ' + str(v) + ' arrows.')
+            ui.print(f'The trader is willing to give {v} arrows.')
             selection = ui.choose(["Accept", "Decline"])
             if selection == 1:
                 if ctx.player.hp < x:
@@ -987,7 +987,7 @@ def traveller_generation(ctx: Context):
             else:
                 ui.print('You decline the trade.')
         if p == 3:
-            ui.print('The trader is willing to give ' + str(v) + ' gold.')
+            ui.print(f'The trader is willing to give {v} gold.')
             selection = ui.choose(["Accept", "Decline"])
             if selection == 1:
                 if ctx.player.hp < x:
@@ -1020,9 +1020,9 @@ class Robbed(TransientState):
             y = random.randint(1, 2)
             # adventure_menu()
             if y == 1:
-                ui.print('During the night, a shadowy figure stole ' + str(v) + ' of your food.')
+                ui.print(f'During the night, a shadowy figure stole {v} of your food.')
             elif y == 2:
-                ui.print('You check your food supply and find that ' + str(v) + ' food is missing.')
+                ui.print(f'You check your food supply and find that {v} food is missing.')
         elif x == 2:
             v = random.randint(1, 50)
             if ctx.player.arrows < v:
@@ -1031,9 +1031,9 @@ class Robbed(TransientState):
             y = random.randint(1, 2)
             # adventure_menu()
             if y == 1:
-                ui.print('During the night, a shadowy figure stole ' + str(v) + ' of your arrows.')
+                ui.print(f'During the night, a shadowy figure stole {v} of your arrows.')
             elif y == 2:
-                ui.print('You check your arrow quill, and find that ' + str(v) + ' arrows are missing.')
+                ui.print(f'You check your arrow quill, and find that {v} arrows are missing.')
 
         elif x == 3:
             v = random.randint(1, 50)
@@ -1043,9 +1043,9 @@ class Robbed(TransientState):
             y = random.randint(1, 2)
             # adventure_menu()
             if y == 1:
-                ui.print('During the night, a shadowy figure stole ' + str(v) + ' of your gold.')
+                ui.print(f'During the night, a shadowy figure stole {v} of your gold.')
             elif y == 2:
-                ui.print('You check your coin purse, and find that ' + str(v) + ' gold is missing.')
+                ui.print(f'You check your coin purse, and find that {v} gold is missing.')
 
 
 # Fight #
@@ -1182,15 +1182,15 @@ class ChestLoot(State):
         if x == 1:
             v = random.randint(50, 100)
             ctx.player.food = ctx.player.food + v
-            ui.print('Inside, you found ' + str(v) + ' food.')
+            ui.print(f'Inside, you found {v} food.')
         if x == 2:
             v = random.randint(50, 100)
             ctx.player.arrows = ctx.player.arrows + v
-            ui.print('Inside, you found ' + str(v) + ' arrows.')
+            ui.print(f'Inside, you found {v} arrows.')
         if x == 3:
             v = random.randint(50, 100)
             ctx.player.gold = ctx.player.gold + v
-            ui.print('Inside, you found ' + str(v) + ' gold.')
+            ui.print(f'Inside, you found {v} gold.')
 
         ui.wait()
         return adventure_menu(self.ctx)
