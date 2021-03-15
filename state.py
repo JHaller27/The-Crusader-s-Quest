@@ -64,3 +64,15 @@ class Context:
     def display_map(self):
         ui.clear()
         ui.display_map(self.map)
+
+    # Information Menus #
+    def adventure_menu(self):
+        ui.clear()
+        ui.display_combat_stats(self.player)
+        ui.display_resources(self.player)
+
+    def char_menu(self):
+        ui.clear()
+        ui.display_basic_player_info(self.player)
+        ui.display_combat_stats(self.player)
+        ui.display_resources(self.player)
