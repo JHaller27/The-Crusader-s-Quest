@@ -90,5 +90,8 @@ class Player:
     def is_alive(self) -> bool:
         return self.hp > 0 and self.endurance > 0
 
+    def is_race(self, race: str) -> bool:
+        return self.race.lower() == race.lower()
+
     def fill_hp(self):
         self._hp = self.max_hp

@@ -1,4 +1,4 @@
-from typing import Optional, Type
+from typing import Optional
 
 from ui import ui
 from map import Map, Location
@@ -18,31 +18,10 @@ class State:
         raise NotImplementedError
 
 
-class TransientState(State):
-    def __init__(self, ctx: 'Context', default: Optional[Type[State]]):
-        super().__init__(ctx)
-        self._default = default
-
-    @property
-    def default(self) -> Optional[Type[State]]:
-        return self._default
-
-    def _do(self) -> Optional[State]:
-        raise NotImplementedError
-
-    def do(self) -> Optional['State']:
-        if next_state := self._do():
-            return next_state
-
-        return self._default(self.ctx)
-
-
 class Context:
     counter = 0
-    counter_set = 0
 
     days_to_go = 0
-    adventure_state = False
 
     player: Player
     enemy: Enemy
@@ -82,18 +61,6 @@ class Context:
 
         return max(self.enemy.battle_score - self.player.martial_prowess, 0)
 
-    def char_menu(self):
-        ui.display_basic_player_info(self.player)
-        ui.display_combat_stats(self.player)
-        ui.display_resources(self.player)
-
-    def adventure_menu(self):
-        ui.display_combat_stats(self.player)
-        ui.display_resources(self.player)
-
     def display_map(self):
         ui.clear()
         ui.display_map(self.map)
-
-    def at_end_location(self) -> bool:
-        return self.location == self.map.end.name

@@ -8,13 +8,31 @@ import yaml
 
 from map import get_map
 from ui import ui
-from state import Context, State, TransientState
+from state import Context, State
 from enemy import Enemy, get_enemy
 
 with open('./data/player_options.yml', 'r') as fp:
     player_options_config = yaml.safe_load(fp)
 with open('./data/enemies.yml', 'r') as fp:
     enemies_config = yaml.safe_load(fp)
+
+
+# Information Menus #
+def char_menu(ctx: Context):
+    player = ctx.player
+
+    ui.clear()
+    ui.display_basic_player_info(player)
+    ui.display_combat_stats(player)
+    ui.display_resources(player)
+
+
+def adventure_menu(ctx: Context):
+    player = ctx.player
+
+    ui.clear()
+    ui.display_combat_stats(player)
+    ui.display_resources(player)
 
 
 # Title Screen #
@@ -33,80 +51,101 @@ class TitleScreen(State):
         ui.print("The Crusader's Quest: Survival Text RPG.\n")
         ui.wait("play")
 
-        return SetupGame(self.ctx)
+        return Introduction(self.ctx)
+
+
+class Introduction(State):
+    def do(self) -> Optional[State]:
+        ui.clear()
+        ui.print("The Antipope is defiling the holiest religious site in the world. You are a warrior monk from the Freemasons, and it is up to you to destroy the Antipope.\n")
+        ui.print("You begin your journey in Goodshire, one of the many towns you hope to pass through.\n")
+
+        return SetName(self.ctx)
 
 
 # Character Creation #
-
-# Name #
-class SetupGame(State):
+class SetName(State):
     def do(self) -> Optional[State]:
-        ctx = self.ctx
+        ui.print("What is your name?\n")
+        self.ctx.player.name = ui.input_text()
 
-        ctx.heal_item = 0
-        ctx.adventure_state = False
+        return SetRace(self.ctx)
+
+
+class SetRace(State):
+    def do(self) -> Optional[State]:
+        player = self.ctx.player
 
         ui.clear()
-        ui.print('The Antipope is defiling the holiest religious site in the world. You are a warrior monk from the Freemasons, and it is up to you to destroy the Antipope.\n')
-        ui.print('You begin your journey in Goodshire, one of the many towns you hope to pass through.\n')
-        ui.print('What is your name?\n')
+        ui.print("What is your race?\n")
 
-        ctx.player.name = ui.input_text()
+        races = player_options_config.get("races")
 
-        # Race #
-        ui.clear()
-        ui.print('What is your race?\n')
-
-        races = player_options_config.get('races')
-
-        selection = ui.choose([r['name'] for r in races]) - 1
+        selection = ui.choose([r.get("name") for r in races]) - 1
         selected_race = races[selection]
 
-        ctx.player.race = selected_race.get('name')
-        ctx.player.max_hp = selected_race.get('hp')
-        ctx.player.hp = selected_race.get('hp')
-        ctx.player.martial_prowess = selected_race.get('martial_prowess')
-        ctx.player.consumption_rate = selected_race.get('consumption_rate')
-        ctx.player.endurance = selected_race.get('endurance')
-        ctx.player.max_gold = selected_race.get('gold')
-        ctx.player.gold = selected_race.get('gold')
-        ctx.player.luck = selected_race.get('luck')
-        ctx.player.speed = selected_race.get('speed')
+        player.race = selected_race.get("name")
+        player.max_hp = selected_race.get("hp")
+        player.hp = selected_race.get("hp")
+        player.martial_prowess = selected_race.get("martial_prowess")
+        player.consumption_rate = selected_race.get("consumption_rate")
+        player.endurance = selected_race.get("endurance")
+        player.max_gold = selected_race.get("gold")
+        player.gold = selected_race.get("gold")
+        player.luck = selected_race.get("luck")
+        player.speed = selected_race.get("speed")
+
+        return SetOccupation(self.ctx)
+
+
+class SetOccupation(State):
+    def do(self) -> Optional[State]:
+        player = self.ctx.player
 
         ui.clear()
+        ui.print("What is your occupation?\n")
 
-        # Occupation #
-        ui.print('What is your occupation?\n')
+        occupations = player_options_config.get("occupations")
 
-        occupations = player_options_config.get('occupations')
-
-        selection = ui.choose([o['name'] for o in occupations]) - 1
+        selection = ui.choose([o.get("name") for o in occupations]) - 1
         selected_occupation = occupations[selection]
 
-        ctx.player.occupation = selected_occupation.get('name')
-        ctx.player.max_hp += selected_occupation.get('hp')
-        ctx.player.hp += selected_occupation.get('hp')
-        ctx.player.max_food += selected_occupation.get('food').get('max')
-        ctx.player.food += selected_occupation.get('food').get('curr')
-        ctx.player.max_arrows += selected_occupation.get('arrows').get('max')
-        ctx.player.arrows += selected_occupation.get('arrows').get('curr')
-        ctx.player.max_gold += selected_occupation.get('gold').get('max')
-        ctx.player.gold += selected_occupation.get('gold').get('curr')
-        ctx.player.martial_prowess += selected_occupation.get('martial_prowess')
+        player.occupation = selected_occupation.get("name")
+        player.max_hp += selected_occupation.get("hp")
+        player.hp += selected_occupation.get("hp")
+        player.max_food += selected_occupation.get("food").get("max")
+        player.food += selected_occupation.get("food").get("curr")
+        player.max_arrows += selected_occupation.get("arrows").get("max")
+        player.arrows += selected_occupation.get("arrows").get("curr")
+        player.max_gold += selected_occupation.get("gold").get("max")
+        player.gold += selected_occupation.get("gold").get("curr")
+        player.martial_prowess += selected_occupation.get("martial_prowess")
+
+        return SetWeapon(self.ctx)
+
+
+class SetWeapon(State):
+    def do(self) -> Optional[State]:
+        player = self.ctx.player
 
         ui.clear()
-        ui.print('What kind of weapon do you want to use? (ie. sword, poleaxe, etc.)')
+        ui.print("What kind of weapon do you want to use? (ie. sword, poleaxe, etc.)")
 
-        ctx.player.weapon = ui.input_text()
+        player.weapon = ui.input_text()
 
+        return BeginAdventure(self.ctx)
+
+
+class BeginAdventure(State):
+    def do(self) -> Optional[State]:
         ui.clear()
-        ui.print(ctx.player.description)
+        ui.print(self.ctx.player.description)
 
         selection = ui.choose(["Begin Adventure", "Restart"])
         if selection == 1:
             return StartGame(self.ctx)
-        else:
-            return TitleScreen(self.ctx)
+
+        return TitleScreen(self.ctx)
 
 
 # Death #
@@ -122,53 +161,15 @@ class Death(State):
         return TitleScreen(self.ctx)
 
 
-# Character Menu #
-def char_menu(ctx: Context):
-    ui.clear()
-    ctx.char_menu()
-
-
-# Adventure Menu #
-def adventure_menu(ctx: Context):
-    ui.clear()
-    ctx.adventure_menu()
-
-
 # Map #
-class TheMap(TransientState):
-    def _do(self) -> Optional[State]:
-        ctx = self.ctx
+class TheMap(State):
+    def do(self) -> Optional[State]:
+        self.ctx.display_map()
 
-        # ui.print('Key: T = Town; C = City; etc.)
-        ctx.display_map()
+        ui.print(f"You have {self.ctx.counter} days to go.")
+        ui.wait()
 
-        return DaysToGo(self.ctx, self.default)
-
-
-# Days to Go #
-class DaysToGo(TransientState):
-    def _do(self) -> Optional[State]:
-        ctx = self.ctx
-
-        if ctx.adventure_state:
-            ui.print(f'You have {ctx.counter} days to go.')
-            ui.wait()
-
-            return None
-
-        location = ctx.get_location()
-        distance = location.distance
-        ctx.counter_set = ctx.counter = distance
-
-        ui.print(f"You will brave the wilds for {distance} days.")
-        selection = ui.choose(['Continue', 'Go back'])
-
-        if selection == 1:
-            ui.wait()
-            return Adventuring(self.ctx)
-
-        return Town(self.ctx)
-
+        return Adventuring(self.ctx)
 
 # Treasure Generator #
 # def treasure_generator():
@@ -181,13 +182,10 @@ class LocationChanger(State):
     def do(self) -> Optional[State]:
         ctx = self.ctx
 
-        ctx.adventure_state = False
+        ctx.map.move()
 
-        location = ctx.get_location()
-        ctx.set_location(location.destination)
-
-        if ctx.at_end_location():
-            return Salem(self.ctx)
+        if ctx.map.at_end_location():
+            return FinalBattle(self.ctx)
 
         return Town(self.ctx)
 
@@ -201,37 +199,44 @@ class StartGame(State):
 # Town #
 class Town(State):
     def do(self) -> Optional[State]:
-        ctx = self.ctx
 
         ui.clear()
-        ui.print('You are in ' + ctx.location + '.')
-        ui.print(ctx.get_location().description)
+        ui.print(f"You are in {self.ctx.location}.")
+        ui.print(self.ctx.get_location().description)
         ui.print()
+
         selection = ui.choose(["Tavern", "Blacksmith", "Character", "Adventure"])
         if selection == 1:
-            ui.clear()
             return Tavern(self.ctx)
 
-        if selection == 4:
-            ui.clear()
-            ctx.counter = 0
-            return TheMap(ctx, LeaveTown)
-
-        if selection == 2:
-            ui.clear()
+        elif selection == 2:
             return Blacksmith(self.ctx)
-        if selection == 3:
+
+        elif selection == 3:
             ui.clear()
             char_menu(self.ctx)
             ui.wait()
+
+        elif selection == 4:
+            return LeaveTown(self.ctx)
+
         return Town(self.ctx)
 
 
 class LeaveTown(State):
     def do(self) -> Optional[State]:
-        ui.print('You will brave the wilds for 5 days.')
-        ui.wait()
-        return Adventuring(self.ctx)
+        self.ctx.counter = 0
+
+        location = self.ctx.get_location()
+        self.ctx.counter = location.distance
+
+        ui.print(f"You will brave the wilds for {self.ctx.counter} days.")
+        selection = ui.choose(["Continue", "Go back"])
+
+        if selection == 1:
+            return TheMap(self.ctx)
+
+        return Town(self.ctx)
 
 
 # Tavern #
@@ -434,155 +439,139 @@ class Adventuring(State):
     def do(self) -> Optional[State]:
         ctx = self.ctx
 
+        if not ctx.player.is_alive():
+            return Death(self.ctx)
+
         if ctx.counter == 0:
             return EndAdventure(self.ctx)
 
-        ctx.adventure_state = True
-        if ctx.player.hp > 0:
-            adventure_menu(self.ctx)
-            selection = ui.choose(["Continue", "Hunt", "Rest", "Map"])
-            ui.clear()
-            if selection == 1:
-                ctx.counter -= 1
+        adventure_menu(self.ctx)
+        selection = ui.choose(["Continue", "Hunt", "Rest", "Map"])
 
-                if not ctx.player.is_alive():
-                    return Death(self.ctx)
+        if selection == 1:
+            ctx.counter -= 1
 
-                adventure_menu(ctx)
+            return RandomEvent(self.ctx)
 
-                return RandomEvent(ctx, Adventuring)
-            if selection == 2:
-                return Hunt(self.ctx, Adventuring)
-            if selection == 3:
-                return Rest(self.ctx, Adventuring)
-            if selection == 4:
-                return TheMap(self.ctx, Adventuring)
-            else:
-                return Adventuring(self.ctx)
-        else:
-            return Death(self.ctx)
+        elif selection == 2:
+            return Hunt(self.ctx)
+
+        elif selection == 3:
+            return Rest(self.ctx)
+
+        elif selection == 4:
+            return TheMap(self.ctx)
 
 
 class EndAdventure(State):
     def do(self) -> Optional[State]:
-        ctx = self.ctx
-
-        ctx.counter = 0
         ui.clear()
         adventure_menu(self.ctx)
-        ui.print('You have survived the trip.')
-        ctx.adventure_state = False
+
+        ui.print("You have survived the trip.")
         ui.wait()
 
         return LocationChanger(self.ctx)
 
 
 # Rest #
-class Rest(TransientState):
-    def _do(self) -> Optional[State]:
-        ctx = self.ctx
-
-        if not ctx.player.is_alive():
-            return Death(self.ctx)
-
-        if ctx.player.hp == ctx.player.max_hp:
+class Rest(State):
+    def do(self) -> Optional[State]:
+        if self.ctx.player.hp == self.ctx.player.max_hp:
             ui.print('You rest for one day. Your HP is already maxed out.')
-            ui.wait()
 
-            return Adventuring(self.ctx)
+        else:
+            restored_hp = random.randint(15, 25)
 
-        x = random.randint(15, 25)
-
-        ctx.player.hp += x
-        ui.print(f'You rest for one day, gaining {x} HP.')
+            self.ctx.player.hp += restored_hp
+            ui.print(f'You rest for one day, gaining {restored_hp} HP.')
 
         ui.wait()
+
+        return Adventuring(self.ctx)
 
 
 # Hunt #
-class Hunt(TransientState):
-    def _do(self) -> Optional[State]:
+class Hunt(State):
+    def do(self) -> Optional[State]:
         ctx = self.ctx
 
-        x = random.randint(1, 10)
-        y = random.randint(1, 25)
+        arrows_shot = min(random.randint(1, 10), self.ctx.player.arrows)
+        food_found = random.randint(1, 25)
 
         if ctx.player.arrows == 0:
-            ui.print('You do not have any arrows to hunt with.')
-            ui.wait()
-            return Adventuring(self.ctx)
-
-        elif ctx.player.arrows < x:
-            adventure_menu(self.ctx)
-            x = ctx.player.arrows
-            ctx.player.arrows = ctx.player.arrows - x
-            ctx.player.food = ctx.player.food + y
-            ui.print(f'You shot {x} arrows, and gained {y} food.')
+            ui.print("You do not have any arrows to hunt with.")
 
         else:
+            ctx.player.arrows -= arrows_shot
+            ctx.player.food += food_found
+
+            ui.clear()
             adventure_menu(self.ctx)
-            ctx.player.arrows = ctx.player.arrows - x
-            ctx.player.food = ctx.player.food + y
-            ui.print(f'You shot {x} arrows, and gained {y} food.')
+
+            ui.print(f"You shot {arrows_shot} arrows, and gained {food_found} food.")
 
         ui.wait()
 
-        return None
+        return Adventuring(self.ctx)
 
 
 #
 # Random Events #
 #
-class RandomEvent(TransientState):
-    def _do(self) -> Optional[State]:
+class RandomEvent(State):
+    def do(self) -> Optional[State]:
         ctx = self.ctx
+
+        ui.clear()
+        adventure_menu(ctx)
 
         n = random.randint(1, 20)
         if n == 1:
-            return Chest(ctx, self.default)
+            return Chest(ctx)
         if n == 2:
-            return Fight(ctx, self.default)
+            return Fight(ctx)
         if n == 3:
-            return Robbed(ctx, self.default)
+            return Robbed(ctx)
         if n == 4:
-            return Traveller(ctx, self.default)
+            return Traveller(ctx)
         if n == 5:
-            return Damaged(ctx, self.default)
+            return Damaged(ctx)
         if n == 6:
-            return Miracle(ctx, self.default)
+            return Miracle(ctx)
         if n == 7:
-            return Mushroom(ctx, self.default)
+            return Mushroom(ctx)
         if n == 8:
-            return Nothing(ctx, self.default)
+            return NoEvent(ctx)
         if n == 9:
-            return Fight(ctx, self.default)
+            return Fight(ctx)
         if n == 10:
-            return Fight(ctx, self.default)
+            return Fight(ctx)
         if n == 11:
-            return Chest(ctx, self.default)
+            return Chest(ctx)
         if n == 12:
-            return Fight(ctx, self.default)
+            return Fight(ctx)
         if n == 13:
-            return Robbed(ctx, self.default)
+            return Robbed(ctx)
         if n == 14:
-            return Traveller(ctx, self.default)
+            return Traveller(ctx)
         if n == 15:
-            return Damaged(ctx, self.default)
+            return Damaged(ctx)
         if n == 16:
-            return Mystic(ctx, self.default)
+            return Mystic(ctx)
         if n == 17:
-            return BiggerBag(ctx, self.default)
+            return BiggerBag(ctx)
         if n == 18:
-            return LoseDay(ctx, self.default)
+            return LoseDay(ctx)
         if n == 19:
-            return Fight(ctx, self.default)
+            return Fight(ctx)
         if n == 20:
-            return Fight(ctx, self.default)
+            return Fight(ctx)
 
 
 # Mushroom #
-class Mushroom(TransientState):
-    def _do(self) -> Optional[State]:
+class Mushroom(State):
+    def do(self) -> Optional[State]:
         ctx = self.ctx
 
         ui.print('You see a strange mushroom.')
@@ -622,68 +611,73 @@ class Mushroom(TransientState):
                     ui.wait()
                     return Death(self.ctx)
 
-        elif selection == 2:
-            ui.print('You leave the mushroom.')
         else:
-            return Mushroom(self.ctx, self.default)
+            ui.print('You leave the mushroom.')
+
         ui.wait()
+        return Adventuring(self.ctx)
 
 
 # Miracle #
-class Miracle(TransientState):
-    def _do(self) -> Optional[State]:
-        ctx = self.ctx
+class Miracle(State):
+    def do(self) -> Optional[State]:
+        player = self.ctx.player
 
-        if ctx.player.race == 'Halfling':
-            ui.print('You see an old wizard, and the wizard beckons you over.')
-            ui.print('"Ho, there, traveler!"')
-            ui.print('"I did not expect to see a Halfing out in the wilderness."')
-            ui.print('"This is delightful. Here, have a gift."')
+        if not player.is_race('Halfling'):
+            return NoEvent(self.ctx)
 
-            selection = ui.choose(["Fill Food", "Fill Arrows", "Fill Gold", "Fill HP"])
-            if selection == 1:
-                ctx.player.food = ctx.player.max_food
-            if selection == 2:
-                ctx.player.arrows = ctx.player.max_arrows
-            if selection == 3:
-                ctx.player.gold = ctx.player.max_gold
-            if selection == 4:
-                ctx.player.fill_hp()
-            ui.wait()
-        else:
-            return Nothing(self.ctx, self.default)
+        ui.print('You see an old wizard, and the wizard beckons you over.')
+        ui.print('"Ho, there, traveler!"')
+        ui.print(f'"I did not expect to see a {player.race} out in the wilderness."')
+        ui.print('"This is delightful. Here, have a gift."')
+
+        selection = ui.choose(["Fill Food", "Fill Arrows", "Fill Gold", "Fill HP"])
+        if selection == 1:
+            player.food = player.max_food
+        if selection == 2:
+            player.arrows = player.max_arrows
+        if selection == 3:
+            player.gold = player.max_gold
+        if selection == 4:
+            player.fill_hp()
+        ui.wait()
+
+        return Adventuring(self.ctx)
 
 
 # Bigger Bag #
-class BiggerBag(TransientState):
-    def _do(self) -> Optional[State]:
+class BiggerBag(State):
+    def do(self) -> Optional[State]:
         ctx = self.ctx
 
         y = random.randint(1, 3)
         if y == 1:
-            ctx.player.max_food = ctx.player.max_food + 10
-            ui.print('You find an empty food storage container on the side of the path, and it holds more food than your current one.')
-            ui.wait('take\n')
-            ui.print('Max food increased by 10.')
-        if y == 2:
-            ctx.player.max_arrows = ctx.player.max_arrows + 10
-            ui.print('You spot an empty quiver on the side of the path. It holds more arrows than your current one.')
-            ui.wait('take\n')
-            ui.print('Max arrows increased by 10.')
-        if y == 3:
-            ctx.player.max_gold = ctx.player.max_gold + 100
-            ui.print('You discover an empty coin purse on the side of the path. It holds more gold than your current one.')
-            ui.wait('take\n')
-            ui.print('Max gold increased by 100.')
+            ctx.player.max_food += 10
+            ui.print("You find an empty food storage container on the side of the path, and it holds more food than your current one.")
+            ui.wait("take\n")
+            ui.print("Max food increased by 10.")
+
+        elif y == 2:
+            ctx.player.max_arrows += 10
+            ui.print("You spot an empty quiver on the side of the path. It holds more arrows than your current one.")
+            ui.wait("take\n")
+            ui.print("Max arrows increased by 10.")
+
+        elif y == 3:
+            ctx.player.max_gold += 100
+            ui.print("You discover an empty coin purse on the side of the path. It holds more gold than your current one.")
+            ui.wait("take\n")
+            ui.print("Max gold increased by 100.")
+
         ui.print()
         ui.wait()
 
-        return None
+        return Adventuring(self.ctx)
 
 
 # Lose a Day #
-class LoseDay(TransientState):
-    def _do(self) -> Optional[State]:
+class LoseDay(State):
+    def do(self) -> Optional[State]:
         ctx = self.ctx
 
         v = random.randint(1, 3)
@@ -714,12 +708,12 @@ class LoseDay(TransientState):
 
         ui.wait()
 
-        return None
+        return Adventuring(self.ctx)
 
 
 # Mystic #
-class Mystic(TransientState):
-    def _do(self) -> Optional[State]:
+class Mystic(State):
+    def do(self) -> Optional[State]:
         ctx = self.ctx
 
         ui.print('You come upon a roaming mystic.')
@@ -731,29 +725,31 @@ class Mystic(TransientState):
             ctx.player.hp = ctx.player.hp + 10
             ui.print('Your max HP increases by 10.')
             ui.wait()
+
         elif selection == 2:
             ctx.endurance = ctx.endurance + ctx.player.consumption_rate
             ui.print(f'Your endurance increases by {ctx.player.consumption_rate}.')
             ui.wait()
-        elif selection == 3:
+
+        else:
             ctx.martial_prowess = ctx.martial_prowess + 10
             ui.print('Your martial prowess increases by 10.')
             ui.wait()
-        else:
-            return Mystic(self.ctx, self.default)
+
+        return Adventuring(self.ctx)
 
 
 # Nothing #
-class Nothing(TransientState):
-    def _do(self) -> Optional[State]:
+class NoEvent(State):
+    def do(self) -> Optional[State]:
         ui.print('Nothing notable happens.')
         ui.wait()
 
-        return None
+        return Adventuring(self.ctx)
 
 
 # Damaged (Random Event) #
-class Damaged(TransientState):
+class Damaged(State):
     def _do(self) -> Optional[State]:
         ctx = self.ctx
 
@@ -770,13 +766,14 @@ class Damaged(TransientState):
             ctx.player.gold = ctx.player.gold + g
             ui.print(f'You sprain your ankle in a divot, taking {v} damage.')
             ui.print(f'However, you find {g} gold on the ground.')
-        if n == 2:
+
+        elif n == 2:
             f = random.randint(1, 20)
             ctx.player.food = ctx.player.food + f
             ui.print(f'You are stung by a swarm of bees, taking {v} damage.')
             ui.print(f'However, you manage to take {f} honey before you flee.')
 
-        if n == 3:
+        else:
             a = random.randint(1, 20)
             ctx.player.arrows = ctx.player.arrows + a
             ui.print(f"You walk into an hunter's trap, taking {v} damage.")
@@ -784,26 +781,21 @@ class Damaged(TransientState):
 
         ui.wait()
 
-        return None
+        return Adventuring(self.ctx)
 
 
 # Traveller #
-class Traveller(TransientState):
-    def _do(self) -> Optional[State]:
+class Traveller(State):
+    def do(self) -> Optional[State]:
         time_of_day = random.choice(['morning', 'evening', 'afternoon'])
 
-        ui.print('A friendly adventurer approaches you and wants to trade.')
+        ui.print("A friendly adventurer approaches you and wants to trade.")
         ui.print(f'"Good {time_of_day}, traveler."\n')
 
-        traveller_values(self.ctx)
+        traveller_generation(self.ctx)
+        ui.wait()
 
-        return None
-
-
-# Traveller Values #
-def traveller_values(ctx: Context):
-    traveller_generation(ctx)
-    ui.wait()
+        return Adventuring(self.ctx)
 
 
 # Traveller Generation #
@@ -992,13 +984,14 @@ def traveller_generation(ctx: Context):
 
 
 # Robbed #
-class Robbed(TransientState):
-    def _do(self) -> Optional[State]:
+class Robbed(State):
+    def do(self) -> Optional[State]:
         ctx = self.ctx
 
         x = random.randint(1, 3)
         if ctx.player.food == 0 and ctx.player.arrows == 0 and ctx.player.gold == 0:
-            return Nothing(self.ctx, self.default)
+            return NoEvent(self.ctx)
+
         elif x == 1:
             v = random.randint(1, 50)
             if ctx.player.food < v:
@@ -1035,10 +1028,12 @@ class Robbed(TransientState):
             elif y == 2:
                 ui.print(f'You check your coin purse, and find that {v} gold is missing.')
 
+        return Adventuring(self.ctx)
+
 
 # Fight #
-class Fight(TransientState):
-    def _do(self) -> Optional[State]:
+class Fight(State):
+    def do(self) -> Optional[State]:
         ctx = self.ctx
 
         ctx.enemy = get_enemy(enemy_locator_generator(ctx))
@@ -1049,65 +1044,58 @@ class Fight(TransientState):
 
         selection = ui.choose(["Fight", "Flee"])
         if selection == 1:
-            return FightSimulation(ctx, self.default)
+            return FightSimulation(ctx)
 
-        return FleeFight(ctx, self.default)
+        return FleeFight(ctx)
 
 
 # Fight Simulation #
-class FightSimulation(TransientState):
-    def _do(self) -> Optional[State]:
+class FightSimulation(State):
+    def do(self) -> Optional[State]:
+        damage_taken = self.ctx.combat_damage()
+        self.ctx.player.hp -= damage_taken
+
+        if damage_taken < 1:
+            ui.print("The enemy was slain, and you took no damage.")
+        else:
+            ui.print(f"The enemy was slain, but you took {damage_taken} damage.")
+
+        return EndFight(self.ctx)
+
+
+class EndFight(State):
+    def do(self) -> Optional[State]:
         ctx = self.ctx
 
-        your_damage_taken(ctx)
-        enemy_loot(ctx)
+        ctx.player.food += ctx.enemy.food
+        ctx.player.arrows += ctx.enemy.arrows
+        ctx.player.gold += ctx.enemy.gold
 
-        ui.wait()
+        ui.print(f"You found {ctx.enemy.food} food, "
+                 f"{ctx.enemy.arrows} arrows, and"
+                 f"{ctx.enemy.gold} gold on the corpse.")
 
         ctx.enemy = None
 
+        ui.wait()
         return Adventuring(self.ctx)
 
 
-# Enemy Loot #
-def enemy_loot(ctx: Context):
-    ctx.player.food += ctx.enemy.food
-    ctx.player.arrows += ctx.enemy.arrows
-    ctx.player.gold += ctx.enemy.gold
-
-    ui.print(f"You found {ctx.enemy.food} food, "
-             f"{ctx.enemy.arrows} arrows, and"
-             f"{ctx.enemy.gold} gold on the corpse.")
-
-
-# Your Damage Taken #
-def your_damage_taken(ctx: Context):
-    damage_taken = ctx.combat_damage()
-
-    ctx.player.hp -= damage_taken
-
-    if damage_taken < 1:
-        ui.print("The enemy was slain, and you took no damage.")
-    else:
-        ui.print(f"The enemy was slain, but you took {damage_taken} damage.")
-
-
 # Flee Fight #
-class FleeFight(TransientState):
-    def _do(self) -> Optional[State]:
+class FleeFight(State):
+    def do(self) -> Optional[State]:
         ctx = self.ctx
 
         n = random.randint(1, 2)
         if n == 2:
             ui.print('You failed to flee the fight.')
-            ui.wait()
 
-            return FightSimulation(self.ctx, self.default)
+            ui.wait()
+            return FightSimulation(self.ctx)
 
         ui.print('You escaped the fight.')
-        ui.wait()
-        adventure_menu(ctx)
 
+        ui.wait()
         return Adventuring(self.ctx)
 
 
@@ -1123,8 +1111,8 @@ def enemy_locator_generator(ctx: Context) -> int:
 
 
 # Chest #
-class Chest(TransientState):
-    def _do(self) -> Optional[State]:
+class Chest(State):
+    def do(self) -> Optional[State]:
         ctx = self.ctx
 
         p = random.randint(1, 2)
@@ -1154,11 +1142,9 @@ class Chest(TransientState):
             if a == 3:
                 return ChestLoot(self.ctx)
 
-        elif selection == 2:
-            ui.print()
+        ui.print()
 
-        else:
-            return Chest(self.ctx, self.default)
+        return Adventuring(self.ctx)
 
 
 # Chest Loot #
@@ -1184,8 +1170,8 @@ class ChestLoot(State):
         return adventure_menu(self.ctx)
 
 
-# Salem #
-class Salem(State):
+# Final Battle #
+class FinalBattle(State):
     def do(self) -> Optional[State]:
         ctx = self.ctx
 

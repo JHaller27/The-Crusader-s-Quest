@@ -45,6 +45,7 @@ class Location:
 
 class Map:
     _grid: list[list[Optional[Location]]]
+    _current: Optional[Location]
 
     def __init__(self, width: int, height: int):
         self._width = width
@@ -106,6 +107,13 @@ class Map:
 
     def get(self, name: str) -> Optional[Location]:
         return self._locations.get(name)
+
+    def move(self):
+        destination = self.get(self._current.destination)
+        self._current = destination
+
+    def at_end_location(self) -> bool:
+        return self._current.name == self.end
 
 
 def get_map(data_path: str) -> Map:
