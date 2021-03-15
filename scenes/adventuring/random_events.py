@@ -4,7 +4,7 @@ import random
 from state import State
 from utils import ui
 
-from scenes import Traveller, Fight
+from scenes import Traveller, Fight, Death, Adventuring
 
 
 class RandomEvent(State):
@@ -321,6 +321,7 @@ class Robbed(State):
         ui.wait()
         return Adventuring(self.ctx)
 
+
 # Chest #
 class Chest(State):
     def do(self) -> Optional[State]:
@@ -380,4 +381,3 @@ class ChestLoot(State):
 
         ui.wait()
         return Adventuring(self.ctx)
-

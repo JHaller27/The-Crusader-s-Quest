@@ -4,6 +4,8 @@ from typing import Optional
 from state import State
 from utils import ui
 
+from scenes import TheMap
+
 
 class Town(State):
     def do(self) -> Optional[State]:

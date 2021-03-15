@@ -5,7 +5,7 @@ from state import State
 from utils import ui
 
 from main import TitleScreen
-from scenes import Town, FinalBattle
+from scenes import Town, FinalBattle, RandomEvent
 
 
 # Hunt #
@@ -126,5 +126,3 @@ class LocationChanger(State):
             return FinalBattle(self.ctx)
 
         return Town(self.ctx)
-
-
