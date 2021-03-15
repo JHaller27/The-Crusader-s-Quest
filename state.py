@@ -97,33 +97,3 @@ class Context:
 
     def at_end_location(self) -> bool:
         return self.location == self.map.end.name
-
-    def gold_mechanic(self):
-        if self.player.gold < 1:
-            self.player.gold = 0
-
-        if self.player.gold > self.player.max_gold:
-            self.player.gold = self.player.max_gold
-            ui.print("You have completely filled your coin purse.")
-
-        if self.player.gold < 1:
-            self.player.gold = 0
-
-    def food_mechanic(self):
-        if self.player.food > self.player.max_food:
-            self.player.food = self.player.max_food
-            ui.print("You have maxed out your food supply.")
-
-        if self.player.food < 1:
-            self.player.food = 0
-
-    def arrows_mechanic(self):
-        if self.player.arrows < 1:
-            self.player.arrows = 0
-
-        if self.player.arrows > self.player.max_arrows:
-            self.player.arrows = self.player.max_arrows
-            ui.print("You have maxed out your arrow count.")
-
-        if self.player.arrows < 1:
-            self.player.arrows = 0

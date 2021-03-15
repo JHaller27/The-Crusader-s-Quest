@@ -108,7 +108,6 @@ class SetupGame(State):
         ui.print('What kind of weapon do you want to use? (ie. sword, poleaxe, etc.)')
 
         ctx.player.weapon = ui.input_text()
-        ctx.gold_mechanic()
 
         ui.clear()
         ui.print(ctx.player.description)
@@ -287,7 +286,6 @@ class Tavern(State):
 
             elif total_cost <= ctx.player.gold:
                 ctx.player.food = ctx.player.food + n
-                ctx.food_mechanic()
                 ctx.player.gold = ctx.player.gold - total_cost
                 ui.print('You complete the transaction')
                 ui.wait()
@@ -311,7 +309,6 @@ class Tavern(State):
                 ctx.player.food = ctx.player.food - n
                 ctx.player.gold = ctx.player.gold + total_sell
                 ui.print('You complete the transaction')
-                ctx.gold_mechanic()
                 ui.wait()
                 ui.clear()
 
@@ -397,7 +394,6 @@ class Blacksmith(State):
                 ui.wait()
             else:
                 ctx.player.gold = ctx.player.gold - ctx.blacksmith_price
-                ctx.gold_mechanic()
                 v = random.randint(10, 30)
                 ctx.martial_prowess = ctx.martial_prowess + v
                 ui.print('Your martial prowess increases by ' + str(v) + '.')
@@ -415,7 +411,6 @@ class Blacksmith(State):
                 return Blacksmith(self.ctx)
             if total_cost <= ctx.player.gold:
                 ctx.player.arrows = ctx.player.arrows + n
-                ctx.arrows_mechanic()
                 ctx.player.gold = ctx.player.gold - total_cost
                 ui.print('You complete the transaction')
                 ui.wait()
@@ -434,7 +429,6 @@ class Blacksmith(State):
                 ctx.player.arrows = ctx.player.arrows - n
                 ctx.player.gold = ctx.player.gold + total_sell
                 ui.print('You complete the transaction')
-                ctx.gold_mechanic()
                 ui.wait()
                 ui.clear()
                 return Blacksmith(self.ctx)
@@ -533,16 +527,12 @@ class Hunt(TransientState):
             x = ctx.player.arrows
             ctx.player.arrows = ctx.player.arrows - x
             ctx.player.food = ctx.player.food + y
-            ctx.arrows_mechanic()
             ui.print('You shot ' + str(x) + ' arrows, and gained ' + str(y) + ' food.')
-            ctx.food_mechanic()
 
         else:
             adventure_menu(self.ctx)
             ctx.player.arrows = ctx.player.arrows - x
             ctx.player.food = ctx.player.food + y
-            ctx.arrows_mechanic()
-            ctx.food_mechanic()
             ui.print('You shot ' + str(x) + ' arrows, and gained ' + str(y) + ' food.')
 
         ui.wait()
@@ -663,13 +653,10 @@ class Miracle(TransientState):
             selection = ui.choose(["Fill Food", "Fill Arrows", "Fill Gold", "Fill HP"])
             if selection == 1:
                 ctx.player.food = ctx.player.max_food
-                ctx.food_mechanic()
             if selection == 2:
                 ctx.player.arrows = ctx.player.max_arrows
-                ctx.arrows_mechanic()
             if selection == 3:
                 ctx.player.gold = ctx.player.max_gold
-                ctx.gold_mechanic()
             if selection == 4:
                 ctx.player.fill_hp()
             ui.wait()
@@ -795,20 +782,17 @@ class Damaged(TransientState):
             ctx.player.gold = ctx.player.gold + g
             ui.print('You sprain your ankle in a divot, taking ' + str(v) + ' damage.')
             ui.print('However, you find ' + str(g) + ' gold on the ground.')
-            ctx.gold_mechanic()
         if n == 2:
             f = random.randint(1, 20)
             ctx.player.food = ctx.player.food + f
             ui.print('You are stung by a swarm of bees, taking ' + str(v) + ' damage.')
             ui.print('However, you manage to take ' + str(f) + ' honey before you flee.')
-            ctx.food_mechanic()
 
         if n == 3:
             a = random.randint(1, 20)
             ctx.player.arrows = ctx.player.arrows + a
             ui.print('You walk into an hunter\'s trap, taking ' + str(v) + ' damage.')
             ui.print('However, you find ' + str(a) + ' arrows nearby.')
-            ctx.arrows_mechanic()
 
         ui.wait()
 
@@ -853,7 +837,6 @@ def traveller_generation(ctx: Context):
                     ctx.player.food = ctx.player.food - x
                     ctx.player.arrows = ctx.player.arrows + v
                     ui.print('You accept the trade.')
-                    ctx.arrows_mechanic()
 
             else:
                 ui.print('You decline the trade.')
@@ -868,7 +851,6 @@ def traveller_generation(ctx: Context):
                     ctx.player.food = ctx.player.food - x
                     ctx.player.gold = ctx.player.gold + v
                     ui.print('You accept the trade.')
-                    ctx.gold_mechanic()
 
             else:
                 ui.print('You decline the trade.')
@@ -899,7 +881,6 @@ def traveller_generation(ctx: Context):
                     ctx.player.arrows = ctx.player.arrows - x
                     ctx.player.food = ctx.player.food + v
                     ui.print('You accept the trade.')
-                    ctx.food_mechanic()
 
             else:
                 ui.print('You decline the trade.')
@@ -913,7 +894,6 @@ def traveller_generation(ctx: Context):
                     ctx.player.arrows = ctx.player.arrows - x
                     ctx.player.gold = ctx.player.gold + v
                     ui.print('You accept the trade.')
-                    ctx.gold_mechanic()
 
             else:
                 ui.print('You decline the trade.')
@@ -943,7 +923,6 @@ def traveller_generation(ctx: Context):
                     ctx.player.gold = ctx.player.gold - x
                     ctx.player.food = ctx.player.food + v
                     ui.print('You accept the trade.')
-                    ctx.food_mechanic()
 
             else:
                 ui.print('You decline the trade.')
@@ -957,7 +936,6 @@ def traveller_generation(ctx: Context):
                     ctx.player.gold = ctx.player.gold - x
                     ctx.player.arrows = ctx.player.arrows + v
                     ui.print('You accept the trade.')
-                    ctx.arrows_mechanic()
 
             else:
                 ui.print('You decline the trade.')
@@ -986,12 +964,10 @@ def traveller_generation(ctx: Context):
                     ui.print('You cannot afford the trade, but the trader is willing to let you slide, this time.')
                     ctx.player.hp = ctx.player.hp - x
                     ctx.player.food = ctx.player.food + v
-                    ctx.food_mechanic()
                 else:
                     ctx.player.hp = ctx.player.hp - x
                     ctx.player.food = ctx.player.food + v
                     ui.print('You accept the trade.')
-                    ctx.food_mechanic()
 
             else:
                 ui.print('You decline the trade.')
@@ -1003,12 +979,10 @@ def traveller_generation(ctx: Context):
                     ui.print('You cannot afford the trade, but the trader is willing to let you slide, this time.')
                     ctx.player.hp = ctx.player.hp - x
                     ctx.player.food = ctx.player.food + v
-                    ctx.food_mechanic()
                 else:
                     ctx.player.hp = ctx.player.hp - x
                     ctx.player.arrows = ctx.player.arrows + v
                     ui.print('You accept the trade.')
-                    ctx.arrows_mechanic()
 
             else:
                 ui.print('You decline the trade.')
@@ -1020,12 +994,10 @@ def traveller_generation(ctx: Context):
                     ui.print('You cannot afford the trade, but the trader is willing to let you slide, this time.')
                     ctx.player.hp = ctx.player.hp - x
                     ctx.player.food = ctx.player.food + v
-                    ctx.food_mechanic()
                 else:
                     ctx.player.hp = ctx.player.hp - x
                     ctx.player.gold = ctx.player.gold + v
                     ui.print('You accept the trade.')
-                    ctx.gold_mechanic()
 
             else:
                 ui.print('You decline the trade.')
@@ -1045,7 +1017,6 @@ class Robbed(TransientState):
                 v = ctx.player.food
 
             ctx.player.food = ctx.player.food - v
-            ctx.food_mechanic()
             y = random.randint(1, 2)
             # adventure_menu()
             if y == 1:
@@ -1057,7 +1028,6 @@ class Robbed(TransientState):
             if ctx.player.arrows < v:
                 v = ctx.player.arrows
             ctx.player.arrows = ctx.player.arrows - v
-            ctx.arrows_mechanic()
             y = random.randint(1, 2)
             # adventure_menu()
             if y == 1:
@@ -1070,7 +1040,6 @@ class Robbed(TransientState):
             if ctx.player.gold < v:
                 v = ctx.player.gold
             ctx.player.gold = ctx.player.gold - v
-            ctx.gold_mechanic()
             y = random.randint(1, 2)
             # adventure_menu()
             if y == 1:
@@ -1121,10 +1090,6 @@ def enemy_loot(ctx: Context):
     ui.print(f"You found {ctx.enemy.food} food, "
              f"{ctx.enemy.arrows} arrows, and"
              f"{ctx.enemy.gold} gold on the corpse.")
-
-    ctx.food_mechanic()
-    ctx.arrows_mechanic()
-    ctx.gold_mechanic()
 
 
 # Your Damage Taken #
@@ -1218,17 +1183,14 @@ class ChestLoot(State):
             v = random.randint(50, 100)
             ctx.player.food = ctx.player.food + v
             ui.print('Inside, you found ' + str(v) + ' food.')
-            ctx.food_mechanic()
         if x == 2:
             v = random.randint(50, 100)
             ctx.player.arrows = ctx.player.arrows + v
             ui.print('Inside, you found ' + str(v) + ' arrows.')
-            ctx.arrows_mechanic()
         if x == 3:
             v = random.randint(50, 100)
             ctx.player.gold = ctx.player.gold + v
             ui.print('Inside, you found ' + str(v) + ' gold.')
-            ctx.gold_mechanic()
 
         ui.wait()
         return adventure_menu(self.ctx)
