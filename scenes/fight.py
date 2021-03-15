@@ -3,7 +3,7 @@ import random
 
 from state import State, Context
 from ui import ui
-from enemy import get_enemy
+from utils import get_enemy
 
 from scenes import Adventuring
 

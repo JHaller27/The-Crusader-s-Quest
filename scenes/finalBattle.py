@@ -2,7 +2,7 @@ from typing import Optional
 
 from state import State
 from ui import ui
-from enemy import Enemy
+from utils.enemy import Enemy
 
 from main import TitleScreen
 

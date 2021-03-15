@@ -2,7 +2,7 @@
 # Authored by: Gaga Gievous
 # Copyright February 2021
 
-from map import get_map
+from utils.map import get_map
 from state import Context
 
 from scenes import TitleScreen

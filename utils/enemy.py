@@ -2,7 +2,7 @@ import yaml
 import random
 
 
-with open('./data/enemies.yml', 'r') as fp:
+with open('../data/enemies.yml', 'r') as fp:
     config = yaml.safe_load(fp)
 
 

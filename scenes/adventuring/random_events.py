@@ -4,7 +4,7 @@ import random
 from state import State
 from ui import ui
 
-from scenes import Traveller
+from scenes import Traveller, Fight
 
 
 class RandomEvent(State):

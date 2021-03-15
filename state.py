@@ -1,9 +1,9 @@
 from typing import Optional
 
 from ui import ui
-from map import Map, Location
-from player import Player
-from enemy import Enemy
+from utils import Map, Location
+from utils import Player
+from utils import Enemy
 
 
 class State:
