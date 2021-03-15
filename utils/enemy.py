@@ -1,23 +1,35 @@
 import random
 
+from utils.configs import EnemyType, EnemyAdjective
+
 
 class Enemy:
-    _adjective = ''
-    _type = ''
-    _battle_score = 0
-    gold = 0
-    arrows = 0
-    food = 0
-
-    def __init__(self, adj: str, name: str, battle_score: int):
+    def __init__(self, enemy_type: EnemyType, adj: EnemyAdjective = None):
         self._adjective = adj
-        self._type = name
-        self._battle_score = battle_score
+        self._type = enemy_type
+
+        self._food = self._type.food if self._type.food is not None else 0
+        self._arrows = self._type.arrows if self._type.arrows is not None else 0
+        self._gold = self._type.gold if self._type.gold is not None else 0
 
     def randomize_loot(self):
-        self.food += random.randrange(10) + 1
-        self.arrows += random.randrange(5) + 1
-        self.gold += random.randrange(10) + 1
+        if self._food is not None:
+            self._food += random.randrange(10) + 1
+
+        if self._arrows is not None:
+            self._arrows += random.randrange(5) + 1
+
+        if self._gold is not None:
+            self._gold += random.randrange(10) + 1
+
+    @property
+    def name(self) -> str:
+        s = ""
+        if self._adjective is not None:
+            s += self._adjective.name + " "
+        s += self._type.name
+
+        return s
 
     @property
     def name(self) -> str:
@@ -25,27 +37,19 @@ class Enemy:
 
     @property
     def battle_score(self) -> int:
-        return self._battle_score
+        return self._type.battle_score + self._adjective.battle_score
+
+    @property
+    def food(self) -> int:
+        return self._food if self._food is not None else 0
+
+    @property
+    def arrows(self) -> int:
+        return self._arrows if self._arrows is not None else 0
+
+    @property
+    def gold(self) -> int:
+        return self._gold if self._gold is not None else 0
 
     def is_type(self, enemy_type: str) -> bool:
-        return self._type.lower() == enemy_type.lower()
-
-
-def get_enemy(type_id: int, config: dict) -> Enemy:
-    enemy_type = config.get("types")[type_id - 1]
-    type_name = enemy_type.get("name")
-
-    adj = random.choice(config.get("adjectives"))
-    adj_name = adj.get("name")
-
-    battle_score = adj.get("battle_score") + enemy_type.get("battle_score")
-
-    enemy = Enemy(adj_name, type_name, battle_score)
-
-    enemy.food = enemy_type.get("food")
-    enemy.arrows = enemy_type.get("arrows")
-    enemy.gold = enemy_type.get("gold")
-
-    enemy.randomize_loot()
-
-    return enemy
+        return self._type.name.lower() == enemy_type.lower()

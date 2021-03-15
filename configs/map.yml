@@ -9,7 +9,7 @@ locations:
     row: 0
     col: 0
     blacksmith_price: 0
-    enemy_exclude: [3,4,5]
+    enemy_exclude: [3,4,5,6]
     travel:
       destination: Rodez
       distance: 7
@@ -20,7 +20,7 @@ locations:
     row: 1
     col: 0
     blacksmith_price: 25
-    enemy_exclude: [2,4,5]
+    enemy_exclude: [2,4,5,6]
     travel:
       destination: Oristano
       distance: 11
@@ -31,7 +31,7 @@ locations:
     row: 2
     col: 1
     blacksmith_price: 45
-    enemy_exclude: [1,2,5]
+    enemy_exclude: [1,2,5,6]
     travel:
       destination: Thasos
       distance: 15
@@ -42,7 +42,7 @@ locations:
     row: 3
     col: 1
     blacksmith_price: 65
-    enemy_exclude: [1,2]
+    enemy_exclude: [1,2,6]
     travel:
       destination: Karabuk
       distance: 19
@@ -53,7 +53,7 @@ locations:
     row: 3
     col: 2
     blacksmith_price: 85
-    enemy_exclude: [1,2,3]
+    enemy_exclude: [1,2,3,6]
     travel:
       destination: Salem
       distance: 25
@@ -62,7 +62,7 @@ locations:
     row: -1
     col: -1
     blacksmith_price: 105
-    enemy_exclude: [1,5]
+    enemy_exclude: [1,5,6]
     travel:
       destination: Rodez
       distance: 25

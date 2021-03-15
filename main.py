@@ -5,7 +5,7 @@
 import yaml
 
 from utils import get_map
-from utils.configs import Player as PlayerConfig
+from utils.configs import PlayerConfig, EnemiesConfig
 from state import Context
 
 from scenes import TitleScreen
@@ -22,6 +22,7 @@ def main():
 
     with open("./configs/enemies.yml", "r") as fp:
         enemy_config = yaml.safe_load(fp)
+    enemy_config = EnemiesConfig(enemy_config)
 
     global_context = Context(map_data, player_config, enemy_config)
     global_context.run(TitleScreen(global_context))

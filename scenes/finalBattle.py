@@ -43,7 +43,7 @@ class FinalBattle(State):
             ui.print('"Very well, then." Chernobog stands up.')
             ui.wait("fight")
 
-            ctx.enemy = Enemy("", "Chernobog", 170)
+            ctx.enemy = Enemy(self.ctx.enemy_config.final)
             damage_taken = ctx.combat_damage()
             ctx.player.hp -= damage_taken
 

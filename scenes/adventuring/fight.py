@@ -2,7 +2,7 @@ from typing import Optional
 import random
 
 from state import State, Context
-from utils import get_enemy, ui
+from utils import Enemy, ui
 
 from scenes import Adventuring
 
@@ -11,7 +11,15 @@ class Fight(State):
     def do(self) -> Optional[State]:
         ctx = self.ctx
 
-        ctx.enemy = get_enemy(enemy_locator_generator(ctx), ctx.enemy_config)
+        types = self.ctx.enemy_config.types
+        adj = random.choice(self.ctx.enemy_config.adjectives)
+
+        type_idx = enemy_locator_generator(ctx) - 1
+        enemy_type = types[type_idx]
+
+        ctx.enemy = Enemy(enemy_type, adj)
+
+        ctx.enemy.randomize_loot()
         ui.print(f"You see a {ctx.enemy.name} approaching.")
 
         if ctx.enemy.is_type("Doppelganger"):

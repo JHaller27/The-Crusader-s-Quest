@@ -29,6 +29,10 @@ types:
     arrows: 0
     gold: 10
 
+final:
+  - name: Chernobog
+    battle_score: 170
+
 adjectives:
   - name: Bloodthirsty
     battle_score: 35
