@@ -135,9 +135,9 @@ class Talk(State):
         if dialogue == 1:
             ui.print("I don't take too kindly to travelers.")
         if dialogue == 2:
-            ui.print("I'm too scared to leave " + ctx.location + ". I don't know how you survive out there.")
+            ui.print(f"I'm too scared to leave {ctx.location}. I don't know how you survive out there.")
         if dialogue == 3:
-            ui.print("The " + ctx.location + " Inn is the best tavern in the world. Not that I would know.")
+            ui.print(f"The {ctx.location} Inn is the best tavern in the world. Not that I would know.")
         if dialogue == 4:
             ui.print("There's nasty things where you're headed.")
         if dialogue == 5:
@@ -198,7 +198,7 @@ class Blacksmith(State):
 
         if selection == 1:
             if ctx.player.gold < ctx.blacksmith_price:
-                ui.print("You do not have enough gold to upgrade your " + ctx.player.weapon + ".")
+                ui.print(f"You do not have enough gold to upgrade your {ctx.player.weapon}.")
                 ui.wait()
             else:
                 ctx.player.gold = ctx.player.gold - ctx.blacksmith_price
