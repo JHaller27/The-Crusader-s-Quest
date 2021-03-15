@@ -21,24 +21,15 @@ with open('./data/enemies.yml', 'r') as fp:
 class TitleScreen(State):
     def do(self) -> Optional[State]:
         ui.clear()
-        ui.print(
-            "#####################################################################################################################")
-        ui.print(
-            "#####################################################################################################################")
-        ui.print(
-            "##     ## ## ##   ######   ##    ### ## ####  ##    ##  ####   ##    ### ####  #####    #### ## ##   ####  ##     ###")
-        ui.print(
-            "#### #### ## ## ######## #### ##  ## ## ### #### ## ## # ### #### ##  ## ### ####### ## #### ## ## ##### ###### #####")
-        ui.print(
-            "#### ####    ##   ###### ####   #### ## ###  ###    ## ## ##   ##   ########  ###### ## #### ## ##   ###  ##### #####")
-        ui.print(
-            "#### #### ## ## ######## #### # #### ## #### ### ## ## # ### #### # ######### ###### ## #### ## ## ###### ##### #####")
-        ui.print(
-            "#### #### ## ##   ######   ## ##  ##    ##  #### ## ##  ####   ## ##  #####  #######      ##    ##   ##  ###### #####")
-        ui.print(
-            "#####################################################################################################################")
-        ui.print(
-            "#####################################################################################################################")
+        ui.print("#####################################################################################################################")
+        ui.print("#####################################################################################################################")
+        ui.print("##     ## ## ##   ######   ##    ### ## ####  ##    ##  ####   ##    ### ####  #####    #### ## ##   ####  ##     ###")
+        ui.print("#### #### ## ## ######## #### ##  ## ## ### #### ## ## # ### #### ##  ## ### ####### ## #### ## ## ##### ###### #####")
+        ui.print("#### ####    ##   ###### ####   #### ## ###  ###    ## ## ##   ##   ########  ###### ## #### ## ##   ###  ##### #####")
+        ui.print("#### #### ## ## ######## #### # #### ## #### ### ## ## # ### #### # ######### ###### ## #### ## ## ###### ##### #####")
+        ui.print("#### #### ## ##   ######   ## ##  ##    ##  #### ## ##  ####   ## ##  #####  #######      ##    ##   ##  ###### #####")
+        ui.print("#####################################################################################################################")
+        ui.print("#####################################################################################################################")
         ui.print("The Crusader's Quest: Survival Text RPG.\n")
         ui.wait("play")
 
@@ -56,8 +47,7 @@ class SetupGame(State):
         ctx.adventure_state = False
 
         ui.clear()
-        ui.print(
-            'The Antipope is defiling the holiest religious site in the world. You are a warrior monk from the Freemasons, and it is up to you to destroy the Antipope.\n')
+        ui.print('The Antipope is defiling the holiest religious site in the world. You are a warrior monk from the Freemasons, and it is up to you to destroy the Antipope.\n')
         ui.print('You begin your journey in Goodshire, one of the many towns you hope to pass through.\n')
         ui.print('What is your name?\n')
 
@@ -672,8 +662,7 @@ class BiggerBag(TransientState):
         y = random.randint(1, 3)
         if y == 1:
             ctx.player.max_food = ctx.player.max_food + 10
-            ui.print(
-                'You find an empty food storage container on the side of the path, and it holds more food than your current one.')
+            ui.print('You find an empty food storage container on the side of the path, and it holds more food than your current one.')
             ui.wait('take\n')
             ui.print('Max food increased by 10.')
         if y == 2:
@@ -683,8 +672,7 @@ class BiggerBag(TransientState):
             ui.print('Max arrows increased by 10.')
         if y == 3:
             ctx.player.max_gold = ctx.player.max_gold + 100
-            ui.print(
-                'You discover an empty coin purse on the side of the path. It holds more gold than your current one.')
+            ui.print('You discover an empty coin purse on the side of the path. It holds more gold than your current one.')
             ui.wait('take\n')
             ui.print('Max gold increased by 100.')
         ui.print()
@@ -1206,30 +1194,25 @@ class Salem(State):
         ui.wait()
         ui.clear()
 
-        ui.print(
-            'You enter the ancient city of Salem, now blackened with fire and as silent as a graveyard, and see a man who looks like a commoner lounging upon a throne of skeletons in the courtyard.')
+        ui.print('You enter the ancient city of Salem, now blackened with fire and as silent as a graveyard, and see a man who looks like a commoner lounging upon a throne of skeletons in the courtyard.')
         ui.print('"Ah, ' + ctx.player.name + '", I was expecting you."\n')
         ui.print('Type \'who are you?\'')
         ui.input_text()
 
         ui.clear()
-        ui.print(
-            '"I am the called by your order the Antipope or the Prince of Darkness, but my birth name is Chernobog."')
-        ui.print(
-            '"As you can see, I have already razed Salem. Your sacred temples and artifacts are totally destroyed. You have failed."')
+        ui.print('"I am the called by your order the Antipope or the Prince of Darkness, but my birth name is Chernobog."')
+        ui.print('"As you can see, I have already razed Salem. Your sacred temples and artifacts are totally destroyed. You have failed."')
         ui.print('"But I admire your willpower and resourcefulness to make it all the way here from Goodshire."')
         ui.print('"I want to make you an offer. Join me, and become my champion. Together, we will forge a New Dawn."')
         ui.print('"Your old ways are gone. You have failed your order, and they will no longer accept you."')
-        ui.print(
-            '"If you decline, I won\'t kill you, but I will beat you within an inch of your life and enslave you for eternity."\n')
+        ui.print('"If you decline, I won\'t kill you, but I will beat you within an inch of your life and enslave you for eternity."\n')
         ui.print('"The choice is yours, ' + ctx.player.name + '."\n')
         selection = ui.choose(["Accept offer", "Decline offer"])
         ui.clear()
 
         if selection == 1:
             char_menu(ctx)
-            ui.print(
-                'You join the forces of Chernobog, the Prince of Darkness, and forsake your old way of life. You both combine your powers and forge a New Dawn.')
+            ui.print('You join the forces of Chernobog, the Prince of Darkness, and forsake your old way of life. You both combine your powers and forge a New Dawn.')
             ui.print()
             ui.wait('end game')
 
@@ -1242,10 +1225,8 @@ class Salem(State):
             ctx.player.hp -= damage_taken
 
             if ctx.player.is_alive():
-                ui.print(
-                    'You have slain the Antipope. His body magically lights on fire, and leaves ashes on the ground.')
-                ui.print(
-                    'Your surroundings shimmer, and the city of Salem transforms from its ruined state to its former glory. You have succeeded in every goal.')
+                ui.print('You have slain the Antipope. His body magically lights on fire, and leaves ashes on the ground.')
+                ui.print('Your surroundings shimmer, and the city of Salem transforms from its ruined state to its former glory. You have succeeded in every goal.')
                 ui.wait()
                 char_menu(ctx)
                 ui.clear()
@@ -1257,8 +1238,7 @@ class Salem(State):
             else:
                 char_menu(ctx)
                 ui.print()
-                ui.print(
-                    'You have lost the fight, letting Chernobog win. He enslaves you for all eternity, and he takes over the world.\n')
+                ui.print('You have lost the fight, letting Chernobog win. He enslaves you for all eternity, and he takes over the world.\n')
                 ui.wait('end game')
 
         else:
