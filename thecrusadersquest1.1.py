@@ -24,26 +24,17 @@ class TitleScreen(State):
         ctx = self.ctx
 
         ctx.ui.clear()
-        ctx.ui.print(
-            '#####################################################################################################################')
-        ctx.ui.print(
-            '#####################################################################################################################')
-        ctx.ui.print(
-            '##     ## ## ##   ######   ##    ### ## ####  ##    ##  ####   ##    ### ####  #####    #### ## ##   ####  ##     ###')
-        ctx.ui.print(
-            '#### #### ## ## ######## #### ##  ## ## ### #### ## ## # ### #### ##  ## ### ####### ## #### ## ## ##### ###### #####')
-        ctx.ui.print(
-            '#### ####    ##   ###### ####   #### ## ###  ###    ## ## ##   ##   ########  ###### ## #### ## ##   ###  ##### #####')
-        ctx.ui.print(
-            '#### #### ## ## ######## #### # #### ## #### ### ## ## # ### #### # ######### ###### ## #### ## ## ###### ##### #####')
-        ctx.ui.print(
-            '#### #### ## ##   ######   ## ##  ##    ##  #### ## ##  ####   ## ##  #####  #######      ##    ##   ##  ###### #####')
-        ctx.ui.print(
-            '#####################################################################################################################')
-        ctx.ui.print(
-            '#####################################################################################################################')
-        ctx.ui.print('The Crusader\'s Quest: Survival Text RPG.\n')
-        ctx.ui.wait('play')
+        ctx.ui.print("#####################################################################################################################")
+        ctx.ui.print("#####################################################################################################################")
+        ctx.ui.print("##     ## ## ##   ######   ##    ### ## ####  ##    ##  ####   ##    ### ####  #####    #### ## ##   ####  ##     ###")
+        ctx.ui.print("#### #### ## ## ######## #### ##  ## ## ### #### ## ## # ### #### ##  ## ### ####### ## #### ## ## ##### ###### #####")
+        ctx.ui.print("#### ####    ##   ###### ####   #### ## ###  ###    ## ## ##   ##   ########  ###### ## #### ## ##   ###  ##### #####")
+        ctx.ui.print("#### #### ## ## ######## #### # #### ## #### ### ## ## # ### #### # ######### ###### ## #### ## ## ###### ##### #####")
+        ctx.ui.print("#### #### ## ##   ######   ## ##  ##    ##  #### ## ##  ####   ## ##  #####  #######      ##    ##   ##  ###### #####")
+        ctx.ui.print("#####################################################################################################################")
+        ctx.ui.print("#####################################################################################################################")
+        ctx.ui.print("The Crusader's Quest: Survival Text RPG.\n")
+        ctx.ui.wait("play")
 
         return SetupGame(self.ctx)
 
@@ -59,8 +50,7 @@ class SetupGame(State):
         ctx.adventure_state = False
 
         ctx.ui.clear()
-        ctx.ui.print(
-            'The Antipope is defiling the holiest religious site in the world. You are a warrior monk from the Freemasons, and it is up to you to destroy the Antipope.\n')
+        ctx.ui.print('The Antipope is defiling the holiest religious site in the world. You are a warrior monk from the Freemasons, and it is up to you to destroy the Antipope.\n')
         ctx.ui.print('You begin your journey in Goodshire, one of the many towns you hope to pass through.\n')
         ctx.ui.print('What is your name?\n')
 
@@ -719,8 +709,7 @@ class BiggerBag(TransientState):
         y = random.randint(1, 3)
         if y == 1:
             ctx.player.max_food = ctx.player.max_food + 10
-            ctx.ui.print(
-                'You find an empty food storage container on the side of the path, and it holds more food than your current one.')
+            ctx.ui.print('You find an empty food storage container on the side of the path, and it holds more food than your current one.')
             ctx.ui.wait('take\n')
             ctx.ui.print('Max food increased by 10.')
         if y == 2:
@@ -1281,29 +1270,25 @@ class Salem(State):
         ctx.ui.wait()
         ctx.ui.clear()
 
-        ctx.ui.print(
-            'You enter the ancient city of Salem, now blackened with fire and as silent as a graveyard, and see a man who looks like a commoner lounging upon a throne of skeletons in the courtyard.')
+        ctx.ui.print('You enter the ancient city of Salem, now blackened with fire and as silent as a graveyard, and see a man who looks like a commoner lounging upon a throne of skeletons in the courtyard.')
         ctx.ui.print('"Ah, ' + ctx.player.name + '", I was expecting you."\n')
         ctx.ui.print('Type \'who are you?\'')
         ctx.ui.input_text()
 
         ctx.ui.clear()
         ctx.ui.print('"I am the called by your order the Antipope or the Prince of Darkness, but my birth name is Chernobog."')
-        ctx.ui.print(
-            '"As you can see, I have already razed Salem. Your sacred temples and artifacts are totally destroyed. You have failed."')
+        ctx.ui.print('"As you can see, I have already razed Salem. Your sacred temples and artifacts are totally destroyed. You have failed."')
         ctx.ui.print('"But I admire your willpower and resourcefulness to make it all the way here from Goodshire."')
         ctx.ui.print('"I want to make you an offer. Join me, and become my champion. Together, we will forge a New Dawn."')
         ctx.ui.print('"Your old ways are gone. You have failed your order, and they will no longer accept you."')
-        ctx.ui.print(
-            '"If you decline, I won\'t kill you, but I will beat you within an inch of your life and enslave you for eternity."\n')
+        ctx.ui.print('"If you decline, I won\'t kill you, but I will beat you within an inch of your life and enslave you for eternity."\n')
         ctx.ui.print('"The choice is yours, ' + ctx.player.name + '."\n')
         selection = ctx.ui.choose(["Accept offer", "Decline offer"])
         ctx.ui.clear()
 
         if selection == 1:
             char_menu(ctx)
-            ctx.ui.print(
-                'You join the forces of Chernobog, the Prince of Darkness, and forsake your old way of life. You both combine your powers and forge a New Dawn.')
+            ctx.ui.print('You join the forces of Chernobog, the Prince of Darkness, and forsake your old way of life. You both combine your powers and forge a New Dawn.')
             ctx.ui.print()
             ctx.ui.wait('end game')
 
@@ -1317,8 +1302,7 @@ class Salem(State):
 
             if ctx.player.is_alive():
                 ctx.ui.print('You have slain the Antipope. His body magically lights on fire, and leaves ashes on the ground.')
-                ctx.ui.print(
-                    'Your surroundings shimmer, and the city of Salem transforms from its ruined state to its former glory. You have succeeded in every goal.')
+                ctx.ui.print('Your surroundings shimmer, and the city of Salem transforms from its ruined state to its former glory. You have succeeded in every goal.')
                 ctx.ui.wait()
                 char_menu(ctx)
                 ctx.ui.clear()
