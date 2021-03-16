@@ -125,7 +125,46 @@ class ConsoleInterface(UserInterface):
         self._print_sep()
 
 
-class DebugInterfaceDecorator(UserInterface):
+class InterfaceDecorator(UserInterface):
+    def __init__(self, base: UserInterface):
+        self._base = base
+
+    @property
+    def base(self) -> UserInterface:
+        return self._base
+
+    def clear(self):
+        return self.base.clear()
+
+    def print(self, text=''):
+        return self.base.print(text)
+
+    def debug(self, text=''):
+        return self.base.debug(text)
+
+    def wait(self, do=None):
+        return self.base.wait(do)
+
+    def choose(self, options: list[str]) -> int:
+        return self.base.choose(options)
+
+    def input_text(self) -> str:
+        return self.base.input_text()
+
+    def display_map(self, map_obj: Map):
+        return self.base.display_map(map_obj)
+
+    def display_basic_player_info(self, player: Player):
+        return self.base.display_basic_player_info(player)
+
+    def display_combat_stats(self, player: Player):
+        return self.base.display_combat_stats(player)
+
+    def display_resources(self, player: Player):
+        return self.base.display_resources(player)
+
+
+class DebugInterfaceDecorator(InterfaceDecorator):
     """
     This will mostly pass through to _base. This way, all possible UserInterfaces
     can be decorated with this class for debugging.
@@ -136,7 +175,7 @@ class DebugInterfaceDecorator(UserInterface):
     """
 
     def __init__(self, base):
-        self._base = base
+        super().__init__(base)
 
     @staticmethod
     def _debug(text):
@@ -147,30 +186,6 @@ class DebugInterfaceDecorator(UserInterface):
 
     def debug(self, text=''):
         self._debug(text)
-
-    def print(self, text=''):
-        self._base.print(text)
-
-    def choose(self, options: list[str]) -> int:
-        return self._base.choose(options)
-
-    def wait(self, do=None):
-        self._base.wait(do)
-
-    def input_text(self) -> str:
-        return self._base.input_text()
-
-    def display_map(self, map_obj: Map):
-        self._base.display_map(map_obj)
-
-    def display_basic_player_info(self, player: Player):
-        self._base.display_basic_player_info(player)
-
-    def display_combat_stats(self, player: Player):
-        self._base.display_combat_stats(player)
-
-    def display_resources(self, player: Player):
-        self._base.display_resources(player)
 
 
 ui = ConsoleInterface()
