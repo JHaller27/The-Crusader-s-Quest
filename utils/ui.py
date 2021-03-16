@@ -246,4 +246,4 @@ class Singleton(InterfaceDecorator, metaclass=SingletonMeta):
         self.base = decorator
 
 
-ui = Singleton(ConsoleInterface())
+Singleton(ConsoleInterface())

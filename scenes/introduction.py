@@ -1,9 +1,11 @@
 from typing import Optional
 
 from state import State
-from utils.ui import ui
+from utils.ui import Singleton
 
 import scenes.town
+
+ui = Singleton()
 
 
 # Title Screen #

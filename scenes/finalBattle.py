@@ -1,10 +1,12 @@
 from typing import Optional
 
 from state import State
-from utils.ui import ui
+from utils.ui import Singleton
 import utils.enemy as enemy
 
 import scenes.introduction as introduction
+
+ui = Singleton()
 
 
 # Final Battle #

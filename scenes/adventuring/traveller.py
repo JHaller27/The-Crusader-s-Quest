@@ -2,9 +2,11 @@ import random
 from typing import Optional
 
 from state import State, Context
-from utils.ui import ui
+from utils.ui import Singleton
 
 import scenes.adventuring.adventuring as adventuring
+
+ui = Singleton()
 
 
 class Traveller(State):

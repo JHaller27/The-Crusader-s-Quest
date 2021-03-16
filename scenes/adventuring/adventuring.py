@@ -2,12 +2,14 @@ from typing import Optional
 import random
 
 from state import State
-from utils.ui import ui
+from utils.ui import Singleton
 
 import scenes.adventuring.random_events as random_events
 import scenes.introduction
 import scenes.town
 import scenes.finalBattle
+
+ui = Singleton()
 
 
 # Hunt #

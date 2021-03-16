@@ -2,10 +2,12 @@ from typing import Optional
 import random
 
 from state import State, Context
-from utils.ui import ui
+from utils.ui import Singleton
 import utils.enemy as enemy
 
 import scenes.adventuring.adventuring as adventuring
+
+ui = Singleton()
 
 
 class Fight(State):

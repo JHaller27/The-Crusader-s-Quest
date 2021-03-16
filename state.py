@@ -3,9 +3,11 @@ from typing import Optional
 from utils.map import Map, Location
 from utils.player import Player
 from utils.enemy import Enemy
-from utils.ui import ui
+from utils.ui import Singleton
 from utils.configs.player import Player as PlayerConfig
 from utils.configs.enemies import Enemies as EnemiesConfig
+
+ui = Singleton()
 
 
 class State:

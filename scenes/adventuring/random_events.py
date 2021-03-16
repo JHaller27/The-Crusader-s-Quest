@@ -2,11 +2,13 @@ from typing import Optional
 import random
 
 from state import State
-from utils.ui import ui
+from utils.ui import Singleton
 
 import scenes.adventuring.traveller as traveller
 import scenes.adventuring.fight as fight
 import scenes.adventuring.adventuring as adventuring
+
+ui = Singleton()
 
 
 class RandomEvent(State):
