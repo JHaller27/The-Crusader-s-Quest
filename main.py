@@ -3,6 +3,7 @@
 # Copyright February 2021
 
 import yaml
+import argparse
 
 from utils.map import Map
 from utils.configs.player import Player as PlayerConfig
@@ -16,15 +17,28 @@ from utils.ui import DebugInterfaceDecorator, FilePlayer, Singleton
 ui = Singleton()
 
 
-def init_debug():
-    with open("./data/dummy_player.txt", "r") as fp:
-        file_data = [line.strip() for line in fp]
+def get_args():
+    parser = argparse.ArgumentParser()
 
-    ui.decorate(DebugInterfaceDecorator(ui.base))
-    ui.decorate(FilePlayer(ui.base, file_data))
+    parser.add_argument("-d", "--debug", action="store_true", help="Debug mode")
+    parser.add_argument("-f", "--fake", type=str, help="Path to input file to simulate player input")
+
+    args = parser.parse_args()
+
+    return args
 
 
 def main():
+    args = get_args()
+
+    if args.debug:
+        ui.decorate(DebugInterfaceDecorator(ui.base))
+
+    if args.fake is not None:
+        with open(args.fake, "r") as fp:
+            file_data = [line.strip() for line in fp]
+        ui.decorate(FilePlayer(ui.base, file_data))
+
     with open("./configs/map.yml", "r") as fp:
         map_config = yaml.safe_load(fp)
     map_config = MapConfig(map_config)
@@ -43,5 +57,4 @@ def main():
 
 
 if __name__ == "__main__":
-    init_debug()
     main()
