@@ -188,5 +188,33 @@ class DebugInterfaceDecorator(InterfaceDecorator):
         self._debug(text)
 
 
+class FilePlayer(InterfaceDecorator):
+    def __init__(self, base: UserInterface, data: list[str]):
+        super().__init__(base)
+        self._data_iter = iter(data)
+
+    def _read(self):
+        data = next(self._data_iter)
+        print(f"<<< {data}")
+
+        return data
+
+    def choose(self, options: list[str]) -> int:
+        try:
+            return int(self._read())
+        except StopIteration:
+            return self.base.choose(options)
+
+    def input_text(self) -> str:
+        try:
+            return self._read()
+        except StopIteration:
+            return self.base.input_text()
+
+
+with open("./data/dummy_player.txt", "r") as fp:
+    file_data = [line.strip() for line in fp]
+
 ui = ConsoleInterface()
 ui = DebugInterfaceDecorator(ui)
+ui = FilePlayer(ui, file_data)
