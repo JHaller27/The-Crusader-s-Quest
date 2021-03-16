@@ -5,6 +5,8 @@ from utils.configs.map import Map as MapConfig, Location as LocationConfig
 
 
 class Location:
+    name: str
+
     def __init__(self, config: LocationConfig):
         self.name = config.name
         self.description = config.description
