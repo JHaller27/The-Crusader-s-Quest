@@ -1,7 +1,7 @@
-from .config_base import ConfigBase
+import utils.configs.config_base as config_base
 
 
-class EnemyType(ConfigBase):
+class EnemyType(config_base.ConfigBase):
     @property
     def name(self) -> str:
         return self._get("name")
@@ -23,7 +23,7 @@ class EnemyType(ConfigBase):
         return self._get("gold")
 
 
-class Adjective(ConfigBase):
+class Adjective(config_base.ConfigBase):
     @property
     def name(self) -> str:
         return self._get("name")
@@ -33,7 +33,7 @@ class Adjective(ConfigBase):
         return self._get("battle_score")
 
 
-class Enemies(ConfigBase):
+class Enemies(config_base.ConfigBase):
     @property
     def types(self) -> list[EnemyType]:
         return [EnemyType(type_config) for type_config in self._get("types")]

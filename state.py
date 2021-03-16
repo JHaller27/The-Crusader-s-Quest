@@ -1,7 +1,11 @@
 from typing import Optional
 
-from utils import Map, Location, Player, Enemy, ui
-from utils.configs import PlayerConfig, EnemiesConfig
+from utils.map import Map, Location
+from utils.player import Player
+from utils.enemy import Enemy
+from utils.ui import ui
+from utils.configs.player import Player as PlayerConfig
+from utils.configs.enemies import Enemies as EnemiesConfig
 
 
 class State:
@@ -53,9 +57,6 @@ class Context:
 
     def get_location(self) -> Location:
         return self.map.get(self.location)
-
-    def set_location(self, loc: str):
-        self.map.set_location(loc)
 
     def combat_damage(self) -> int:
         assert self.enemy is not None, "No enemy set, combat failed"

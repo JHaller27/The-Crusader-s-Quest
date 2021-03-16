@@ -1,10 +1,10 @@
 import random
 
-from utils.configs import EnemyType, EnemyAdjective
+import utils.configs.enemies as config
 
 
 class Enemy:
-    def __init__(self, enemy_type: EnemyType, adj: EnemyAdjective = None):
+    def __init__(self, enemy_type: config.EnemyType, adj: config.Adjective = None):
         self._adjective = adj
         self._type = enemy_type
 

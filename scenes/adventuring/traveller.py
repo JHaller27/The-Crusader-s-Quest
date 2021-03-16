@@ -2,9 +2,9 @@ import random
 from typing import Optional
 
 from state import State, Context
-from utils import ui
+from utils.ui import ui
 
-from scenes import Adventuring
+import scenes.adventuring.adventuring as adventuring
 
 
 class Traveller(State):
@@ -17,7 +17,7 @@ class Traveller(State):
         traveller_generation(self.ctx)
         ui.wait()
 
-        return Adventuring(self.ctx)
+        return adventuring.Adventuring(self.ctx)
 
 
 # Traveller Generation #

@@ -1,7 +1,7 @@
 from typing import Optional
 import random
 
-from utils.configs import MapConfig, LocationConfig
+from utils.configs.map import Map as MapConfig, Location as LocationConfig
 
 
 class Location:
@@ -36,12 +36,16 @@ class Map:
         self._width = config.width
         self._height = config.height
 
-        self._locations = {loc_config.name: Location(loc_config) for loc_config in config.locations}
+        self._grid = [[None for _ in range(self._width)] for _ in range(self._height)]
+
+        self._locations = dict()
+        for loc_config in config.locations:
+            loc = Location(loc_config)
+            self._locations[loc_config.name] = loc
+            self._grid[loc_config.row][loc_config.col] = loc
 
         self._start = self._current = self.get(config.start)
         self._end = self.get(config.end)
-
-        self._grid = [[None for _ in range(self._width)] for _ in range(self._height)]
 
     @property
     def width(self) -> int:

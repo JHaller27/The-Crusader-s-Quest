@@ -2,9 +2,10 @@ from typing import Optional
 import random
 
 from state import State, Context
-from utils import Enemy, ui
+from utils.ui import ui
+import utils.enemy as enemy
 
-from scenes import Adventuring
+import scenes.adventuring.adventuring as adventuring
 
 
 class Fight(State):
@@ -17,7 +18,7 @@ class Fight(State):
         type_idx = enemy_locator_generator(ctx) - 1
         enemy_type = types[type_idx]
 
-        ctx.enemy = Enemy(enemy_type, adj)
+        ctx.enemy = enemy.Enemy(enemy_type, adj)
 
         ctx.enemy.randomize_loot()
         ui.print(f"You see a {ctx.enemy.name} approaching.")
@@ -61,7 +62,7 @@ class EndFight(State):
         ctx.enemy = None
 
         ui.wait()
-        return Adventuring(self.ctx)
+        return adventuring.Adventuring(self.ctx)
 
 
 # Flee Fight #
@@ -77,7 +78,7 @@ class FleeFight(State):
         ui.print("You escaped the fight.")
 
         ui.wait()
-        return Adventuring(self.ctx)
+        return adventuring.Adventuring(self.ctx)
 
 
 # Enemy Locator and Excluder Generator #

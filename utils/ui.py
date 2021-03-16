@@ -1,8 +1,8 @@
 import os
 from typing import Optional
 
-from utils import Map, Location
-from utils import Player
+from .player import Player
+from .map import Map, Location
 
 
 class UserInterface:

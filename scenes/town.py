@@ -2,9 +2,9 @@ import random
 from typing import Optional
 
 from state import State
-from utils import ui
+from utils.ui import ui
 
-from scenes import TheMap
+import scenes.adventuring.adventuring as adventuring
 
 
 class Town(State):
@@ -44,7 +44,7 @@ class LeaveTown(State):
         selection = ui.choose(["Continue", "Go back"])
 
         if selection == 1:
-            return TheMap(self.ctx)
+            return adventuring.TheMap(self.ctx)
 
         return Town(self.ctx)
 

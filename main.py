@@ -4,11 +4,13 @@
 
 import yaml
 
-from utils import Map
-from utils.configs import PlayerConfig, EnemiesConfig, MapConfig
+from utils.map import Map
+from utils.configs.player import Player as PlayerConfig
+from utils.configs.map import Map as MapConfig
+from utils.configs.enemies import Enemies as EnemiesConfig
 from state import Context
 
-from scenes import TitleScreen
+from scenes.introduction import TitleScreen
 
 
 def main():

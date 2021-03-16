@@ -12,9 +12,8 @@ class ConfigBase:
     def _get(self, *args) -> Optional[Any]:
         curr = self.config
         for arg in args:
-            if child := curr.get(arg):
-                curr = child
-            else:
+            curr = curr.get(arg)
+            if curr is None:
                 return None
 
         return curr

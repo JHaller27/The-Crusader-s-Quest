@@ -2,10 +2,12 @@ from typing import Optional
 import random
 
 from state import State
-from utils import ui
+from utils.ui import ui
 
-from main import TitleScreen
-from scenes import Town, FinalBattle, RandomEvent
+import scenes.adventuring.random_events as random_events
+import scenes.introduction
+import scenes.town
+import scenes.finalBattle
 
 
 # Hunt #
@@ -66,7 +68,7 @@ class Adventuring(State):
         if selection == 1:
             ctx.counter -= 1
 
-            return RandomEvent(self.ctx)
+            return random_events.RandomEvent(self.ctx)
 
         elif selection == 2:
             return Hunt(self.ctx)
@@ -100,7 +102,7 @@ class Death(State):
         ui.print()
         ui.wait("return to menu")
 
-        return TitleScreen(self.ctx)
+        return scenes.introduction.TitleScreen(self.ctx)
 
 
 # Map #
@@ -123,6 +125,6 @@ class LocationChanger(State):
         ctx.map.move()
 
         if ctx.map.at_end_location():
-            return FinalBattle(self.ctx)
+            return scenes.finalBattle.FinalBattle(self.ctx)
 
-        return Town(self.ctx)
+        return scenes.town.Town(self.ctx)

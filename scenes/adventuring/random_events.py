@@ -2,9 +2,11 @@ from typing import Optional
 import random
 
 from state import State
-from utils import ui
+from utils.ui import ui
 
-from scenes import Traveller, Fight, Death, Adventuring
+import scenes.adventuring.traveller as traveller
+import scenes.adventuring.fight as fight
+import scenes.adventuring.adventuring as adventuring
 
 
 class RandomEvent(State):
@@ -18,11 +20,11 @@ class RandomEvent(State):
         if n == 1:
             return Chest(ctx)
         if n == 2:
-            return Fight(ctx)
+            return fight.Fight(ctx)
         if n == 3:
             return Robbed(ctx)
         if n == 4:
-            return Traveller(ctx)
+            return traveller.Traveller(ctx)
         if n == 5:
             return Damaged(ctx)
         if n == 6:
@@ -32,17 +34,17 @@ class RandomEvent(State):
         if n == 8:
             return NoEvent(ctx)
         if n == 9:
-            return Fight(ctx)
+            return fight.Fight(ctx)
         if n == 10:
-            return Fight(ctx)
+            return fight.Fight(ctx)
         if n == 11:
             return Chest(ctx)
         if n == 12:
-            return Fight(ctx)
+            return fight.Fight(ctx)
         if n == 13:
             return Robbed(ctx)
         if n == 14:
-            return Traveller(ctx)
+            return traveller.Traveller(ctx)
         if n == 15:
             return Damaged(ctx)
         if n == 16:
@@ -52,9 +54,9 @@ class RandomEvent(State):
         if n == 18:
             return LoseDay(ctx)
         if n == 19:
-            return Fight(ctx)
+            return fight.Fight(ctx)
         if n == 20:
-            return Fight(ctx)
+            return fight.Fight(ctx)
 
 
 # Mushroom #
@@ -82,7 +84,7 @@ class Mushroom(State):
                 else:
                     ui.print("You eat the mushroom, and it causes you to vomit.")
                     if not ctx.player.is_alive():
-                        return Death(self.ctx)
+                        return adventuring.Death(self.ctx)
 
             elif x == 3:
                 w = ctx.player.consumption_rate + ctx.player.consumption_rate
@@ -99,13 +101,13 @@ class Mushroom(State):
                     ctx.endurance = 0
                     ui.print("You eat the mushroom, and then fall to the ground, foaming at the mouth.")
                     ui.wait()
-                    return Death(self.ctx)
+                    return adventuring.Death(self.ctx)
 
         else:
             ui.print("You leave the mushroom.")
 
         ui.wait()
-        return Adventuring(self.ctx)
+        return adventuring.Adventuring(self.ctx)
 
 
 # Miracle #
@@ -132,7 +134,7 @@ class Miracle(State):
             player.fill_hp()
 
         ui.wait()
-        return Adventuring(self.ctx)
+        return adventuring.Adventuring(self.ctx)
 
 
 # Bigger Bag #
@@ -165,7 +167,7 @@ class BiggerBag(State):
         ui.print()
 
         ui.wait()
-        return Adventuring(self.ctx)
+        return adventuring.Adventuring(self.ctx)
 
 
 # Lose a Day #
@@ -201,7 +203,7 @@ class LoseDay(State):
 
         ui.wait()
 
-        return Adventuring(self.ctx)
+        return adventuring.Adventuring(self.ctx)
 
 
 # Mystic #
@@ -232,7 +234,7 @@ class Mystic(State):
         ui.print(f"Your {resource_name} increases by {increase}.")
 
         ui.wait()
-        return Adventuring(self.ctx)
+        return adventuring.Adventuring(self.ctx)
 
 
 # Nothing #
@@ -241,7 +243,7 @@ class NoEvent(State):
         ui.print("Nothing notable happens.")
         ui.wait()
 
-        return Adventuring(self.ctx)
+        return adventuring.Adventuring(self.ctx)
 
 
 # Damaged (Random Event) #
@@ -255,7 +257,7 @@ class Damaged(State):
         ctx.player.hp -= v
 
         if not ctx.player.is_alive():
-            return Death(self.ctx)
+            return adventuring.Death(self.ctx)
 
         if n == 1:
             g = random.randint(1, 20)
@@ -276,7 +278,7 @@ class Damaged(State):
             ui.print(f"However, you find {a} arrows nearby.")
 
         ui.wait()
-        return Adventuring(self.ctx)
+        return adventuring.Adventuring(self.ctx)
 
 
 # Robbed #
@@ -319,7 +321,7 @@ class Robbed(State):
                 ui.print(f"You check your coin purse, and find that {v} gold is missing.")
 
         ui.wait()
-        return Adventuring(self.ctx)
+        return adventuring.Adventuring(self.ctx)
 
 
 # Chest #
@@ -344,7 +346,7 @@ class Chest(State):
                 ui.wait()
 
                 if not ctx.player.is_alive():
-                    return Death(self.ctx)
+                    return adventuring.Death(self.ctx)
 
                 self.ctx.adventure_menu()
             # if a == 2 and ctx.luck > 0:
@@ -353,7 +355,7 @@ class Chest(State):
 
         ui.print()
 
-        return Adventuring(self.ctx)
+        return adventuring.Adventuring(self.ctx)
 
 
 # Chest Loot #
@@ -380,4 +382,4 @@ class ChestLoot(State):
         ui.print(f"Inside, you found {amount} {resource_name}.")
 
         ui.wait()
-        return Adventuring(self.ctx)
+        return adventuring.Adventuring(self.ctx)

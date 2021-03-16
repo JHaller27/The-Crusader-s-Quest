@@ -1,9 +1,9 @@
 from typing import Optional
 
 from state import State
-from utils import ui
+from utils.ui import ui
 
-from scenes import Town
+import scenes.town
 
 
 # Title Screen #
@@ -121,4 +121,4 @@ class BeginAdventure(State):
 # Start Game #
 class StartGame(State):
     def do(self) -> Optional[State]:
-        return Town(self.ctx)
+        return scenes.town.Town(self.ctx)

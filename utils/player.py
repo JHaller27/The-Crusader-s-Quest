@@ -1,6 +1,3 @@
-from utils import ui
-
-
 def sanitize_value(val: int, lower_bound: int = None, upper_bound: int = None) -> int:
     if lower_bound is not None and val < lower_bound:
         return lower_bound
@@ -51,8 +48,6 @@ class Player:
     @food.setter
     def food(self, val: int):
         self._food = sanitize_value(val, 0, self.max_food)
-        if self._food == self.max_food:
-            ui.print("You have maxed out your food supply.")
 
     @property
     def arrows(self) -> int:
@@ -61,8 +56,6 @@ class Player:
     @arrows.setter
     def arrows(self, val: int):
         self._arrows = sanitize_value(val, 0, self.max_arrows)
-        if self._arrows == self.max_arrows:
-            ui.print("You have maxed out your arrow count.")
 
     @property
     def gold(self) -> int:
@@ -71,8 +64,6 @@ class Player:
     @gold.setter
     def gold(self, val: int):
         self._gold = sanitize_value(val, 0, self.max_gold)
-        if self._gold == self.max_gold:
-            ui.print("You have completely filled your coin purse.")
 
     @property
     def endurance(self) -> int:
@@ -92,6 +83,15 @@ class Player:
 
     def is_full_health(self) -> bool:
         return self.hp == self.max_hp
+
+    def is_full_food(self) -> bool:
+        return self.food == self.max_food
+
+    def is_full_arrows(self) -> bool:
+        return self.arrows == self.max_arrows
+
+    def is_full_gold(self) -> bool:
+        return self.gold == self.max_gold
 
     def is_race(self, race: str) -> bool:
         return self.race.lower() == race.lower()

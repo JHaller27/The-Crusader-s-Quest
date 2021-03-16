@@ -1,9 +1,10 @@
 from typing import Optional
 
 from state import State
-from utils import Enemy, ui
+from utils.ui import ui
+import utils.enemy as enemy
 
-from main import TitleScreen
+import scenes.introduction as introduction
 
 
 # Final Battle #
@@ -43,7 +44,7 @@ class FinalBattle(State):
             ui.print('"Very well, then." Chernobog stands up.')
             ui.wait("fight")
 
-            ctx.enemy = Enemy(self.ctx.enemy_config.final)
+            ctx.enemy = enemy.Enemy(self.ctx.enemy_config.final)
             damage_taken = ctx.combat_damage()
             ctx.player.hp -= damage_taken
 
@@ -65,4 +66,4 @@ class FinalBattle(State):
 
             ui.wait("end game")
 
-        return TitleScreen(self.ctx)
+        return introduction.TitleScreen(self.ctx)
