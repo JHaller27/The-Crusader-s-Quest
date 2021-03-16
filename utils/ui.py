@@ -32,13 +32,10 @@ class UserInterface:
     def display_map(self, map_obj: map_utils.Map):
         raise NotImplementedError
 
-    def display_basic_player_info(self, player: player_utils.Player):
+    def adventure_menu(self, player: player_utils.Player):
         raise NotImplementedError
 
-    def display_combat_stats(self, player: player_utils.Player):
-        raise NotImplementedError
-
-    def display_resources(self, player: player_utils.Player):
+    def char_menu(self, player: player_utils.Player):
         raise NotImplementedError
 
 
@@ -101,21 +98,21 @@ class ConsoleInterface(UserInterface):
             self.print('######################')
             self._last_printed_sep = True
 
-    def display_basic_player_info(self, player: player_utils.Player):
+    def _display_basic_player_info(self, player: player_utils.Player):
         self._print_sep()
         self.print(f"Name: {player.name}")
         self.print(f"Race: {player.race}")
         self.print(f"Occupation: {player.occupation}")
         self._print_sep()
 
-    def display_combat_stats(self, player: player_utils.Player):
+    def _display_combat_stats(self, player: player_utils.Player):
         self._print_sep()
         self.print(f"HP: {player.hp} / {player.max_hp}")
         self.print(f"Martial Prowess: {player.martial_prowess}")
         self.print(f"Weapon: {player.weapon}")
         self._print_sep()
 
-    def display_resources(self, player: player_utils.Player):
+    def _display_resources(self, player: player_utils.Player):
         self._print_sep()
         self.print(f"Consumption Rate:{player.consumption_rate}")
         self.print(f"Food:{player.food}/{player.max_food}")
@@ -123,6 +120,15 @@ class ConsoleInterface(UserInterface):
         self.print(f"Arrows:{player.arrows}/{player.max_arrows}")
         self.print(f"Gold:{player.gold}/{player.max_gold}")
         self._print_sep()
+
+    def adventure_menu(self, player: player_utils.Player):
+        self._display_combat_stats(player)
+        self._display_resources(player)
+
+    def char_menu(self, player: player_utils.Player):
+        self._display_basic_player_info(player)
+        self._display_combat_stats(player)
+        self._display_resources(player)
 
 
 class InterfaceDecorator(UserInterface):
@@ -158,14 +164,11 @@ class InterfaceDecorator(UserInterface):
     def display_map(self, map_obj: map_utils.Map):
         return self.base.display_map(map_obj)
 
-    def display_basic_player_info(self, player: player_utils.Player):
-        return self.base.display_basic_player_info(player)
+    def adventure_menu(self, player: player_utils.Player):
+        return self.base.adventure_menu(player)
 
-    def display_combat_stats(self, player: player_utils.Player):
-        return self.base.display_combat_stats(player)
-
-    def display_resources(self, player: player_utils.Player):
-        return self.base.display_resources(player)
+    def char_menu(self, player: player_utils.Player):
+        return self.base.char_menu(player)
 
 
 class DebugInterfaceDecorator(InterfaceDecorator):

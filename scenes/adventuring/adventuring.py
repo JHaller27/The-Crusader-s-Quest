@@ -28,7 +28,7 @@ class Hunt(State):
             ctx.player.food += food_found
 
             ui.clear()
-            self.ctx.adventure_menu()
+            ui.adventure_menu(self.ctx.player)
 
             ui.print(f"You shot {arrows_shot} arrows, and gained {food_found} food.")
 
@@ -64,7 +64,8 @@ class Adventuring(State):
         if ctx.counter == 0:
             return EndAdventure(self.ctx)
 
-        self.ctx.adventure_menu()
+        ui.clear()
+        ui.adventure_menu(self.ctx.player)
         selection = ui.choose(["Continue", "Hunt", "Rest", "Map"])
 
         if selection == 1:
@@ -85,7 +86,7 @@ class Adventuring(State):
 class EndAdventure(State):
     def do(self) -> Optional[State]:
         ui.clear()
-        self.ctx.adventure_menu()
+        ui.adventure_menu(self.ctx.player)
 
         ui.print("You have survived the trip.")
         ui.wait()
@@ -100,7 +101,7 @@ class Death(State):
         ui.print("You have died.\n")
         ui.wait()
 
-        self.ctx.char_menu()
+        ui.char_menu(self.ctx.player)
         ui.print()
         ui.wait("return to menu")
 

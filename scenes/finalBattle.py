@@ -37,7 +37,8 @@ class FinalBattle(State):
         ui.clear()
 
         if selection == 1:
-            self.ctx.char_menu()
+            ui.clear()
+            ui.char_menu(self.ctx.player)
             ui.print("You join the forces of Chernobog, the Prince of Darkness, and forsake your old way of life. You both combine your powers and forge a New Dawn.")
             ui.print()
             ui.wait("end game")
@@ -55,14 +56,13 @@ class FinalBattle(State):
                 ui.print("Your surroundings shimmer, and the city of Salem transforms from its ruined state to its former glory. You have succeeded in every goal.")
                 ui.wait()
 
-                self.ctx.char_menu()
                 ui.clear()
                 ui.print("You win!")
 
                 ui.print(f"Occupation: {ctx.player.occupation}")
 
             else:
-                self.ctx.char_menu()
+                ui.char_menu(self.ctx.player)
                 ui.print()
                 ui.print("You have lost the fight, letting Chernobog win. He enslaves you for all eternity, and he takes over the world.\n")
 

@@ -26,7 +26,7 @@ class Town(State):
 
         elif selection == 3:
             ui.clear()
-            self.ctx.char_menu()
+            ui.char_menu(self.ctx.player)
             ui.wait()
 
         elif selection == 4:

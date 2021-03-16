@@ -16,7 +16,7 @@ class RandomEvent(State):
         ctx = self.ctx
 
         ui.clear()
-        self.ctx.adventure_menu()
+        ui.adventure_menu(self.ctx.player)
 
         n = random.randint(1, 20)
         if n == 1:
@@ -339,24 +339,21 @@ class Chest(State):
             a = random.randint(1, 3)
             if a == 1:
                 ui.print("It is empty. Nothing but cobwebs remain.")
-                ui.wait()
-                self.ctx.adventure_menu()
             if a == 2:
                 damage = 20
                 ui.print(f"It was booby trapped. A dart flies out and hits you for {damage} damage.")
                 ctx.player.hp -= damage
-                ui.wait()
 
                 if not ctx.player.is_alive():
                     return adventuring.Death(self.ctx)
 
-                self.ctx.adventure_menu()
             # if a == 2 and ctx.luck > 0:
             # ui.print('It was booby trapped. A dart flies out and hits you for 20 damage.')
             # chest_loot()
 
         ui.print()
 
+        ui.wait()
         return adventuring.Adventuring(self.ctx)
 
 

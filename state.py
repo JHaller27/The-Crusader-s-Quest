@@ -7,8 +7,6 @@ from utils.ui import Singleton
 from utils.configs.player import Player as PlayerConfig
 from utils.configs.enemies import Enemies as EnemiesConfig
 
-ui = Singleton()
-
 
 class State:
     def __init__(self, ctx: 'Context'):
@@ -40,7 +38,7 @@ class Context:
         self.player = Player()
 
     def _run_once(self):
-        ui.debug(f"Running state '{type(self._state).__name__}'")
+        Singleton().debug(f"Running state '{type(self._state).__name__}'")
         self._state = self._state.do()
 
     def run(self, init: Optional[State]):
@@ -64,15 +62,3 @@ class Context:
         assert self.enemy is not None, "No enemy set, combat failed"
 
         return max(self.enemy.battle_score - self.player.martial_prowess, 0)
-
-    # Information Menus #
-    def adventure_menu(self):
-        ui.clear()
-        ui.display_combat_stats(self.player)
-        ui.display_resources(self.player)
-
-    def char_menu(self):
-        ui.clear()
-        ui.display_basic_player_info(self.player)
-        ui.display_combat_stats(self.player)
-        ui.display_resources(self.player)
