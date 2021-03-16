@@ -1,8 +1,8 @@
 import os
 from typing import Optional
 
-from .player import Player
-from .map import Map, Location
+import utils.player as player_utils
+import utils.map as map_utils
 
 
 class UserInterface:
@@ -29,16 +29,16 @@ class UserInterface:
     def input_text(self) -> str:
         raise NotImplementedError
 
-    def display_map(self, map_obj: Map):
+    def display_map(self, map_obj: map_utils.Map):
         raise NotImplementedError
 
-    def display_basic_player_info(self, player: Player):
+    def display_basic_player_info(self, player: player_utils.Player):
         raise NotImplementedError
 
-    def display_combat_stats(self, player: Player):
+    def display_combat_stats(self, player: player_utils.Player):
         raise NotImplementedError
 
-    def display_resources(self, player: Player):
+    def display_resources(self, player: player_utils.Player):
         raise NotImplementedError
 
 
@@ -80,8 +80,8 @@ class ConsoleInterface(UserInterface):
     def input_text(self) -> str:
         return input(">: ")
 
-    def display_map(self, map_obj: Map):
-        def opt_loc_to_chr(loc: Optional[Location]):
+    def display_map(self, map_obj: map_utils.Map):
+        def opt_loc_to_chr(loc: Optional[map_utils.Location]):
             if loc is None:
                 return ' '
             if not loc.visited:
@@ -101,21 +101,21 @@ class ConsoleInterface(UserInterface):
             self.print('######################')
             self._last_printed_sep = True
 
-    def display_basic_player_info(self, player: Player):
+    def display_basic_player_info(self, player: player_utils.Player):
         self._print_sep()
         self.print(f"Name: {player.name}")
         self.print(f"Race: {player.race}")
         self.print(f"Occupation: {player.occupation}")
         self._print_sep()
 
-    def display_combat_stats(self, player: Player):
+    def display_combat_stats(self, player: player_utils.Player):
         self._print_sep()
         self.print(f"HP: {player.hp} / {player.max_hp}")
         self.print(f"Martial Prowess: {player.martial_prowess}")
         self.print(f"Weapon: {player.weapon}")
         self._print_sep()
 
-    def display_resources(self, player: Player):
+    def display_resources(self, player: player_utils.Player):
         self._print_sep()
         self.print(f"Consumption Rate:{player.consumption_rate}")
         self.print(f"Food:{player.food}/{player.max_food}")
@@ -151,16 +151,16 @@ class InterfaceDecorator(UserInterface):
     def input_text(self) -> str:
         return self.base.input_text()
 
-    def display_map(self, map_obj: Map):
+    def display_map(self, map_obj: map_utils.Map):
         return self.base.display_map(map_obj)
 
-    def display_basic_player_info(self, player: Player):
+    def display_basic_player_info(self, player: player_utils.Player):
         return self.base.display_basic_player_info(player)
 
-    def display_combat_stats(self, player: Player):
+    def display_combat_stats(self, player: player_utils.Player):
         return self.base.display_combat_stats(player)
 
-    def display_resources(self, player: Player):
+    def display_resources(self, player: player_utils.Player):
         return self.base.display_resources(player)
 
 
