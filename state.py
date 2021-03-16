@@ -48,15 +48,12 @@ class Context:
             self._run_once()
 
     @property
-    def location(self) -> str:
-        return self.map.current.name
+    def location(self) -> Location:
+        return self.map.current
 
     @property
     def blacksmith_price(self) -> int:
         return self.map.current.blacksmith_price
-
-    def get_location(self) -> Location:
-        return self.map.get(self.location)
 
     def combat_damage(self) -> int:
         assert self.enemy is not None, "No enemy set, combat failed"

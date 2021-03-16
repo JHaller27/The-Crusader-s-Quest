@@ -14,7 +14,7 @@ class Town(State):
 
         ui.clear()
         ui.print(f"You are in {self.ctx.location}.")
-        ui.print(self.ctx.get_location().description)
+        ui.print(self.ctx.location.description)
         ui.print()
 
         selection = ui.choose(["Tavern", "Blacksmith", "Character", "Adventure"])
@@ -39,7 +39,7 @@ class LeaveTown(State):
     def do(self) -> Optional[State]:
         self.ctx.counter = 0
 
-        location = self.ctx.get_location()
+        location = self.ctx.location
         self.ctx.counter = location.distance
 
         ui.print(f"You will brave the wilds for {self.ctx.counter} days.")

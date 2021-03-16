@@ -85,10 +85,8 @@ class FleeFight(State):
 
 # Enemy Locator and Excluder Generator #
 def enemy_locator_generator(ctx: Context) -> int:
-    location = ctx.get_location()
-
     enemy_number = random.randint(1, 5)
-    while enemy_number in location.enemy_exclude:
+    while enemy_number in ctx.location.enemy_exclude:
         enemy_number = random.randint(1, 5)
 
     return enemy_number

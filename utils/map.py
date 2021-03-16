@@ -18,6 +18,9 @@ class Location:
         self.distance = config.distance
         self.visited = False
 
+    def __str__(self) -> str:
+        return self.name
+
     @property
     def blacksmith_price(self) -> int:
         return self._blacksmith_base + self._blacksmith_base
