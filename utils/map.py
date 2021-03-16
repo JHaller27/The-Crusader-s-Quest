@@ -1,35 +1,20 @@
-from typing import Optional, Union
+from typing import Optional
 import random
+
+from utils.configs import MapConfig, LocationConfig
 
 
 class Location:
-    def __init__(self, name: str, description: str, pos: (int, int), blacksmith_price: int,
-                 enemy_exclude: list[int], destination: str, distance: int):
-        self.name = name
-        self.description = description
-        self.row, self.col = pos
-        self._blacksmith_mod = blacksmith_price
+    def __init__(self, config: LocationConfig):
+        self.name = config.name
+        self.description = config.description
+        self.row, self.col = config.row, config.col
+        self._blacksmith_mod = config.blacksmith_price
         self._blacksmith_base = 0
-        self.enemy_exclude = enemy_exclude
-        self.destination = destination
-        self.distance = distance
+        self.enemy_exclude = config.enemy_exclude
+        self.destination = config.destination
+        self.distance = config.distance
         self.visited = False
-
-    @classmethod
-    def from_yaml(cls, name: str, source: dict):
-        travel = source.get("travel")
-        dest = None if travel is None else travel.get("destination")
-        dist = None if travel is None else travel.get("distance")
-
-        return cls(
-            name=name,
-            description=source.get("description"),
-            pos=(source.get("row"), source.get("col")),
-            blacksmith_price=source.get("blacksmith_price"),
-            enemy_exclude=source.get("enemy_exclude"),
-            destination=dest,
-            distance=dist,
-        )
 
     @property
     def blacksmith_price(self) -> int:
@@ -43,18 +28,19 @@ class Location:
 
 
 class Map:
+    _locations: dict[str, Location]
     _grid: list[list[Optional[Location]]]
     _current: Optional[Location]
 
-    def __init__(self, width: int, height: int):
-        self._width = width
-        self._height = height
+    def __init__(self, config: MapConfig):
+        self._width = config.width
+        self._height = config.height
 
-        self._start = None
-        self._end = None
-        self._current = None
+        self._locations = {loc_config.name: Location(loc_config) for loc_config in config.locations}
 
-        self._locations = dict()
+        self._start = self._current = self.get(config.start)
+        self._end = self.get(config.end)
+
         self._grid = [[None for _ in range(self._width)] for _ in range(self._height)]
 
     @property
@@ -84,25 +70,9 @@ class Map:
         assert self._current is not None, "No current location"
         return self._current
 
-    def set_location(self, val: Union[Location, str]):
-        if isinstance(val, str):
-            val = self.get(val)
-
-        self._current = val
-        self._current.visit()
-
-    def add_location(self, loc: Location):
-        self._locations[loc.name] = loc
-        self._grid[loc.row][loc.col] = loc
-
-    def set_start(self, name: str):
-        self._start = self._locations.get(name)
-
-        if self._current is None:
-            self._current = self._start
-
-    def set_end(self, name: str):
-        self._end = self._locations.get(name)
+    def randomize_blacksmith_prices(self):
+        for loc in self._locations.values():
+            loc.randomize_blacksmith_price()
 
     def get(self, name: str) -> Optional[Location]:
         return self._locations.get(name)
@@ -113,19 +83,3 @@ class Map:
 
     def at_end_location(self) -> bool:
         return self._current.name == self.end
-
-
-def get_map(map_config: dict) -> Map:
-    map_obj = Map(map_config.get("width"), map_config.get("height"))
-    for name, loc in map_config.get("locations").items():
-        loc_obj = Location.from_yaml(name, loc)
-        loc_obj.randomize_blacksmith_price()
-
-        map_obj.add_location(loc_obj)
-
-    map_obj.set_start(map_config.get("start"))
-    map_obj.start.visit()
-
-    map_obj.set_end(map_config.get("end"))
-
-    return map_obj
