@@ -44,7 +44,7 @@ class Map:
             self._locations[loc_config.name] = loc
             self._grid[loc_config.row][loc_config.col] = loc
 
-        self._start = self._current = self.get(config.start)
+        self._start = self.current = self.get(config.start)
         self._end = self.get(config.end)
 
     @property
@@ -74,6 +74,11 @@ class Map:
         assert self._current is not None, "No current location"
         return self._current
 
+    @current.setter
+    def current(self, val: Location):
+        self._current = val
+        self._current.visit()
+
     def randomize_blacksmith_prices(self):
         for loc in self._locations.values():
             loc.randomize_blacksmith_price()
@@ -82,8 +87,8 @@ class Map:
         return self._locations.get(name)
 
     def move(self):
-        destination = self.get(self._current.destination)
-        self._current = destination
+        destination = self.get(self.current.destination)
+        self.current = destination
 
     def at_end_location(self) -> bool:
-        return self._current.name == self.end
+        return self.current.name == self.end
