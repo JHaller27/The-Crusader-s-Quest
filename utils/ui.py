@@ -133,6 +133,10 @@ class InterfaceDecorator(UserInterface):
     def base(self) -> UserInterface:
         return self._base
 
+    @base.setter
+    def base(self, val: UserInterface):
+        self._base = val
+
     def clear(self):
         return self.base.clear()
 
@@ -212,9 +216,34 @@ class FilePlayer(InterfaceDecorator):
             return self.base.input_text()
 
 
-with open("./data/dummy_player.txt", "r") as fp:
-    file_data = [line.strip() for line in fp]
+# To be honest, this Singleton implementation is mostly black magic pulled from
+# refactoring.guru/design-patterns/singleton/python/example
+class SingletonMeta(type):
+    """
+    The Singleton class can be implemented in different ways in Python. Some
+    possible methods include: base class, decorator, metaclass. We will use the
+    metaclass because it is best suited for this purpose.
+    """
 
-ui = ConsoleInterface()
-ui = DebugInterfaceDecorator(ui)
-ui = FilePlayer(ui, file_data)
+    _instance = None
+
+    def __call__(cls, *args, **kwargs):
+        """
+        Possible changes to the value of the `__init__` argument do not affect
+        the returned instance.
+        """
+        if cls._instance is None:
+            instance = super().__call__(*args, **kwargs)
+            cls._instance = instance
+        return cls._instance
+
+
+class Singleton(InterfaceDecorator, metaclass=SingletonMeta):
+    def __init__(self, base: UserInterface = None):
+        super().__init__(base)
+
+    def decorate(self, decorator: InterfaceDecorator):
+        self.base = decorator
+
+
+ui = Singleton(ConsoleInterface())

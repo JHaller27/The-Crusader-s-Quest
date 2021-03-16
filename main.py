@@ -11,6 +11,14 @@ from utils.configs.enemies import Enemies as EnemiesConfig
 from state import Context
 
 from scenes.introduction import TitleScreen
+from utils.ui import ui, DebugInterfaceDecorator, FilePlayer, Singleton
+
+
+def init_debug():
+    with open("./data/dummy_player.txt", "r") as fp:
+        file_data = [line.strip() for line in fp]
+    Singleton().decorate(DebugInterfaceDecorator(ui.base))
+    ui.decorate(FilePlayer(ui.base, file_data))
 
 
 def main():
@@ -32,4 +40,5 @@ def main():
 
 
 if __name__ == "__main__":
+    init_debug()
     main()
