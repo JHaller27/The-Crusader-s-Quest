@@ -22,6 +22,9 @@ class EnemyType(config_base.ConfigBase):
     def gold(self) -> int:
         return self._get("gold")
 
+    def __str__(self) -> str:
+        return self.name
+
 
 class Adjective(config_base.ConfigBase):
     @property
@@ -31,6 +34,9 @@ class Adjective(config_base.ConfigBase):
     @property
     def battle_score(self) -> int:
         return self._get("battle_score")
+
+    def __str__(self) -> str:
+        return self.name
 
 
 class Enemies(config_base.ConfigBase):

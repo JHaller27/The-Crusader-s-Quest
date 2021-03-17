@@ -45,6 +45,7 @@ class ConsoleInterface(UserInterface):
 
     def clear(self):
         os.system("cls" if os.name == "nt" else "clear")
+        self._last_printed_sep = False
 
     def print(self, text=''):
         print(text)
