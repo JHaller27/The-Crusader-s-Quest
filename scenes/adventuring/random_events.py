@@ -7,6 +7,7 @@ from utils.ui import Singleton
 import scenes.adventuring.traveller as traveller
 import scenes.adventuring.fight as fight
 import scenes.adventuring.adventuring as adventuring
+import scenes.adventuring.robbed as robbed
 
 ui = Singleton()
 
@@ -245,49 +246,6 @@ class Damaged(State):
         return adventuring.Adventuring(self.ctx)
 
 
-# Robbed #
-class Robbed(State):
-    def do(self) -> Optional[State]:
-        ctx = self.ctx
-
-        if ctx.player.food == 0 and ctx.player.arrows == 0 and ctx.player.gold == 0:
-            return NoEvent(self.ctx)
-
-        x = random.randint(1, 3)
-        if x == 1:
-            v = random.randint(1, 50)
-            ctx.player.food -= v
-
-            y = random.randint(1, 2)
-            if y == 1:
-                ui.print(f"During the night, a shadowy figure stole {v} of your food.")
-            else:
-                ui.print(f"You check your food supply and find that {v} food is missing.")
-
-        elif x == 2:
-            v = random.randint(1, 50)
-            ctx.player.arrows -= v
-
-            y = random.randint(1, 2)
-            if y == 1:
-                ui.print(f"During the night, a shadowy figure stole {v} of your arrows.")
-            elif y == 2:
-                ui.print(f"You check your arrow quill, and find that {v} arrows are missing.")
-
-        elif x == 3:
-            v = random.randint(1, 50)
-            ctx.player.gold -= v
-
-            y = random.randint(1, 2)
-            if y == 1:
-                ui.print(f"During the night, a shadowy figure stole {v} of your gold.")
-            elif y == 2:
-                ui.print(f"You check your coin purse, and find that {v} gold is missing.")
-
-        ui.wait()
-        return adventuring.Adventuring(self.ctx)
-
-
 # Chest #
 class Chest(State):
     def do(self) -> Optional[State]:
@@ -350,7 +308,7 @@ EVENT_MAP = [
     (NoEvent, 1),
     (Chest, 2),
     (fight.Fight, 6),
-    (Robbed, 2),
+    (robbed.Robbed, 2),
     (traveller.Traveller, 2),
     (Damaged, 2),
     (Miracle, 1),

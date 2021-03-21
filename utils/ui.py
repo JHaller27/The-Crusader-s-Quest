@@ -219,6 +219,9 @@ class FilePlayer(InterfaceDecorator):
         except StopIteration:
             return self.base.input_text()
 
+    def wait(self, do=None):
+        pass
+
 
 # To be honest, this Singleton implementation is mostly black magic pulled from
 # refactoring.guru/design-patterns/singleton/python/example
