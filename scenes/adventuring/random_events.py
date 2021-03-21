@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, Type
 import random
 
 from state import State
@@ -18,47 +18,30 @@ class RandomEvent(State):
         ui.clear()
         ui.adventure_menu(self.ctx.player)
 
-        n = random.randint(1, 20)
-        if n == 1:
-            return Chest(ctx)
-        if n == 2:
-            return fight.Fight(ctx)
-        if n == 3:
-            return Robbed(ctx)
-        if n == 4:
-            return traveller.Traveller(ctx)
-        if n == 5:
-            return Damaged(ctx)
-        if n == 6:
-            return Miracle(ctx)
-        if n == 7:
-            return Mushroom(ctx)
-        if n == 8:
-            return NoEvent(ctx)
-        if n == 9:
-            return fight.Fight(ctx)
-        if n == 10:
-            return fight.Fight(ctx)
-        if n == 11:
-            return Chest(ctx)
-        if n == 12:
-            return fight.Fight(ctx)
-        if n == 13:
-            return Robbed(ctx)
-        if n == 14:
-            return traveller.Traveller(ctx)
-        if n == 15:
-            return Damaged(ctx)
-        if n == 16:
-            return Mystic(ctx)
-        if n == 17:
-            return BiggerBag(ctx)
-        if n == 18:
-            return LoseDay(ctx)
-        if n == 19:
-            return fight.Fight(ctx)
-        if n == 20:
-            return fight.Fight(ctx)
+        next_state: State = random.choice([
+            Chest,
+            fight.Fight,
+            Robbed,
+            traveller.Traveller,
+            Damaged,
+            Miracle,
+            Mushroom,
+            NoEvent,
+            fight.Fight,
+            fight.Fight,
+            Chest,
+            fight.Fight,
+            Robbed,
+            traveller.Traveller,
+            Damaged,
+            Mystic,
+            BiggerBag,
+            LoseDay,
+            fight.Fight,
+            fight.Fight,
+        ])[0](ctx)
+
+        return next_state
 
 
 # Mushroom #
