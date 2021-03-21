@@ -260,7 +260,7 @@ class Chest(State):
             if a == 1:
                 ui.print("It is empty. Nothing but cobwebs remain.")
             if a == 2:
-                damage = 20
+                damage = min(20, ctx.player.hp)
                 ui.print(f"It was booby trapped. A dart flies out and hits you for {damage} damage.")
                 ctx.player.hp -= damage
 
