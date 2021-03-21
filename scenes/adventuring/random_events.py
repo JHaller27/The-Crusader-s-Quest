@@ -18,28 +18,26 @@ class RandomEvent(State):
         ui.clear()
         ui.adventure_menu(self.ctx.player)
 
-        next_state: State = random.choice([
-            NoEvent,
-            Chest,
-            Chest,
-            fight.Fight,
-            fight.Fight,
-            fight.Fight,
-            fight.Fight,
-            fight.Fight,
-            fight.Fight,
-            Robbed,
-            Robbed,
-            traveller.Traveller,
-            traveller.Traveller,
-            Damaged,
-            Damaged,
-            Miracle,
-            Mushroom,
-            Mystic,
-            BiggerBag,
-            LoseDay,
-        ])[0](ctx)
+        event_map = [
+            (NoEvent, 1),
+            (Chest, 2),
+            (fight.Fight, 6),
+            (Robbed, 2),
+            (traveller.Traveller, 2),
+            (Damaged, 2),
+            (Miracle, 1),
+            (Mushroom, 1),
+            (Mystic, 1),
+            (BiggerBag, 1),
+            (LoseDay, 1),
+        ]
+        states = []
+        weights = []
+        for e in event_map:
+            states.append(e[0])
+            weights.append(e[1])
+
+        next_state: State = random.choices(states, weights)[0](ctx)
 
         return next_state
 
