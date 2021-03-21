@@ -19,26 +19,26 @@ class RandomEvent(State):
         ui.adventure_menu(self.ctx.player)
 
         next_state: State = random.choice([
+            NoEvent,
+            Chest,
             Chest,
             fight.Fight,
+            fight.Fight,
+            fight.Fight,
+            fight.Fight,
+            fight.Fight,
+            fight.Fight,
+            Robbed,
             Robbed,
             traveller.Traveller,
+            traveller.Traveller,
+            Damaged,
             Damaged,
             Miracle,
             Mushroom,
-            NoEvent,
-            fight.Fight,
-            fight.Fight,
-            Chest,
-            fight.Fight,
-            Robbed,
-            traveller.Traveller,
-            Damaged,
             Mystic,
             BiggerBag,
             LoseDay,
-            fight.Fight,
-            fight.Fight,
         ])[0](ctx)
 
         return next_state
