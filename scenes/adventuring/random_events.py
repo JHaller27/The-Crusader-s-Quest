@@ -8,6 +8,7 @@ import scenes.adventuring.traveller as traveller
 import scenes.adventuring.fight as fight
 import scenes.adventuring.adventuring as adventuring
 import scenes.adventuring.robbed as robbed
+import scenes.adventuring.mushroom as mushroom
 
 ui = Singleton()
 
@@ -22,57 +23,6 @@ class RandomEvent(State):
         next_state: State = random.choices(STATE_CHOICES, WEIGHT_CHOICES)[0](ctx)
 
         return next_state
-
-
-# Mushroom #
-class Mushroom(State):
-    def do(self) -> Optional[State]:
-        ctx = self.ctx
-
-        ui.print("You see a strange mushroom.")
-        selection = ui.choose(["Consume", "Leave"])
-        if selection == 1:
-            x = random.randint(1, 4)
-            if x == 1:
-                if ctx.player.is_race("Satyr"):
-                    w = ctx.player.consumption_rate + ctx.player.consumption_rate + ctx.player.consumption_rate
-                    ctx.player.consumption_rate = ctx.player.consumption_rate + w
-                    ui.print(f"You eat the mushroom, and gain {w} Endurance.")
-                else:
-                    ui.print("You eat the mushroom, and nothing happened.")
-
-            elif x == 2:
-                if ctx.player.race == "Satyr":
-                    w = ctx.player.consumption_rate + ctx.player.consumption_rate + ctx.player.consumption_rate
-                    ctx.player.consumption_rate = ctx.player.consumption_rate + w
-                    ui.print(f"You eat the mushroom, and gain {w} Endurance.")
-                else:
-                    ui.print("You eat the mushroom, and it causes you to vomit.")
-                    if not ctx.player.is_alive():
-                        return adventuring.Death(self.ctx)
-
-            elif x == 3:
-                w = ctx.player.consumption_rate + ctx.player.consumption_rate
-                ctx.player.consumption_rate = ctx.player.consumption_rate + w
-                ui.print(f"You eat the mushroom, and gain {w} Endurance.")
-
-            elif x == 4:
-                if ctx.player.race == "Satyr":
-                    w = ctx.player.consumption_rate + ctx.player.consumption_rate
-                    ctx.player.consumption_rate = ctx.player.consumption_rate + w
-                    ui.print(f"You eat the mushroom, and gain {w} Endurance.")
-                else:
-                    ctx.player.hp = 0
-                    ctx.endurance = 0
-                    ui.print("You eat the mushroom, and then fall to the ground, foaming at the mouth.")
-                    ui.wait()
-                    return adventuring.Death(self.ctx)
-
-        else:
-            ui.print("You leave the mushroom.")
-
-        ui.wait()
-        return adventuring.Adventuring(self.ctx)
 
 
 # Miracle #
@@ -312,7 +262,7 @@ EVENT_MAP = [
     (traveller.Traveller, 2),
     (Damaged, 2),
     (Miracle, 1),
-    (Mushroom, 1),
+    (mushroom.Mushroom, 1),
     (Mystic, 1),
     (BiggerBag, 1),
     (LoseDay, 1),
