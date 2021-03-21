@@ -199,28 +199,37 @@ class DebugInterfaceDecorator(InterfaceDecorator):
 class FilePlayer(InterfaceDecorator):
     def __init__(self, base: UserInterface, data: list[str]):
         super().__init__(base)
-        self._data_iter = iter(data)
+        self._data = data
+        self._line = 0
 
     def _read(self):
-        data = next(self._data_iter)
+        if self._line >= len(self._data):
+            return None
+
+        data = self._data[self._line].strip()
+        self._line += 1
         print(f"<<< {data}")
 
         return data
 
     def choose(self, options: list[str]) -> int:
-        try:
-            return int(self._read())
-        except StopIteration:
-            return self.base.choose(options)
+        data = self._read()
+        if data is not None:
+            return int(data)
+
+        return self.base.choose(options)
 
     def input_text(self) -> str:
-        try:
-            return self._read()
-        except StopIteration:
-            return self.base.input_text()
+        data = self._read()
+        if data is not None:
+            return data
+
+        return self.base.input_text()
 
     def wait(self, do=None):
-        pass
+        if self._read() != "":
+            self._line -= 1
+            super().wait(do)
 
 
 # To be honest, this Singleton implementation is mostly black magic pulled from
