@@ -1,4 +1,4 @@
-from typing import Optional, Type
+from typing import Optional
 import random
 
 from state import State
@@ -18,26 +18,7 @@ class RandomEvent(State):
         ui.clear()
         ui.adventure_menu(self.ctx.player)
 
-        event_map = [
-            (NoEvent, 1),
-            (Chest, 2),
-            (fight.Fight, 6),
-            (Robbed, 2),
-            (traveller.Traveller, 2),
-            (Damaged, 2),
-            (Miracle, 1),
-            (Mushroom, 1),
-            (Mystic, 1),
-            (BiggerBag, 1),
-            (LoseDay, 1),
-        ]
-        states = []
-        weights = []
-        for e in event_map:
-            states.append(e[0])
-            weights.append(e[1])
-
-        next_state: State = random.choices(states, weights)[0](ctx)
+        next_state: State = random.choices(STATE_CHOICES, WEIGHT_CHOICES)[0](ctx)
 
         return next_state
 
@@ -363,3 +344,23 @@ class ChestLoot(State):
 
         ui.wait()
         return adventuring.Adventuring(self.ctx)
+
+
+EVENT_MAP = [
+    (NoEvent, 1),
+    (Chest, 2),
+    (fight.Fight, 6),
+    (Robbed, 2),
+    (traveller.Traveller, 2),
+    (Damaged, 2),
+    (Miracle, 1),
+    (Mushroom, 1),
+    (Mystic, 1),
+    (BiggerBag, 1),
+    (LoseDay, 1),
+]
+STATE_CHOICES = []
+WEIGHT_CHOICES = []
+for e in EVENT_MAP:
+    STATE_CHOICES.append(e[0])
+    WEIGHT_CHOICES.append(e[1])
